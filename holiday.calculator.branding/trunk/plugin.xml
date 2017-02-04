@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+ 
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            icon="icons/alt_launcher.ico">
+         <run
+               class="ru.iskandar.holiday.calculator.branding.Application">
+         </run>
+      </application>
+   </extension>
+   <extension
+         id="scanner_product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="ru.iskandar.holiday.calculator.branding.application"
+            name="Учет отгулов">
+         <property
+               name="appName"
+               value="Учет отгулов">
+         </property>
+      </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="ru.iskandar.holiday.calculator.branding.MainPerspective"
+            id="ru.iskandar.holiday.calculator.branding.MainPerspective"
+            name="Основная ">
+      </perspective>
+   </extension>
+   
+   <extension
+ point="org.eclipse.ui.perspectiveExtensions">
+    <perspectiveExtension
+     targetID="ru.iskandar.holiday.calculator.product.MainPerspective">
+         <hiddenMenuItem id="org.eclipse.ui.run"></hiddenMenuItem>
+         <hiddenMenuItem id="navigate"></hiddenMenuItem>
+     </perspectiveExtension>
+ </extension>
+   <extension
+         point="org.eclipse.ui.activities">
+      <activity
+            id="holiday.calculator.activity"
+            name="name">
+      </activity>
+      <activityPatternBinding
+            activityId="holiday.calculator.activity"
+            pattern="org.eclipse.*">
+      </activityPatternBinding>
+   </extension>
+
+</plugin>

@@ -32,6 +32,21 @@
             name="Основная ">
       </perspective>
    </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="ru.iskandar.holiday.calculator.branding.MainPerspective">
+         <view
+               closeable="false"
+               id="ru.iskandar.holiday.calculator.ui.NavigationViewPart"
+               minimized="false"
+               moveable="false"
+               ratio="0.2"
+               relationship="left"
+               visible="true">
+         </view>
+      </perspectiveExtension>
+   </extension>
    
 
 </plugin>

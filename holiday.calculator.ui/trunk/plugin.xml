@@ -58,5 +58,14 @@
          </toolbar>
       </menuContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="ru.iskandar.holiday.calculator.ui.NavigationViewPart"
+            id="ru.iskandar.holiday.calculator.ui.NavigationViewPart"
+            name="%navigation.view.name"
+            restorable="true">
+      </view>
+   </extension>
 
 </plugin>

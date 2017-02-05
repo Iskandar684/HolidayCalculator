@@ -6,6 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: ru.iskandar.holiday.calculator.branding.Activator
 Bundle-Vendor: Iskandar
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ ru.iskandar.holiday.calculator.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

@@ -13,7 +13,7 @@
       </application>
    </extension>
    <extension
-         id="scanner_product"
+         id="calculator_product"
          point="org.eclipse.core.runtime.products">
       <product
             application="ru.iskandar.holiday.calculator.branding.application"
@@ -31,21 +31,6 @@
             id="ru.iskandar.holiday.calculator.branding.MainPerspective"
             name="Основная ">
       </perspective>
-   </extension>
-   <extension
-         point="org.eclipse.ui.perspectiveExtensions">
-      <perspectiveExtension
-            targetID="ru.iskandar.holiday.calculator.branding.MainPerspective">
-         <view
-               closeable="false"
-               id="ru.iskandar.holiday.calculator.ui.NavigationViewPart"
-               minimized="false"
-               moveable="false"
-               ratio="0.2"
-               relationship="left"
-               visible="true">
-         </view>
-      </perspectiveExtension>
    </extension>
    
 

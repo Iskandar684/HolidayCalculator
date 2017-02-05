@@ -25,7 +25,7 @@ public class MainPerspective implements IPerspectiveFactory {
 
 		final String contentsID = NavigationViewPart.ID;
 		final float r = 0.27f;
-		aLayout.addStandaloneView(contentsID, true, IPageLayout.LEFT, r, aLayout.getEditorArea());
+		aLayout.addStandaloneView(contentsID, false, IPageLayout.LEFT, r, aLayout.getEditorArea());
 		final IViewLayout contentsLayout = aLayout.getViewLayout(contentsID);
 		if (contentsLayout != null) {
 			contentsLayout.setCloseable(false);

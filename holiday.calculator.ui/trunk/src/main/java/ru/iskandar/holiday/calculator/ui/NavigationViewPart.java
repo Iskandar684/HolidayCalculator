@@ -9,12 +9,16 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 
+import ru.iskandar.holiday.calculator.service.model.User;
+
 public class NavigationViewPart extends ViewPart {
 
 	public static final String ID = "ru.iskandar.holiday.calculator.ui.NavigationViewPart";
 
+	/** Поставщик модели */
+	private final HolidayCalculatorModelProvider _modelProvider = new HolidayCalculatorModelProvider();
+
 	public NavigationViewPart() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -24,7 +28,9 @@ public class NavigationViewPart extends ViewPart {
 		main.setLayout(new GridLayout());
 		main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		final Label fio = toolkit.createLabel(aParent, "ФИО");
+		User user = _modelProvider.getModel().getCurrentUser();
+		final Label fio = toolkit.createLabel(aParent,
+				String.format("%s %s %s", user.getLastName(), user.getFirstName(), user.getPatronymic()));
 		fio.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
 	}
 

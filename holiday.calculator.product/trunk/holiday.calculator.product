@@ -7,9 +7,26 @@
    </configIni>
 
    <launcherArgs>
+      <programArgs>-nl ru
+osgi.nl=ru
+      </programArgs>
+      <vmArgs>-Dfile.encoding=UTF-8
+      </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
       </vmArgsMac>
    </launcherArgs>
+
+   <splash
+      location="ru.iskandar.holiday.calculator.branding" />
+   <launcher name="calculator">
+      <solaris/>
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
+   <vm>
+   </vm>
 
    <plugins>
       <plugin id="com.ibm.icu"/>
@@ -80,5 +97,8 @@
       <plugin id="ru.iskandar.holiday.calculator.ui"/>
    </plugins>
 
+   <configurations>
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="2" />
+   </configurations>
 
 </product>

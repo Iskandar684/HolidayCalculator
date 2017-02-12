@@ -27,6 +27,9 @@
 	<modules>
 		<module>holiday.calculator.service/trunk</module>
 		<module>holiday.calculator.client-libraries/trunk</module>
+		<module>holiday.calculator.ui/trunk</module>
+		<module>holiday.calculator.branding/trunk</module>
+		<module>holiday.calculator.product/trunk</module>
 	</modules>
 
 	<build>

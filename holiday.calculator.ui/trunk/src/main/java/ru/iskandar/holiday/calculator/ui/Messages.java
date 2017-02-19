@@ -13,6 +13,21 @@ public class Messages extends NLS {
 	/** Количество отгулов */
 	public static String holidaysQuantity;
 
+	/** Количество дней отпуска */
+	public static String leaveCount;
+
+	/** Дата начала следующего периода */
+	public static String nextLeaveStartDate;
+
+	/** Наименование кнопки подачи заявления на отгул */
+	public static String getHoliday;
+
+	/** Наименование кнопки подачи заявления на отпуск */
+	public static String getLeave;
+
+	/** Наименование кнопки подачи заявления на отзыв */
+	public static String makeRecall;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

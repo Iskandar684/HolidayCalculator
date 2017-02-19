@@ -8,7 +8,7 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 
 	/** Путь к ресурсам */
-	private static final String BUNDLE_NAME = "ru.iskandar.holiday.calculator.ui.Messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "ru.iskandar.holiday.calculator.ui.messages"; //$NON-NLS-1$
 
 	/** Количество отгулов */
 	public static String holidaysQuantity;

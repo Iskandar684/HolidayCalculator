@@ -18,10 +18,20 @@
          point="org.eclipse.ui.views">
       <view
             class="ru.iskandar.holiday.calculator.ui.NavigationViewPart"
+            fastViewWidthRatio="0.27"
             id="ru.iskandar.holiday.calculator.ui.NavigationViewPart"
             name="%navigation.view.name"
             restorable="true">
       </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="ru.iskandar.holiday.calculator.ui.TakeHolidayEditor"
+            default="false"
+            id="ru.iskandar.holiday.take.editor"
+            name="%holiday.take.view.name">
+      </editor>
    </extension>
 
 </plugin>

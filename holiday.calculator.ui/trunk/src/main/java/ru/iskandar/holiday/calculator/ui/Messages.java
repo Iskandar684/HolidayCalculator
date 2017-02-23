@@ -10,6 +10,9 @@ public class Messages extends NLS {
 	/** Путь к ресурсам */
 	private static final String BUNDLE_NAME = "ru.iskandar.holiday.calculator.ui.messages"; //$NON-NLS-1$
 
+	/** Пустая строка */
+	public static final String EMPTY = "";
+
 	/** Количество отгулов */
 	public static String holidaysQuantity;
 
@@ -27,6 +30,18 @@ public class Messages extends NLS {
 
 	/** Наименование кнопки подачи заявления на отзыв */
 	public static String makeRecall;
+
+	/** Заголовок формы подачи заявления на отгул */
+	public static String getHolidayFormHeader;
+
+	/** Наименование кнопки выбора типа отгула - за счет отгулов */
+	public static String getHolidayByHolidayDays;
+
+	/** Наименование кнопки выбора типа отгула - за свой счет */
+	public static String getHolidayByOwn;
+
+	/** Наименование кнопки отправки заявления на отгул */
+	public static String takeHoliday;
 
 	static {
 		// инициализация ресурсов бандла

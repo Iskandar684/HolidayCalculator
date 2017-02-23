@@ -1,16 +1,31 @@
 /**
  *
  */
-package ru.iskandar.holiday.calculator.ui;
+package ru.iskandar.holiday.calculator.ui.takeholiday;
+
+import java.util.Objects;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
+import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
+
 /**
  *
  */
 public class TakeHolidayEditorInput implements IEditorInput {
+
+	/** Поставщик модели */
+	private final HolidayCalculatorModelProvider _modelProvider;
+
+	/**
+	 * Конструктор
+	 */
+	public TakeHolidayEditorInput(HolidayCalculatorModelProvider aModelProvider) {
+		Objects.requireNonNull(aModelProvider);
+		_modelProvider = aModelProvider;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -64,6 +79,13 @@ public class TakeHolidayEditorInput implements IEditorInput {
 	public String getToolTipText() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	/**
+	 * @return the modelProvider
+	 */
+	public HolidayCalculatorModelProvider getModelProvider() {
+		return _modelProvider;
 	}
 
 }

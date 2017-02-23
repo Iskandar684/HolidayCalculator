@@ -12,6 +12,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import ru.iskandar.holiday.calculator.service.model.User;
 import ru.iskandar.holiday.calculator.ui.UserAttributesForm.IUserProvider;
+import ru.iskandar.holiday.calculator.ui.takeholiday.TakeHolidayButtonPM;
 
 /**
  * Панель навигации

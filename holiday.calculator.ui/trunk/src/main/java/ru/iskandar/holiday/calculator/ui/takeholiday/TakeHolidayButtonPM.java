@@ -1,7 +1,7 @@
 /**
  *
  */
-package ru.iskandar.holiday.calculator.ui;
+package ru.iskandar.holiday.calculator.ui.takeholiday;
 
 import java.util.Objects;
 
@@ -11,6 +11,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+
+import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 
 /**
  * Контроллер кнопки формирования заявления на отгул
@@ -54,7 +56,8 @@ public class TakeHolidayButtonPM {
 		public void widgetSelected(SelectionEvent aE) {
 			try {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(
-						new TakeHolidayEditorInput(), TakeHolidayEditor.EDITOR_ID, true, IWorkbenchPage.MATCH_ID);
+						new TakeHolidayEditorInput(_provider), TakeHolidayEditor.EDITOR_ID, true,
+						IWorkbenchPage.MATCH_ID);
 
 			} catch (PartInitException e) {
 				throw new IllegalStateException(

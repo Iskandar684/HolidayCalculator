@@ -5,14 +5,21 @@ import javax.ejb.Stateless;
 
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelException;
+import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelFactory;
 
+/**
+ * Сервис учета отгулов
+ */
 @Stateless
 @Remote(IHolidayCalculatorRemote.class)
 public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public HolidayCalculatorModel loadHolidayCalculatorModel() throws HolidayCalculatorModelException {
-		return new HolidayCalculatorModel();
+		return new HolidayCalculatorModelFactory().create();
 	}
 
 }

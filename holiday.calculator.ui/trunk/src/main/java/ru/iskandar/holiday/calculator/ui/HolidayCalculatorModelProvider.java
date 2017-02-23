@@ -1,23 +1,53 @@
 package ru.iskandar.holiday.calculator.ui;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+
 import ru.iskandar.holiday.calculator.clientlibraries.ClientConnector;
-import ru.iskandar.holiday.calculator.clientlibraries.ConnectionException;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 
 public class HolidayCalculatorModelProvider {
 
-	private HolidayCalculatorModel _model;
+	/** Задача загрузки модели */
+	private final FutureTask<HolidayCalculatorModel> _task = new FutureTask<>(new LoadModelCallable());
 
-	public synchronized HolidayCalculatorModel getModel() {
-		// TODO переделать на FutureTask
-		if (_model == null) {
-			try {
-				_model = new ClientConnector().loadModel();
-			} catch (ConnectionException e) {
-				throw new IllegalStateException("Ошибка загрузки модели учета отгулов", e);
-			}
+	/**
+	 * Конструктор
+	 */
+	public HolidayCalculatorModelProvider() {
+		Executors.newSingleThreadExecutor().submit(_task);
+	}
+
+	/**
+	 * Возвращает модель
+	 *
+	 * @return модель
+	 * @throws IllegalStateException
+	 *             если не удалось загрузить модель
+	 */
+	public HolidayCalculatorModel getModel() {
+		try {
+			return _task.get();
+		} catch (InterruptedException | ExecutionException e) {
+			throw new IllegalStateException("Ошибка получения модели учета отгулов", e);
 		}
-		return _model;
+	}
+
+	/**
+	 * Загрузчик модели
+	 */
+	private class LoadModelCallable implements Callable<HolidayCalculatorModel> {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public HolidayCalculatorModel call() throws Exception {
+			return new ClientConnector().loadModel();
+		}
+
 	}
 
 }

@@ -27,7 +27,7 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="ru.iskandar.holiday.calculator.ui.TakeHolidayEditor"
+            class="ru.iskandar.holiday.calculator.ui.takeholiday.TakeHolidayEditor"
             default="false"
             id="ru.iskandar.holiday.take.editor"
             name="%holiday.take.view.name">

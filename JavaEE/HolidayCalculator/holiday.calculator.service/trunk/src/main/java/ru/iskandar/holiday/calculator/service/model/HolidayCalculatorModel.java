@@ -14,6 +14,12 @@ public class HolidayCalculatorModel implements Serializable {
 	private static final long serialVersionUID = -2279698461127019581L;
 
 	/**
+	 * Конструктор
+	 */
+	HolidayCalculatorModel() {
+	}
+
+	/**
 	 * Возвращает текущего пользователя
 	 *
 	 * @return текущий пользователь

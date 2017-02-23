@@ -3,6 +3,9 @@ package ru.iskandar.holiday.calculator.service.ejb;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelException;
 
+/**
+ * Сервис учета отгулов
+ */
 public interface IHolidayCalculatorRemote {
 
 	/** JNDI имя */

@@ -1,5 +1,6 @@
 package ru.iskandar.holiday.calculator.service.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -7,7 +8,12 @@ import java.util.Set;
 /**
  * Формирователь заявления на отгул
  */
-public class TakeHolidayStatementBuilder {
+public class TakeHolidayStatementBuilder implements Serializable {
+
+	/**
+	 * Идентификатор для сериализации
+	 */
+	private static final long serialVersionUID = 3380998355782094502L;
 
 	/** Тип заявления на отгул */
 	private HolidayStatementType _statementType = HolidayStatementType.BY_HOLIDAY_DAYS;

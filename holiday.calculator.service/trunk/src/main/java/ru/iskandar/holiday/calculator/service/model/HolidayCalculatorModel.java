@@ -1,10 +1,17 @@
 package ru.iskandar.holiday.calculator.service.model;
 
+import java.io.Serializable;
+
 /**
  * Модель учета отгулов
  *
  */
-public class HolidayCalculatorModel {
+public class HolidayCalculatorModel implements Serializable {
+
+	/**
+	 * Индентификатор для сериализации
+	 */
+	private static final long serialVersionUID = -2279698461127019581L;
 
 	/**
 	 * Возвращает текущего пользователя

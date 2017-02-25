@@ -12,5 +12,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/holiday.calculator.service.jar,
  lib/jboss-client.jar,
  .
-Export-Package: ru.iskandar.holiday.calculator.clientlibraries,
+Export-Package: org.jboss.naming.remote.client,
+ ru.iskandar.holiday.calculator.clientlibraries,
+ ru.iskandar.holiday.calculator.service.ejb,
  ru.iskandar.holiday.calculator.service.model

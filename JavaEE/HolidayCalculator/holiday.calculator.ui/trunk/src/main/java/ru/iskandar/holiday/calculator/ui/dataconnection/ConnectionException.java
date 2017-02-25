@@ -1,7 +1,7 @@
 /**
  *
  */
-package ru.iskandar.holiday.calculator.clientlibraries;
+package ru.iskandar.holiday.calculator.ui.dataconnection;
 
 /**
  *

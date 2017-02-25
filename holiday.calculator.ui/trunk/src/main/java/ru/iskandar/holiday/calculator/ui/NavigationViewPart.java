@@ -1,5 +1,7 @@
 package ru.iskandar.holiday.calculator.ui;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -7,8 +9,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 import ru.iskandar.holiday.calculator.service.model.User;
 import ru.iskandar.holiday.calculator.ui.UserAttributesForm.IUserProvider;
@@ -36,34 +40,74 @@ public class NavigationViewPart extends ViewPart {
 	@Override
 	public void createPartControl(Composite aParent) {
 		final FormToolkit toolkit = new FormToolkit(Display.getDefault());
-		final Composite main = toolkit.createComposite(aParent, SWT.BORDER);
+		// TODO не ждать загрузки модели в UI потоке! Ориентироваться по
+		// _modelProvider.getLoadStatus();
+		try {
+			_modelProvider.getModel();
+		} catch (Exception e) {
+			StatusManager.getManager().handle(
+					new Status(IStatus.ERROR, Activator.PLUGIN_ID, Messages.modelLoadError, e), StatusManager.LOG);
+			createLoadErrorStub(aParent, toolkit);
+			return;
+		}
+		createMain(aParent, toolkit);
+	}
+
+	/**
+	 * Создает загрушку в случае ошибки загрузки модели учета отгулов
+	 *
+	 * @param aParent
+	 *            родитель
+	 * @param aToolkit
+	 *            инструментарий для создания пользовательского интерфейса
+	 */
+	private void createLoadErrorStub(Composite aParent, FormToolkit aToolkit) {
+		final Composite main = aToolkit.createComposite(aParent, SWT.BORDER);
+		final int columns = 2;
+		main.setLayout(new GridLayout(columns, false));
+		main.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
+		Label iconLabel = aToolkit.createLabel(main, Messages.EMPTY);
+		iconLabel.setImage(Display.getDefault().getSystemImage(SWT.ICON_ERROR));
+		Label messLabel = aToolkit.createLabel(main, Messages.modelLoadError, SWT.WRAP);
+		messLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
+	}
+
+	/**
+	 * Создает основную форму
+	 *
+	 * @param aParent
+	 *            родитель
+	 * @param aToolkit
+	 *            инструментарий для создания пользовательского интерфейса
+	 */
+	private void createMain(Composite aParent, FormToolkit aToolkit) {
+		final Composite main = aToolkit.createComposite(aParent, SWT.BORDER);
 		final int columns = 2;
 		main.setLayout(new GridLayout(columns, false));
 		main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		UserAttributesForm form = new UserAttributesForm(main, toolkit, new FormUserProvider());
+		UserAttributesForm form = new UserAttributesForm(main, aToolkit, new FormUserProvider());
 		form.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, columns, 1));
 
 		DateTime dateTime = new DateTime(main, SWT.CALENDAR);
 		dateTime.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, columns, 1));
 
 		final int buttonHeight = 60;
-		Button takeHolidayBt = toolkit.createButton(main, Messages.getHoliday, SWT.NONE);
+		Button takeHolidayBt = aToolkit.createButton(main, Messages.getHoliday, SWT.NONE);
 		GridData btGridData = new GridData(SWT.FILL, SWT.BOTTOM, true, false, columns, 1);
 		btGridData.heightHint = buttonHeight;
 		takeHolidayBt.setLayoutData(btGridData);
 		new TakeHolidayButtonPM(takeHolidayBt, _modelProvider);
 
-		Button makeRecallBt = toolkit.createButton(main, Messages.makeRecall, SWT.NONE);
+		Button makeRecallBt = aToolkit.createButton(main, Messages.makeRecall, SWT.NONE);
 		btGridData = new GridData(SWT.FILL, SWT.BOTTOM, true, false);
 		btGridData.heightHint = buttonHeight;
 		makeRecallBt.setLayoutData(btGridData);
 
-		Button getLeaveBt = toolkit.createButton(main, Messages.getLeave, SWT.NONE);
+		Button getLeaveBt = aToolkit.createButton(main, Messages.getLeave, SWT.NONE);
 		btGridData = new GridData(SWT.FILL, SWT.BOTTOM, true, false);
 		btGridData.heightHint = buttonHeight;
 		getLeaveBt.setLayoutData(btGridData);
-
 	}
 
 	/**

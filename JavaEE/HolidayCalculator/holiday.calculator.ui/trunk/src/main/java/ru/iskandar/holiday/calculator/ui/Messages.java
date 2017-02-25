@@ -43,6 +43,9 @@ public class Messages extends NLS {
 	/** Наименование кнопки отправки заявления на отгул */
 	public static String takeHoliday;
 
+	/** Ошибка загрузки модели учета отгулов */
+	public static String modelLoadError;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

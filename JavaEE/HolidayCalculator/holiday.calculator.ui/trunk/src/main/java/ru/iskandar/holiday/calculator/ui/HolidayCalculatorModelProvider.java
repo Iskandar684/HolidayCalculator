@@ -8,7 +8,7 @@ import java.util.concurrent.FutureTask;
 import ru.iskandar.holiday.calculator.clientlibraries.ClientConnector;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 
-public class HolidayCalculatorModelProvider {
+public class HolidayCalculatorModelProvider implements ILoadingProvider {
 
 	/** Задача загрузки модели */
 	private final FutureTask<HolidayCalculatorModel> _task = new FutureTask<>(new LoadModelCallable());
@@ -26,6 +26,7 @@ public class HolidayCalculatorModelProvider {
 	 * @return модель
 	 * @throws IllegalStateException
 	 *             если не удалось загрузить модель
+	 * @see #getLoadStatus()
 	 */
 	public HolidayCalculatorModel getModel() {
 		try {
@@ -48,6 +49,22 @@ public class HolidayCalculatorModelProvider {
 			return new ClientConnector().loadModel();
 		}
 
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public LoadStatus getLoadStatus() {
+		if (!_task.isDone() && !_task.isCancelled()) {
+			return LoadStatus.LOADING;
+		}
+		try {
+			_task.get();
+		} catch (InterruptedException | ExecutionException e) {
+			return LoadStatus.LOAD_ERROR;
+		}
+		return LoadStatus.LOADED;
 	}
 
 }

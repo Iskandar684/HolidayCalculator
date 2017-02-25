@@ -5,24 +5,27 @@ import org.osgi.framework.BundleContext;
 
 public class Activator implements BundleActivator {
 
+	/** Идентификатор плагина */
+	public static final String PLUGIN_ID = "ru.iskandar.holiday.calculator.ui";
+
 	private static BundleContext context;
 
 	static BundleContext getContext() {
 		return context;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void stop(BundleContext bundleContext) throws Exception {
 		Activator.context = null;
 	}

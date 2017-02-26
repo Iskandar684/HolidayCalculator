@@ -18,6 +18,7 @@ public class ClientConnector {
 		env.put(Context.INITIAL_CONTEXT_FACTORY, org.jboss.naming.remote.client.InitialContextFactory.class.getName());
 		env.put(Context.PROVIDER_URL, "remote://127.0.0.1:4447");
 
+		// env.put(Context.PROVIDER_URL, "http-remoting://127.0.0.1:8080");
 		env.put(Context.SECURITY_PRINCIPAL, "testuser");
 		env.put(Context.SECURITY_CREDENTIALS, "testpassword");
 

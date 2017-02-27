@@ -1,7 +1,7 @@
 package ru.iskandar.holiday.calculator.service.ejb;
 
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
-import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelException;
+import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelLoadException;
 
 /**
  * Сервис учета отгулов
@@ -15,8 +15,8 @@ public interface IHolidayCalculatorRemote {
 	 * Загружает модель учета отгулов для текущего пользователя
 	 *
 	 * @return модель
-	 * @throws HolidayCalculatorModelException
+	 * @throws HolidayCalculatorModelLoadException
 	 *             ошибка загрузки модели
 	 */
-	public HolidayCalculatorModel loadHolidayCalculatorModel() throws HolidayCalculatorModelException;
+	public HolidayCalculatorModel loadHolidayCalculatorModel() throws HolidayCalculatorModelLoadException;
 }

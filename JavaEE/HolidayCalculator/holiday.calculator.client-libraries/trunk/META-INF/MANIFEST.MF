@@ -11,6 +11,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/holiday.calculator.service.jar,
  lib/jboss-client.jar,
+ lib/jboss-cli-client.jar,
  .
 Export-Package: org.jboss.naming.remote.client,
  ru.iskandar.holiday.calculator.clientlibraries,

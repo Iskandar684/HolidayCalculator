@@ -6,6 +6,10 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Сервис учета отгулов</name>
 
+	<properties>
+		<jar.name>holiday.calculator.service</jar.name>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>javax.ejb</groupId>
@@ -14,7 +18,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-	<finalName>holiday.calculator.service</finalName>
+		<finalName>${jar.name}</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -24,6 +28,26 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
+		<!-- 	<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<echo message="Копирование сервиса учета отгулов в директорию jboss" />
+								<copy file="${project.build.directory}/${jar.name}.jar"
+									tofile="C:\jboss-as-7.1.1.Final\standalone\deployments" />
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>-->
 		</plugins>
 	</build>
 </project>

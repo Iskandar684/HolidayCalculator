@@ -1,12 +1,15 @@
 package ru.iskandar.holiday.calculator.service.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Модель учета отгулов
  *
  */
 public class HolidayCalculatorModel implements Serializable {
+	/** Текущий пользователь */
+	private final User _currenUser;
 
 	/**
 	 * Индентификатор для сериализации
@@ -16,7 +19,9 @@ public class HolidayCalculatorModel implements Serializable {
 	/**
 	 * Конструктор
 	 */
-	HolidayCalculatorModel() {
+	HolidayCalculatorModel(User aCurrentUser) {
+		Objects.requireNonNull(aCurrentUser);
+		_currenUser = aCurrentUser;
 	}
 
 	/**
@@ -26,8 +31,7 @@ public class HolidayCalculatorModel implements Serializable {
 	 *
 	 */
 	public User getCurrentUser() {
-		// TODO
-		return new User("Анисимов", "Олег", "Артёмович");
+		return _currenUser;
 	}
 
 	/**

@@ -1,12 +1,18 @@
 package ru.iskandar.holiday.calculator.service.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Пользователь
  *
  */
-public class User {
+public class User implements Serializable {
+
+	/**
+	 * Идентфикатор для сериализации
+	 */
+	private static final long serialVersionUID = 7332495096773696543L;
 
 	/** Имя */
 	private final String _firstName;
@@ -15,13 +21,18 @@ public class User {
 	/** Отчество */
 	private final String _patronymic;
 
+	/** Логин */
+	private final String _login;
+
 	/**
 	 * Конструктор
 	 */
-	protected User(String aLastName, String aFirstName, String aPatronymic) {
+	// TODO protected
+	public User(String aLastName, String aFirstName, String aPatronymic, String aLogin) {
 		_firstName = aFirstName;
 		_lastName = aLastName;
 		_patronymic = aPatronymic;
+		_login = aLogin;
 	}
 
 	public String getFirstName() {
@@ -94,6 +105,15 @@ public class User {
 	 */
 	public Date getNextLeaveStartDate() {
 		return new Date();
+	}
+
+	/**
+	 * Возвращает логин
+	 *
+	 * @return логин
+	 */
+	protected String getLogin() {
+		return _login;
 	}
 
 }

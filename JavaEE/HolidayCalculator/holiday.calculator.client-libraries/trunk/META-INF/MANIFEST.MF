@@ -15,5 +15,6 @@ Bundle-ClassPath: lib/holiday.calculator.service.jar,
  .
 Export-Package: org.jboss.naming.remote.client,
  ru.iskandar.holiday.calculator.clientlibraries,
+ ru.iskandar.holiday.calculator.dataconnection,
  ru.iskandar.holiday.calculator.service.ejb,
  ru.iskandar.holiday.calculator.service.model

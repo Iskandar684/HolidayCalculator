@@ -5,8 +5,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
+import ru.iskandar.holiday.calculator.dataconnection.ClientConnector;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
-import ru.iskandar.holiday.calculator.ui.dataconnection.ClientConnector;
 
 public class HolidayCalculatorModelProvider implements ILoadingProvider {
 

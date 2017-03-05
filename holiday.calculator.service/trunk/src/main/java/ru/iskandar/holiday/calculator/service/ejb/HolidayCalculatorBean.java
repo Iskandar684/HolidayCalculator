@@ -6,6 +6,7 @@ import javax.ejb.Stateless;
 import javax.jms.JMSException;
 
 import ru.iskandar.holiday.calculator.service.ejb.jms.MessageSenderBean;
+import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorEvent;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelFactory;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelLoadException;
@@ -21,6 +22,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	@EJB
 	private ICurrentUserServiceLocal _currentUserServiceLocal;
 
+	/** Отправитель сообщения */
 	@EJB
 	private MessageSenderBean _messageSender;
 
@@ -30,8 +32,10 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 
 	@Override
 	public HolidayCalculatorModel loadHolidayCalculatorModel() throws HolidayCalculatorModelLoadException {
+		HolidayCalculatorEvent event = new HolidayCalculatorEvent();
 		try {
-			_messageSender.send();
+			// TODO временно, для отладки
+			_messageSender.send(event);
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

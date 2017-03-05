@@ -1,6 +1,3 @@
-/**
- *
- */
 package ru.iskandar.holiday.calculator.service.model;
 
 import javax.jms.Connection;
@@ -10,50 +7,38 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
 import javax.jms.Topic;
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 /**
- * @author Windows 7 x64
- *
+ * Подписчик на серверные события
  */
 public class ServerEventsSubscriber {
 
-	public void subscribe(InitialContext context, MessageListener aMessageListener)
+	/**
+	 * Подписывает на серверные события
+	 *
+	 * @param aContext
+	 *            контекст
+	 * @param aMessageListener
+	 *            слушатель серверных события
+	 * @throws NamingException
+	 * @throws JMSException
+	 */
+	public void subscribe(InitialContext aContext, MessageListener aMessageListener)
 			throws NamingException, JMSException {
-		// Connection connection = null;
-		// try {
-		System.out.println("subscribe in model");
 
-		System.out.println("Get connection facory");
-		// ConnectionFactory connectionFactory = (ConnectionFactory) context
-		// .lookup("ConnectionFactory");
+		String login = (String) aContext.getEnvironment().get(Context.SECURITY_PRINCIPAL);
+		String password = (String) aContext.getEnvironment().get(Context.SECURITY_CREDENTIALS);
 
-		// ConnectionFactory connectionFactory = (ConnectionFactory) context
-		// .lookup("java:jboss/exported/jms/RemoteConnectionFactory");
-		ConnectionFactory connectionFactory = (ConnectionFactory) context.lookup("jms/RemoteConnectionFactory");
+		ConnectionFactory connectionFactory = (ConnectionFactory) aContext.lookup("jms/RemoteConnectionFactory");
 
-		System.out.println("Create connection");
-		// TODO получить логин и пароль из initinalContext
-		try (Connection connection = connectionFactory.createConnection("testuser2", "testpassword2")) {
-			System.out.println("ConnectionFactory " + connectionFactory);
-			System.out.println("Create session");
+		try (Connection connection = connectionFactory.createConnection(login, password)) {
 			Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-			System.out.println("Lookup queue");
-			// Queue queue = (Queue) context.lookup("/queue/HelloWorldQueue");
-			// Queue queue = (Queue)
-			// context.lookup("java:/jms/queue/ExpiryQueue");
-
-			// Queue queue = session.createQueue("java:jms/queue/ExpiryQueue");
-			// Queue queue = (Queue) context.lookup("jms/queue/test");
-			Topic queue = (Topic) context.lookup("jms/topic/test");
-			System.out.println("queue=" + queue);
-
-			System.out.println("Start connection");
+			Topic queue = (Topic) aContext.lookup("jms/topic/test");
 			connection.start();
-			System.out.println("Create consumer");
 			MessageConsumer consumer = session.createConsumer(queue);
-			System.out.println("set message listener");
 			consumer.setMessageListener(aMessageListener);
 			while (!Thread.interrupted()) {
 				Thread.yield();

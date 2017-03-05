@@ -1,6 +1,3 @@
-/**
- *
- */
 package ru.iskandar.holiday.calculator.service.ejb.jms;
 
 import java.util.Objects;
@@ -15,31 +12,45 @@ import javax.jms.JMSException;
 import javax.jms.JMSProducer;
 import javax.jms.ObjectMessage;
 
+import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorEvent;
+
 /**
- *
+ * Сервис отправки сообщений
  */
 @Stateless
 public class MessageSenderBean {
 
+	/** JNDI имя очереди */
+	private static final String DESTINATION_ID = "java:jboss/exported/jms/topic/test";
+
+	/** Контекст JMS */
 	@Inject
-	// @JMSConnectionFactory("jms/QueueConnectionFactory")
 	@JMSConnectionFactory("java:jboss/DefaultJMSConnectionFactory")
 	private JMSContext _context;
 
-	// @Resource(name = "jms/ShippingRequestQueue")
-	@Resource(name = "java:jboss/exported/jms/topic/test")
-	// @Resource(name = "queue/ShippingRequestQueue")
+	/** Очередь */
+	@Resource(name = DESTINATION_ID)
 	private Destination _destination;
 
-	public void send() throws JMSException {
-		System.out.println("send");
-		ShippingRequest shippingRequest = new ShippingRequest();
+	/**
+	 * Отправляет сообщение
+	 *
+	 * @param aEvent
+	 *            сообщение
+	 * @throws JMSException
+	 *             ошибка отправки сообщения
+	 */
+	public void send(HolidayCalculatorEvent aEvent) throws JMSException {
+		Objects.requireNonNull(aEvent, "Не указано сообщение");
+		if (_destination == null) {
+			throw new IllegalStateException(String.format("Отсутствует очередь; destinationId='%s'", DESTINATION_ID));
+		}
 
 		ObjectMessage om = _context.createObjectMessage();
-		om.setObject(shippingRequest);
+		om.setObject(aEvent);
 
 		JMSProducer producer = _context.createProducer();
-		Objects.requireNonNull(_destination, "Не указан _destination");
+
 		producer.send(_destination, om);
 	}
 

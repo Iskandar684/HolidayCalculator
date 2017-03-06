@@ -40,7 +40,7 @@
 				<executions>
 					<execution>
 						<id>copy</id>
-						<phase>package</phase>
+						<phase>initialize</phase>
 						<goals>
 							<goal>copy</goal>
 						</goals>

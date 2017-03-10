@@ -14,7 +14,15 @@ http://wildfly.org/downloads/
 5. В wildfly-10.1.0.Final\standalone\configuration\standalone.xml 
 добавить    <jms-topic name="testTopic" entries="topic/test java:jboss/exported/jms/topic/test"/>
 
-6. Запустить wildfly-10.1.0.Final/bin/standalone.bat
+6. Если клиент и сервер на разных хостах, то указать ip адрес сервера:
+wildfly-10.1.0.Final\standalone\configuration\standalone.xml
+<interfaces>
+    <interface name="public">
+       <any-ipv4-address/>
+    </interface>
+</interfaces>
+
+7. Запустить wildfly-10.1.0.Final/bin/standalone.bat
 
 
 Инструкция по разворачиванию клиента.

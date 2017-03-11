@@ -1,7 +1,5 @@
 package ru.iskandar.holiday.calculator.ui;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -12,7 +10,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.ui.statushandlers.StatusManager;
 
 import ru.iskandar.holiday.calculator.service.model.User;
 import ru.iskandar.holiday.calculator.ui.UserAttributesForm.IUserProvider;
@@ -40,16 +37,6 @@ public class NavigationViewPart extends ViewPart {
 	@Override
 	public void createPartControl(Composite aParent) {
 		final FormToolkit toolkit = new FormToolkit(Display.getDefault());
-		// TODO не ждать загрузки модели в UI потоке! Ориентироваться по
-		// _modelProvider.getLoadStatus();
-		try {
-			_modelProvider.getModel();
-		} catch (Exception e) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, Activator.PLUGIN_ID, Messages.modelLoadError, e), StatusManager.LOG);
-			createLoadErrorStub(aParent, toolkit);
-			return;
-		}
 		createMain(aParent, toolkit);
 	}
 
@@ -156,8 +143,6 @@ public class NavigationViewPart extends ViewPart {
 	 */
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
-
 	}
 
 }

@@ -118,6 +118,13 @@ public class HolidayCalculatorModelProvider implements ILoadingProvider {
 		@Override
 		protected void done() {
 			try {
+				get();
+			} catch (InterruptedException | ExecutionException e) {
+				StatusManager.getManager().handle(
+						new Status(IStatus.ERROR, Activator.PLUGIN_ID, Messages.modelLoadError, e), StatusManager.LOG);
+			}
+
+			try {
 				fireLoadStatusChangedEvent();
 			} catch (Exception e) {
 				StatusManager.getManager().handle(new Status(IStatus.ERROR, Activator.PLUGIN_ID,

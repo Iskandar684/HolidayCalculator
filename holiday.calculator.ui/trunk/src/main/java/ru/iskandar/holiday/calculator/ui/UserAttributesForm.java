@@ -154,6 +154,7 @@ public class UserAttributesForm extends Composite {
 		_holidaysQuantityLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 
 		_hqLink = _formToolkit.createHyperlink(main, Messages.EMPTY, SWT.NONE);
+		_hqLink.setLayoutData(new GridData(SWT.CENTER, SWT.LEFT, false, false));
 
 		_outHQLink = _formToolkit.createHyperlink(main, Messages.EMPTY, SWT.NONE);
 		_outHQLink.addHyperlinkListener(new HyperlinkAdapter() {
@@ -240,6 +241,12 @@ public class UserAttributesForm extends Composite {
 		_lcLink.setText(lcStr);
 		_outLCLink.setText(outLCStr);
 		_nextLeaveStartDateLink.setText(dateAsStr);
+
+		_fioLabel.getParent().layout();
+		_hqLink.getParent().layout();
+		_outHQLink.getParent().layout();
+		_lcLink.getParent().layout();
+		_nextLeaveStartDateLink.getParent().layout();
 	}
 
 	/**

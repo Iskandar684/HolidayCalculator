@@ -125,6 +125,30 @@ public class NavigationViewPart extends ViewPart {
 			return user;
 		}
 
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public LoadStatus getLoadStatus() {
+			return _modelProvider.getLoadStatus();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void addLoadListener(ILoadListener aLoadListener) {
+			_modelProvider.addLoadListener(aLoadListener);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void removeLoadListener(ILoadListener aLoadListener) {
+			_modelProvider.removeLoadListener(aLoadListener);
+		}
+
 	}
 
 	/**

@@ -46,6 +46,9 @@ public class Messages extends NLS {
 	/** Ошибка загрузки модели учета отгулов */
 	public static String modelLoadError;
 
+	/** Ошибка оповещения изменения статуса загрузки модели */
+	public static String modelLoadStatusChangedNotificationError;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

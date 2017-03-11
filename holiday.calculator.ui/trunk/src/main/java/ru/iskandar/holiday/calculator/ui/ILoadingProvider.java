@@ -24,4 +24,31 @@ public interface ILoadingProvider {
 		LOAD_ERROR
 	}
 
+	/**
+	 * Слушатель изменения статуса загрузки
+	 */
+	public interface ILoadListener {
+
+		/**
+		 * Обрабатывает изменения статуса загрузки
+		 */
+		public void loadStatusChanged();
+	}
+
+	/**
+	 * Добавляет слушатель изменения статуса загрузки
+	 *
+	 * @param aLoadListener
+	 *            слушатель изменения статуса загрузки
+	 */
+	public void addLoadListener(ILoadListener aLoadListener);
+
+	/**
+	 * Удаляет слушатель изменения статуса загрузки
+	 *
+	 * @param aLoadListener
+	 *            слушатель изменения статуса загрузки
+	 */
+	public void removeLoadListener(ILoadListener aLoadListener);
+
 }

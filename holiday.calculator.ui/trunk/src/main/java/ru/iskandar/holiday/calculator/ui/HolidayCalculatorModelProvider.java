@@ -1,9 +1,14 @@
 package ru.iskandar.holiday.calculator.ui;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 import ru.iskandar.holiday.calculator.dataconnection.ClientConnector;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
@@ -11,7 +16,10 @@ import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 public class HolidayCalculatorModelProvider implements ILoadingProvider {
 
 	/** Задача загрузки модели */
-	private final FutureTask<HolidayCalculatorModel> _task = new FutureTask<>(new LoadModelCallable());
+	private final FutureTask<HolidayCalculatorModel> _task = new LoadModelTask(new LoadModelCallable());
+
+	/** Слушатели изменения статуса загрузки */
+	private final CopyOnWriteArrayList<ILoadListener> _loadListeners = new CopyOnWriteArrayList<>();
 
 	/**
 	 * Конструктор
@@ -65,6 +73,58 @@ public class HolidayCalculatorModelProvider implements ILoadingProvider {
 			return LoadStatus.LOAD_ERROR;
 		}
 		return LoadStatus.LOADED;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addLoadListener(ILoadListener aLoadListener) {
+		_loadListeners.add(aLoadListener);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void removeLoadListener(ILoadListener aLoadListener) {
+		_loadListeners.remove(aLoadListener);
+	}
+
+	/**
+	 * Оповещает слушателей об изменении статуса загрузки
+	 */
+	private void fireLoadStatusChangedEvent() {
+		for (ILoadListener listener : _loadListeners) {
+			listener.loadStatusChanged();
+		}
+	}
+
+	/**
+	 * Задача загрузки модели
+	 */
+	private class LoadModelTask extends FutureTask<HolidayCalculatorModel> {
+
+		/**
+		 * Конструктор
+		 */
+		public LoadModelTask(Callable<HolidayCalculatorModel> aCallable) {
+			super(aCallable);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		protected void done() {
+			try {
+				fireLoadStatusChangedEvent();
+			} catch (Exception e) {
+				StatusManager.getManager().handle(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+						Messages.modelLoadStatusChangedNotificationError, e), StatusManager.LOG);
+			}
+		}
+
 	}
 
 }

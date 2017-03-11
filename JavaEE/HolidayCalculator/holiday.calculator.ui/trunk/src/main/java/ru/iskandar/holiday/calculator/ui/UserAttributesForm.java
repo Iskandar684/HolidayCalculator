@@ -4,15 +4,20 @@ import java.text.SimpleDateFormat;
 import java.util.Objects;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 
 import ru.iskandar.holiday.calculator.service.model.User;
+import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
+import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
 
 /**
  * Форма отображения атрибутов пользователя
@@ -21,6 +26,21 @@ public class UserAttributesForm extends Composite {
 
 	/** Поставщик пользователя */
 	private final IUserProvider _userProvider;
+	/***/
+	private Hyperlink _lcLink;
+	/***/
+	private Label _holidaysQuantityLabel;
+	/***/
+	private Hyperlink _outHQLink;
+	/***/
+	private Hyperlink _hqLink;
+	/***/
+	private Hyperlink _inHQLink;
+	/***/
+	private Label _fioLabel;
+	/***/
+	private Hyperlink _outLCLink;
+
 	/** Инструментарий для создания пользовательского интерфейса */
 	private final FormToolkit _formToolkit;
 
@@ -39,6 +59,8 @@ public class UserAttributesForm extends Composite {
 		_userProvider = aUserProvider;
 		_formToolkit = aFormToolkit;
 		create();
+		initListeners();
+		refresh();
 	}
 
 	/**
@@ -49,18 +71,18 @@ public class UserAttributesForm extends Composite {
 		mainLayout.marginWidth = 0;
 		mainLayout.marginHeight = 0;
 		setLayout(mainLayout);
-		_formToolkit.createLabel(this, "").setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
-		User user = _userProvider.getUser();
-		Objects.requireNonNull(user);
-		String fio = String.format("%s %s %s", user.getLastName(), user.getFirstName(), user.getPatronymic());
-		Label fioLabel = _formToolkit.createLabel(this, fio);
-		fioLabel.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, false));
-		_formToolkit.createLabel(this, "").setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
+		_formToolkit.createLabel(this, Messages.EMPTY).setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
+
+		_fioLabel = _formToolkit.createLabel(this, Messages.EMPTY);
+		_fioLabel.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, true, false));
+		_formToolkit.createLabel(this, Messages.EMPTY).setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
 
 		createHolidaysQuantityLabel(this).setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		createLeaveCountLabel(this).setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		createNextLeaveStartDate(this).setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 	}
+
+	Hyperlink _nextLeaveStartDateLink;
 
 	/**
 	 * Создает строку "Дата начала следующего периода"
@@ -70,7 +92,7 @@ public class UserAttributesForm extends Composite {
 	 * @return корневой элемент управления
 	 */
 	private Composite createNextLeaveStartDate(Composite aParent) {
-		User user = _userProvider.getUser();
+
 		Composite main = _formToolkit.createComposite(aParent);
 		int columns = 2;
 		GridLayout mainLayout = new GridLayout(columns, false);
@@ -80,8 +102,7 @@ public class UserAttributesForm extends Composite {
 		Label nextDateLabel = _formToolkit.createLabel(main, Messages.nextLeaveStartDate);
 		nextDateLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 
-		String dateAsStr = new SimpleDateFormat("dd.MM.yyyy").format(user.getNextLeaveStartDate());
-		_formToolkit.createHyperlink(main, dateAsStr, SWT.NONE);
+		_nextLeaveStartDateLink = _formToolkit.createHyperlink(main, Messages.EMPTY, SWT.NONE);
 
 		return main;
 	}
@@ -94,15 +115,9 @@ public class UserAttributesForm extends Composite {
 	 * @return корневой элемент управления
 	 */
 	private Composite createLeaveCountLabel(Composite aParent) {
-		User user = _userProvider.getUser();
-		Composite main = _formToolkit.createComposite(aParent);
-		int columns = 2;
-		int outLC = user.getOutgoingLeaveCount();
-		boolean needOutLC = outLC != 0;
 
-		if (needOutLC) {
-			columns++;
-		}
+		Composite main = _formToolkit.createComposite(aParent);
+		final int columns = 3;
 
 		GridLayout mainLayout = new GridLayout(columns, false);
 		mainLayout.marginWidth = 0;
@@ -112,12 +127,9 @@ public class UserAttributesForm extends Composite {
 		Label leaveCountLabel = _formToolkit.createLabel(main, Messages.leaveCount);
 		leaveCountLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 
-		int lc = user.getLeaveCount();
-		_formToolkit.createHyperlink(main, String.valueOf(lc), SWT.NONE);
+		_lcLink = _formToolkit.createHyperlink(main, Messages.EMPTY, SWT.NONE);
 
-		if (needOutLC) {
-			_formToolkit.createHyperlink(main, String.format("(-%s)", outLC), SWT.NONE);
-		}
+		_outLCLink = _formToolkit.createHyperlink(main, Messages.EMPTY, SWT.NONE);
 
 		return main;
 	}
@@ -130,50 +142,111 @@ public class UserAttributesForm extends Composite {
 	 * @return корневой элемент управления
 	 */
 	private Composite createHolidaysQuantityLabel(Composite aParent) {
-		User user = _userProvider.getUser();
 		Composite main = _formToolkit.createComposite(aParent);
-		int columns = 2;
-		int outHQ = user.getOutgoingHolidaysQuantity();
-		boolean needOutHQ = outHQ != 0;
-
-		int inHQ = user.getIncomingHolidaysQuantity();
-		boolean needInHQ = inHQ != 0;
-
-		if (needInHQ) {
-			columns++;
-		}
-		if (needOutHQ) {
-			columns++;
-		}
+		final int columns = 4;
 
 		GridLayout mainLayout = new GridLayout(columns, false);
 		mainLayout.marginWidth = 0;
 		mainLayout.marginHeight = 0;
 		main.setLayout(mainLayout);
 
-		Label holidaysQuantityLabel = _formToolkit.createLabel(main, Messages.holidaysQuantity);
-		holidaysQuantityLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
-		int hq = user.getHolidaysQuantity();
-		_formToolkit.createHyperlink(main, String.valueOf(hq), SWT.NONE);
+		_holidaysQuantityLabel = _formToolkit.createLabel(main, Messages.holidaysQuantity);
+		_holidaysQuantityLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 
-		if (needOutHQ) {
-			Hyperlink outHQLink = _formToolkit.createHyperlink(main, String.format("(-%s)", outHQ), SWT.NONE);
-			outHQLink.addHyperlinkListener(new HyperlinkAdapter() {
-			});
-		}
+		_hqLink = _formToolkit.createHyperlink(main, Messages.EMPTY, SWT.NONE);
 
-		if (needInHQ) {
-			_formToolkit.createHyperlink(main, String.format("(+%s)", inHQ), SWT.NONE);
-		}
+		_outHQLink = _formToolkit.createHyperlink(main, Messages.EMPTY, SWT.NONE);
+		_outHQLink.addHyperlinkListener(new HyperlinkAdapter() {
+		});
+
+		_inHQLink = _formToolkit.createHyperlink(main, Messages.EMPTY, SWT.NONE);
 
 		return main;
+	}
+
+	/**
+	 * Подписка на события
+	 */
+	private void initListeners() {
+		final ILoadListener loadListener = new ILoadListener() {
+
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public void loadStatusChanged() {
+				Display.getDefault().asyncExec(new Runnable() {
+
+					/**
+					 * {@inheritDoc}
+					 */
+					@Override
+					public void run() {
+						UserAttributesForm.this.refresh();
+					}
+
+				});
+
+			}
+
+		};
+		_userProvider.addLoadListener(loadListener);
+		addDisposeListener(new DisposeListener() {
+
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public void widgetDisposed(DisposeEvent aE) {
+				_userProvider.removeLoadListener(loadListener);
+			}
+		});
+	}
+
+	/**
+	 * Обновляет UI
+	 */
+	void refresh() {
+		boolean loaded = LoadStatus.LOADED.equals(_userProvider.getLoadStatus());
+		String fio = Messages.EMPTY;
+		String hqStr = Messages.EMPTY;
+		String dateAsStr = Messages.EMPTY;
+		String outHQStr = Messages.EMPTY;
+		String inHQStr = Messages.EMPTY;
+		String lcStr = Messages.EMPTY;
+		String outLCStr = Messages.EMPTY;
+		if (loaded) {
+			User user = _userProvider.getUser();
+			Objects.requireNonNull(user);
+			fio = String.format("%s %s %s", user.getLastName(), user.getFirstName(), user.getPatronymic());
+			int hq = user.getHolidaysQuantity();
+			hqStr = String.valueOf(hq);
+			int outHQ = user.getOutgoingHolidaysQuantity();
+			int inHQ = user.getIncomingHolidaysQuantity();
+			int outLC = user.getOutgoingLeaveCount();
+
+			int lc = user.getLeaveCount();
+			dateAsStr = new SimpleDateFormat("dd.MM.yyyy").format(user.getNextLeaveStartDate());
+			outHQStr = String.format("(-%s)", outHQ);
+			inHQStr = String.format("(+%s)", inHQ);
+			lcStr = String.valueOf(lc);
+			outLCStr = String.format("(-%s)", outLC);
+		}
+
+		_fioLabel.setText(fio);
+		_hqLink.setText(hqStr);
+		_outHQLink.setText(outHQStr);
+		_inHQLink.setText(inHQStr);
+		_lcLink.setText(lcStr);
+		_outLCLink.setText(outLCStr);
+		_nextLeaveStartDateLink.setText(dateAsStr);
 	}
 
 	/**
 	 * Поставщик пользователя
 	 *
 	 */
-	public static interface IUserProvider {
+	public static interface IUserProvider extends ILoadingProvider {
 		/**
 		 * Возвращает пользователя
 		 *

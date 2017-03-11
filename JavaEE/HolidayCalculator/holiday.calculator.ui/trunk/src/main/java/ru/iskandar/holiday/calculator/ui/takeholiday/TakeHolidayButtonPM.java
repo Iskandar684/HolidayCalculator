@@ -40,7 +40,7 @@ public class TakeHolidayButtonPM {
 		_button = aButton;
 		_provider = aProvider;
 		aButton.addSelectionListener(new BtSelectionListener());
-		update();
+
 		final LoadListener loadListener = new LoadListener();
 		_provider.addLoadListener(loadListener);
 		aButton.addDisposeListener(new DisposeListener() {
@@ -53,6 +53,7 @@ public class TakeHolidayButtonPM {
 				_provider.removeLoadListener(loadListener);
 			}
 		});
+		update();
 	}
 
 	private class LoadListener implements ILoadListener {

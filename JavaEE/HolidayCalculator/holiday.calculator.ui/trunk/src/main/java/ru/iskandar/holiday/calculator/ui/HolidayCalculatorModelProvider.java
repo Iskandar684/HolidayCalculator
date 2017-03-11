@@ -16,7 +16,7 @@ import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 public class HolidayCalculatorModelProvider implements ILoadingProvider {
 
 	/** Задача загрузки модели */
-	private final FutureTask<HolidayCalculatorModel> _task = new LoadModelTask(new LoadModelCallable());
+	private FutureTask<HolidayCalculatorModel> _task = new LoadModelTask(new LoadModelCallable());
 
 	/** Слушатели изменения статуса загрузки */
 	private final CopyOnWriteArrayList<ILoadListener> _loadListeners = new CopyOnWriteArrayList<>();
@@ -98,6 +98,15 @@ public class HolidayCalculatorModelProvider implements ILoadingProvider {
 		for (ILoadListener listener : _loadListeners) {
 			listener.loadStatusChanged();
 		}
+	}
+
+	/**
+	 * Асинхронно перезагружает модель
+	 */
+	public synchronized void asynReload() {
+		_task = new LoadModelTask(new LoadModelCallable());
+		Executors.newSingleThreadExecutor().submit(_task);
+		fireLoadStatusChangedEvent();
 	}
 
 	/**

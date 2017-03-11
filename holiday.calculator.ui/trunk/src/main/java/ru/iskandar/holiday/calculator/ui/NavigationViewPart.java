@@ -113,16 +113,20 @@ public class NavigationViewPart extends ViewPart {
 	 *            инструментарий для создания пользовательского интерфейса
 	 */
 	private Composite createLoadErrorStub(Composite aParent, FormToolkit aToolkit) {
-		final Composite main = aToolkit.createComposite(aParent, SWT.BORDER);
-		final int columns = 2;
-		main.setLayout(new GridLayout(columns, false));
+		final Composite main = aToolkit.createComposite(aParent, SWT.NONE);
+		main.setLayout(new GridLayout());
 		main.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
-		Label iconLabel = aToolkit.createLabel(main, Messages.EMPTY);
+
+		final Composite content = aToolkit.createComposite(main, SWT.NONE);
+		final int columns = 2;
+		content.setLayout(new GridLayout(columns, false));
+		content.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
+		Label iconLabel = aToolkit.createLabel(content, Messages.EMPTY);
 		iconLabel.setImage(Display.getDefault().getSystemImage(SWT.ICON_ERROR));
 		iconLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
-		Label messLabel = aToolkit.createLabel(main, Messages.modelLoadError, SWT.WRAP);
+		Label messLabel = aToolkit.createLabel(content, Messages.modelLoadError, SWT.WRAP);
 		messLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
-		Button tryReloadBt = aToolkit.createButton(main, Messages.tryReloadModel, SWT.NONE);
+		Button tryReloadBt = aToolkit.createButton(content, Messages.tryReloadModel, SWT.NONE);
 		tryReloadBt.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, columns, 1));
 		tryReloadBt.addSelectionListener(new SelectionAdapter() {
 			/**
@@ -151,8 +155,9 @@ public class NavigationViewPart extends ViewPart {
 		main.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
 		Label iconLabel = aToolkit.createLabel(main, Messages.EMPTY);
 		iconLabel.setImage(Display.getDefault().getSystemImage(SWT.ICON_WORKING));
+		iconLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, true));
 		Label messLabel = aToolkit.createLabel(main, Messages.modelLoading, SWT.WRAP);
-		messLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
+		messLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, true));
 		return main;
 	}
 

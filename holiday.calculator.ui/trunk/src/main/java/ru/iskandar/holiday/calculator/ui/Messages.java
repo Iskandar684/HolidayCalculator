@@ -49,6 +49,12 @@ public class Messages extends NLS {
 	/** Ошибка оповещения изменения статуса загрузки модели */
 	public static String modelLoadStatusChangedNotificationError;
 
+	/** Попробовать перезагрузить модель */
+	public static String tryReloadModel;
+
+	/** Идет загрузка модели */
+	public static String modelLoading;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

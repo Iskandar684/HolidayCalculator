@@ -11,6 +11,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import ru.iskandar.holiday.calculator.service.ejb.HolidayCalculatorJMSConstants;
+
 /**
  * Подписчик на серверные события
  */
@@ -36,7 +38,7 @@ public class ServerEventsSubscriber {
 
 		try (Connection connection = connectionFactory.createConnection(login, password)) {
 			Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-			Topic queue = (Topic) aContext.lookup("jms/topic/test");
+			Topic queue = (Topic) aContext.lookup(HolidayCalculatorJMSConstants.REMOTE_DESTINATION_ID);
 			connection.start();
 			MessageConsumer consumer = session.createConsumer(queue);
 			consumer.setMessageListener(aMessageListener);

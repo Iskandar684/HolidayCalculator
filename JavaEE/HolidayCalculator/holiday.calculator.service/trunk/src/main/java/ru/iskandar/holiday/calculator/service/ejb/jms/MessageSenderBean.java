@@ -12,6 +12,7 @@ import javax.jms.JMSException;
 import javax.jms.JMSProducer;
 import javax.jms.ObjectMessage;
 
+import ru.iskandar.holiday.calculator.service.ejb.HolidayCalculatorJMSConstants;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorEvent;
 
 /**
@@ -21,7 +22,7 @@ import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorEvent;
 public class MessageSenderBean {
 
 	/** JNDI имя очереди */
-	private static final String DESTINATION_ID = "java:jboss/exported/jms/topic/test";
+	private static final String DESTINATION_ID = HolidayCalculatorJMSConstants.DESTINATION_ID;
 
 	/** Контекст JMS */
 	@Inject

@@ -21,12 +21,15 @@ public class ClientConnector {
 	 *             ошибка загрузки модели
 	 */
 	public HolidayCalculatorModel loadModel() throws ConnectionException {
+		ConnectionParams args = ConnectionParams.getInstance();
 
 		InitialContext ctx;
 		try {
-			ctx = ContextProvider.getInstance().getInitialContext();
+			ctx = ContextProvider.getInstance().getInitialContext(args);
 		} catch (NamingException e) {
 			throw new ConnectionException("Ошибка создания контекста", e);
+		} catch (InvalidConnectionParamsException e) {
+			throw new ConnectionException("Указаны невалидные агрументы программы", e);
 		}
 		Object obj;
 		try {

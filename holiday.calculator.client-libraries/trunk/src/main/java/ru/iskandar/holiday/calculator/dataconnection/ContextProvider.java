@@ -1,5 +1,6 @@
 package ru.iskandar.holiday.calculator.dataconnection;
 
+import java.util.Objects;
 import java.util.Properties;
 
 import javax.naming.Context;
@@ -22,19 +23,38 @@ public class ContextProvider {
 
 	/**
 	 * Возвращает контекст
-	 * 
+	 *
+	 * @param aProgramArgs
+	 *            аргументы программы
 	 * @return контекст
 	 * @throws NamingException
 	 *             ошибка создания контекста
+	 * @throws InvalidConnectionParamsException
+	 *             если невалидные аргументы программы
 	 */
-	public InitialContext getInitialContext() throws NamingException {
+	public InitialContext getInitialContext(ConnectionParams aProgramArgs) throws NamingException, InvalidConnectionParamsException {
+		Objects.requireNonNull(aProgramArgs);
+
 		Properties props = new Properties();
 		props.put(Context.INITIAL_CONTEXT_FACTORY,
 				org.jboss.naming.remote.client.InitialContextFactory.class.getName());
 		props.setProperty("java.naming.factory.url.pkgs", "org.jboss.naming");
-		props.put(Context.PROVIDER_URL, "http-remoting://127.0.0.1:8080");
-		props.put(Context.SECURITY_PRINCIPAL, "testuser");
-		props.put(Context.SECURITY_CREDENTIALS, "testpassword");
+		String server = aProgramArgs.getServerHost();
+		if ((server == null) || server.isEmpty()) {
+			throw new InvalidConnectionParamsException("Не указан адрес сервера");
+		}
+		String user = aProgramArgs.getUser();
+		if ((user == null) || user.isEmpty()) {
+			throw new InvalidConnectionParamsException("Не указан пользователь");
+		}
+		String password = aProgramArgs.getPassword();
+		if ((password == null) || password.isEmpty()) {
+			throw new InvalidConnectionParamsException("Не указан пароль");
+		}
+
+		props.put(Context.PROVIDER_URL, String.format("http-remoting://%s:8080", server));
+		props.put(Context.SECURITY_PRINCIPAL, user);
+		props.put(Context.SECURITY_CREDENTIALS, password);
 		props.put("jboss.naming.client.ejb.context", true);
 
 		InitialContext context = new InitialContext(props);

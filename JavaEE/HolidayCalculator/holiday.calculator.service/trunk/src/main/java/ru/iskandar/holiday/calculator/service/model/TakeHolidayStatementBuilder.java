@@ -3,7 +3,9 @@ package ru.iskandar.holiday.calculator.service.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Формирователь заявления на отгул
@@ -20,10 +22,14 @@ public class TakeHolidayStatementBuilder implements Serializable {
 	/** Дни на отгул */
 	private final Set<Date> _days = new HashSet<>();
 
+	private final HolidayCalculatorModel _model;
+
 	/**
 	 * Конструктор
 	 */
-	TakeHolidayStatementBuilder() {
+	TakeHolidayStatementBuilder(HolidayCalculatorModel aModel) {
+		Objects.requireNonNull(aModel);
+		_model = aModel;
 	}
 
 	/**
@@ -36,6 +42,8 @@ public class TakeHolidayStatementBuilder implements Serializable {
 		if (!canSendHolidayStatement()) {
 			throw new HolidayCalculatorModelException("Подача заявления на отгул запрещено");
 		}
+		HolidayStatement statement = new HolidayStatement(UUID.randomUUID());
+		_model.sendHolidayStatement(statement);
 	}
 
 	/**

@@ -33,7 +33,7 @@ public class NavigationViewPart extends ViewPart {
 	public static final String ID = "ru.iskandar.holiday.calculator.ui.NavigationViewPart";
 
 	/** Поставщик модели */
-	private final HolidayCalculatorModelProvider _modelProvider = new HolidayCalculatorModelProvider();
+	private final HolidayCalculatorModelProvider _modelProvider;
 
 	/** Менеджер расположения элементов управления */
 	private final StackLayout _stackLayout = new StackLayout();
@@ -51,6 +51,7 @@ public class NavigationViewPart extends ViewPart {
 	 * Конструктор
 	 */
 	public NavigationViewPart() {
+		_modelProvider = ModelProviderHolder.getInstance().getModelProvider();
 	}
 
 	/**

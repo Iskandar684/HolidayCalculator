@@ -24,7 +24,7 @@ public class HolidayCalculatorModelProvider implements ILoadingProvider {
 	/**
 	 * Конструктор
 	 */
-	public HolidayCalculatorModelProvider() {
+	HolidayCalculatorModelProvider() {
 		Executors.newSingleThreadExecutor().submit(_task);
 	}
 

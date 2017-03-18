@@ -49,8 +49,8 @@ public class ClientConnector {
 		} catch (HolidayCalculatorModelInitException e) {
 			throw new ConnectionException("Ошибка инициализации модели учета отгулов", e);
 		}
-		return model;
 
+		return model;
 	}
 
 }

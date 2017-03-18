@@ -4,14 +4,13 @@
 
    <extension
          point="org.eclipse.ui.commands">
-      <category
-            name="Sample Category"
-            id="ru.iskandar.holiday.calculator.ui.commands.category">
-      </category>
       <command
-            name="Sample Command"
-            categoryId="ru.iskandar.holiday.calculator.ui.commands.category"
-            id="ru.iskandar.holiday.calculator.ui.commands.sampleCommand">
+            id="holiday.calculator.ui.command.open.incoming"
+            name="%open.incoming.menuitem.name">
+      </command>
+      <command
+            id="holiday.calculator.ui.command.take.holiday"
+            name="%take.holiday.menuitem.name">
       </command>
    </extension>
    <extension
@@ -32,6 +31,54 @@
             id="ru.iskandar.holiday.take.editor"
             name="%holiday.take.view.name">
       </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.ui.main.menu">
+         <menu
+               id="statements.menu"
+               label="%statements.menu.name">
+            <command
+                  commandId="holiday.calculator.ui.command.open.incoming"
+                  label="%open.incoming.menuitem.name"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <test
+                        property="ru.iskandar.holiday.calculator.ui.openIncomingIsVisible">
+                  </test>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="holiday.calculator.ui.command.take.holiday"
+                  label="%take.holiday.menuitem.name"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="ru.iskandar.holiday.calculator.ui.menu.handlers.TakeHolidayMenuHandler"
+            commandId="holiday.calculator.ui.command.take.holiday">
+      </handler>
+      <handler
+            class="ru.iskandar.holiday.calculator.ui.menu.handlers.OpenIncomingStatementsHandler"
+            commandId="holiday.calculator.ui.command.open.incoming">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="ru.iskandar.holiday.calculator.ui.menu.HolidayCalculatorPropertyTester"
+            id="ru.iskandar.holiday.calculator.ui.menu.HolidayCalculatorPropertyTester"
+            namespace="ru.iskandar.holiday.calculator.ui"
+            properties="openIncomingIsVisible"
+            type="java.lang.Object">
+      </propertyTester>
    </extension>
 
 </plugin>

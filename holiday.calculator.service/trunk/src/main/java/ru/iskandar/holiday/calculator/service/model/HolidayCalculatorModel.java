@@ -94,4 +94,12 @@ public class HolidayCalculatorModel implements Serializable {
 		return _permissions.canConsider();
 	}
 
+	public int getUnConsideredStatementsCount() {
+		if (!canConsider()) {
+			throw new PermissionDeniedException("Нет прав на получение количества нерассмотренных заявлений");
+		}
+		// TODO
+		return 2;
+	}
+
 }

@@ -40,17 +40,10 @@
          <menu
                id="statements.menu"
                label="%statements.menu.name">
-            <command
-                  commandId="holiday.calculator.ui.command.open.incoming"
-                  label="%open.incoming.menuitem.name"
-                  style="push">
-               <visibleWhen
-                     checkEnabled="false">
-                  <test
-                        property="ru.iskandar.holiday.calculator.ui.openIncomingIsVisible">
-                  </test>
-               </visibleWhen>
-            </command>
+            <dynamic
+                  class="ru.iskandar.holiday.calculator.ui.menu.IncomingStatementsContributionItem"
+                  id="holiday.calculator.ui.dynamic1">
+            </dynamic>
             <command
                   commandId="holiday.calculator.ui.command.take.holiday"
                   label="%take.holiday.menuitem.name"
@@ -65,20 +58,6 @@
             class="ru.iskandar.holiday.calculator.ui.menu.handlers.TakeHolidayMenuHandler"
             commandId="holiday.calculator.ui.command.take.holiday">
       </handler>
-      <handler
-            class="ru.iskandar.holiday.calculator.ui.menu.handlers.OpenIncomingStatementsHandler"
-            commandId="holiday.calculator.ui.command.open.incoming">
-      </handler>
-   </extension>
-   <extension
-         point="org.eclipse.core.expressions.propertyTesters">
-      <propertyTester
-            class="ru.iskandar.holiday.calculator.ui.menu.HolidayCalculatorPropertyTester"
-            id="ru.iskandar.holiday.calculator.ui.menu.HolidayCalculatorPropertyTester"
-            namespace="ru.iskandar.holiday.calculator.ui"
-            properties="openIncomingIsVisible"
-            type="java.lang.Object">
-      </propertyTester>
    </extension>
 
 </plugin>

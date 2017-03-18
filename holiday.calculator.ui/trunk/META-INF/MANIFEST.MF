@@ -10,7 +10,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.forms;bundle-version="3.6.200",
  ru.iskandar.holiday.calculator.client-libraries;bundle-version="[1.0.0,1.0.1)",
- org.eclipse.core.expressions;bundle-version="[3.5.100,3.6.100)"
+ org.eclipse.core.expressions;bundle-version="[3.4.300,3.6.100)"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: ru.iskandar.holiday.calculator.ui

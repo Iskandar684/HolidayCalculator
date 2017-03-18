@@ -30,6 +30,11 @@ wildfly-10.1.0.Final\standalone\configuration\standalone.xml
 7. Запустить wildfly-10.1.0.Final/bin/standalone.bat
 
 
+Добавление пользователей.
+1. Выполнить wildfly-10.1.0.Final/bin/add-user.*
+2. Полномочие рассматривать заявления: consider
+
+
 Инструкция по разворачиванию клиента.
 
 1. Переменную JAVA_HOME указать на jdk8 

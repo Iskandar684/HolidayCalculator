@@ -3,9 +3,9 @@ package ru.iskandar.holiday.calculator.service.ejb;
 import ru.iskandar.holiday.calculator.service.model.User;
 
 /**
- * Сервис работы с текущим пользователем
+ * Сервис работы с пользователями
  */
-public interface ICurrentUserServiceLocal {
+public interface IUserServiceLocal {
 
 	/**
 	 * Возвращает текущего пользователя

@@ -7,6 +7,9 @@ import ru.iskandar.holiday.calculator.service.model.UserId;
  */
 public interface IPermissionsService {
 
+	/** JNDI имя */
+	public static String JNDI_NAME = "holiday.calculator.service/PermissionsServiceBean!ru.iskandar.holiday.calculator.service.ejb.IPermissionsService";
+
 	/**
 	 * Возвращает наличие указанных полномочий у указанного пользователя
 	 *
@@ -18,5 +21,15 @@ public interface IPermissionsService {
 	 *         {@code false}, если иначе
 	 */
 	public boolean hasPermission(PermissionId aPermissionId, UserId aUserId);
+
+	/**
+	 * Возвращает наличие указанных полномочий у текущего пользователя
+	 *
+	 * @param aPermissionId
+	 *            идентификатор полномочия
+	 * @return {@code true}, если пользователь имеет указанное полномочие;
+	 *         {@code false}, если иначе
+	 */
+	public boolean hasPermission(PermissionId aPermissionId);
 
 }

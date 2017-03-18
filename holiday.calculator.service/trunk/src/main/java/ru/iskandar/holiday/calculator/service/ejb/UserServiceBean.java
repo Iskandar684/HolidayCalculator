@@ -11,12 +11,12 @@ import javax.ejb.Stateless;
 import ru.iskandar.holiday.calculator.service.model.User;
 
 /**
- * Сервис работы с текущим пользователем
+ * Сервис работы с пользователями
  *
  */
 @Stateless
-@Local(ICurrentUserServiceLocal.class)
-public class CurrentUserServiceBean implements ICurrentUserServiceLocal {
+@Local(IUserServiceLocal.class)
+public class UserServiceBean implements IUserServiceLocal {
 
 	/** Контекст сессии */
 	@Resource

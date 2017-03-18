@@ -20,7 +20,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 
 	/** Сервис работы с текущим пользователем */
 	@EJB
-	private ICurrentUserServiceLocal _currentUserServiceLocal;
+	private IUserServiceLocal _currentUserServiceLocal;
 
 	/** Отправитель сообщения */
 	@EJB
@@ -29,7 +29,6 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	/**
 	 * {@inheritDoc}
 	 */
-
 	@Override
 	public HolidayCalculatorModel loadHolidayCalculatorModel() throws HolidayCalculatorModelLoadException {
 		HolidayCalculatorEvent event = new HolidayCalculatorEvent();

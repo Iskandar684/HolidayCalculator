@@ -34,9 +34,11 @@ public class IncomingStatementsMenuItemPM {
 	private String getText() {
 		HolidayCalculatorModelProvider provider = ModelProviderHolder.getInstance().getModelProvider();
 		if (LoadStatus.LOADED.equals(provider.getLoadStatus())) {
-			int count = provider.getModel().getUnConsideredStatementsCount();
-			if (count != 0) {
-				return NLS.bind(Messages.openIncomingStatementsMenuItemWithCount, count);
+			if (provider.getModel().canConsider()) {
+				int count = provider.getModel().getUnConsideredStatementsCount();
+				if (count != 0) {
+					return NLS.bind(Messages.openIncomingStatementsMenuItemWithCount, count);
+				}
 			}
 		}
 		return Messages.openIncomingStatementsMenuItem;

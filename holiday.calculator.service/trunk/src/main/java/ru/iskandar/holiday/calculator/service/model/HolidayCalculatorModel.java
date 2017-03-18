@@ -1,13 +1,16 @@
 package ru.iskandar.holiday.calculator.service.model;
 
 import java.io.Serializable;
+import java.util.EnumSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.Executors;
 
 import javax.jms.JMSException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorRemote;
 import ru.iskandar.holiday.calculator.service.ejb.IPermissionsService;
 
 /**
@@ -20,6 +23,8 @@ public class HolidayCalculatorModel implements Serializable {
 	private final User _currenUser;
 
 	private IHolidayCalculatorModelPermissions _permissions;
+
+	private IHolidayCalculatorRemote _service;
 	/**
 	 * Индентификатор для сериализации
 	 */
@@ -52,7 +57,11 @@ public class HolidayCalculatorModel implements Serializable {
 		if (!canCreateHolidayStatementBuilder()) {
 			throw new IllegalStateException("Формирование заявления на отгул запрещено");
 		}
-		return new TakeHolidayStatementBuilder();
+		return new TakeHolidayStatementBuilder(this);
+	}
+
+	void sendHolidayStatement(HolidayStatement aStatement) {
+		_service.sendStatement(aStatement);
 	}
 
 	/**
@@ -88,6 +97,11 @@ public class HolidayCalculatorModel implements Serializable {
 			throw new HolidayCalculatorModelInitException("Ошибка получения сервиса работы с полномочиями", e);
 		}
 		_permissions = new CurrentUserHolidayCalculatorModelPermissions(permService);
+		try {
+			_service = (IHolidayCalculatorRemote) aInitialContext.lookup(IHolidayCalculatorRemote.JNDI_NAME);
+		} catch (NamingException e) {
+			throw new HolidayCalculatorModelInitException("Ошибка получения сервиса учета отгулов", e);
+		}
 	}
 
 	public boolean canConsider() {
@@ -98,8 +112,16 @@ public class HolidayCalculatorModel implements Serializable {
 		if (!canConsider()) {
 			throw new PermissionDeniedException("Нет прав на получение количества нерассмотренных заявлений");
 		}
-		// TODO
-		return 2;
+		Set<Statement> statements = _service.loadStatements(EnumSet.of(StatementStatus.NOT_CONSIDERED));
+		return statements.size();
+	}
+
+	public void approve(Statement aStatement) {
+		_service.approve(aStatement);
+	}
+
+	public void reject(Statement aStatement) {
+		_service.reject(aStatement);
 	}
 
 }

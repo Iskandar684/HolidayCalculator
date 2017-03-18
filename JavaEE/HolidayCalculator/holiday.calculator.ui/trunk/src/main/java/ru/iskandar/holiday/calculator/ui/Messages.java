@@ -55,6 +55,12 @@ public class Messages extends NLS {
 	/** Идет загрузка модели */
 	public static String modelLoading;
 
+	/** Текст пункта меню открытия входящих заявлений */
+	public static String openIncomingStatementsMenuItem;
+
+	/** Текст пункта меню открытия входящих заявлений со счетчиком */
+	public static String openIncomingStatementsMenuItemWithCount;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

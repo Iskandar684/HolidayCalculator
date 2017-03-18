@@ -2,7 +2,7 @@ package ru.iskandar.holiday.calculator.service.model;
 
 import java.util.Objects;
 
-import ru.iskandar.holiday.calculator.service.ejb.ICurrentUserServiceLocal;
+import ru.iskandar.holiday.calculator.service.ejb.IUserServiceLocal;
 
 /**
  * Фабрика создания модели учета отгулов
@@ -10,12 +10,12 @@ import ru.iskandar.holiday.calculator.service.ejb.ICurrentUserServiceLocal;
 public class HolidayCalculatorModelFactory {
 
 	/** Сервис работы с текущим пользователем */
-	private final ICurrentUserServiceLocal _currentUserServiceLocal;
+	private final IUserServiceLocal _currentUserServiceLocal;
 
 	/**
 	 * Конструктор
 	 */
-	public HolidayCalculatorModelFactory(ICurrentUserServiceLocal aCurrentUserServiceLocal) {
+	public HolidayCalculatorModelFactory(IUserServiceLocal aCurrentUserServiceLocal) {
 		Objects.requireNonNull(aCurrentUserServiceLocal);
 		_currentUserServiceLocal = aCurrentUserServiceLocal;
 	}

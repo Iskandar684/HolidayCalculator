@@ -2,7 +2,6 @@ package ru.iskandar.holiday.calculator.service.ejb;
 
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * Идентификатор полномочия
@@ -15,7 +14,7 @@ public class PermissionId implements Serializable {
 	private static final long serialVersionUID = 4936714256790646532L;
 
 	/** Идентификатор полномочия */
-	private final UUID _uuid;
+	private final String _id;
 
 	/**
 	 * Конструктор
@@ -23,8 +22,8 @@ public class PermissionId implements Serializable {
 	 * @param aUserUUID
 	 *            идентификатор полномочия
 	 */
-	private PermissionId(UUID aUserUUID) {
-		_uuid = aUserUUID;
+	private PermissionId(String aUserUUID) {
+		_id = aUserUUID;
 	}
 
 	/**
@@ -36,7 +35,7 @@ public class PermissionId implements Serializable {
 	 * @throws NullPointerException
 	 *             если {@code aUserUUID} {@code null}
 	 */
-	public static PermissionId from(UUID aUserUUID) {
+	public static PermissionId from(String aUserUUID) {
 		Objects.requireNonNull(aUserUUID, "Не указан UUID полномочия");
 		return new PermissionId(aUserUUID);
 	}
@@ -48,7 +47,7 @@ public class PermissionId implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + ((_uuid == null) ? 0 : _uuid.hashCode());
+		result = (prime * result) + ((_id == null) ? 0 : _id.hashCode());
 		return result;
 	}
 
@@ -67,14 +66,21 @@ public class PermissionId implements Serializable {
 			return false;
 		}
 		PermissionId other = (PermissionId) obj;
-		if (_uuid == null) {
-			if (other._uuid != null) {
+		if (_id == null) {
+			if (other._id != null) {
 				return false;
 			}
-		} else if (!_uuid.equals(other._uuid)) {
+		} else if (!_id.equals(other._id)) {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return _id;
 	}
 
 }

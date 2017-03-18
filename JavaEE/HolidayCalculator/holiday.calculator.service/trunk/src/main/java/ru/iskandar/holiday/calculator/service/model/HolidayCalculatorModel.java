@@ -8,14 +8,18 @@ import javax.jms.JMSException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import ru.iskandar.holiday.calculator.service.ejb.IPermissionsService;
+
 /**
  * Модель учета отгулов
  *
  */
 public class HolidayCalculatorModel implements Serializable {
+
 	/** Текущий пользователь */
 	private final User _currenUser;
 
+	private IHolidayCalculatorModelPermissions _permissions;
 	/**
 	 * Индентификатор для сериализации
 	 */
@@ -77,6 +81,17 @@ public class HolidayCalculatorModel implements Serializable {
 		};
 		Executors.newSingleThreadExecutor().submit(run);
 
+		IPermissionsService permService;
+		try {
+			permService = (IPermissionsService) aInitialContext.lookup(IPermissionsService.JNDI_NAME);
+		} catch (NamingException e) {
+			throw new HolidayCalculatorModelInitException("Ошибка получения сервиса работы с полномочиями", e);
+		}
+		_permissions = new CurrentUserHolidayCalculatorModelPermissions(permService);
+	}
+
+	public boolean canConsider() {
+		return _permissions.canConsider();
 	}
 
 }

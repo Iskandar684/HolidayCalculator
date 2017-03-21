@@ -39,5 +39,5 @@ public interface IHolidayCalculatorRemote {
 
 	public Statement reject(Statement aStatement);
 
-	public HolidayStatement sendStatement(HolidayStatement aStatement);
+	public HolidayStatement sendStatement(HolidayStatement aStatement) throws HolidayCalculatorServiceException;
 }

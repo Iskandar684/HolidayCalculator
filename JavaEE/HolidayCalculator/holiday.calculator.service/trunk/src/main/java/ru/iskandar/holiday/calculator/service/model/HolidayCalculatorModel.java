@@ -4,12 +4,14 @@ import java.io.Serializable;
 import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 
 import javax.jms.JMSException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import ru.iskandar.holiday.calculator.service.ejb.HolidayCalculatorServiceException;
 import ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorRemote;
 import ru.iskandar.holiday.calculator.service.ejb.IPermissionsService;
 
@@ -18,17 +20,18 @@ import ru.iskandar.holiday.calculator.service.ejb.IPermissionsService;
  *
  */
 public class HolidayCalculatorModel implements Serializable {
-
+	/**
+	 * Индентификатор для сериализации
+	 */
+	private static final long serialVersionUID = -2279698461127019581L;
 	/** Текущий пользователь */
 	private final User _currenUser;
 
 	private IHolidayCalculatorModelPermissions _permissions;
 
 	private IHolidayCalculatorRemote _service;
-	/**
-	 * Индентификатор для сериализации
-	 */
-	private static final long serialVersionUID = -2279698461127019581L;
+
+	private transient CopyOnWriteArrayList<IHolidayCalculatorModelListener> _listeners;
 
 	/**
 	 * Конструктор
@@ -60,8 +63,12 @@ public class HolidayCalculatorModel implements Serializable {
 		return new TakeHolidayStatementBuilder(this);
 	}
 
-	void sendHolidayStatement(HolidayStatement aStatement) {
-		_service.sendStatement(aStatement);
+	void sendHolidayStatement(HolidayStatement aStatement) throws HolidayCalculatorModelException {
+		try {
+			_service.sendStatement(aStatement);
+		} catch (HolidayCalculatorServiceException e) {
+			throw new HolidayCalculatorModelException("Ошибка отправки заявления на отгул", e);
+		}
 	}
 
 	/**
@@ -75,11 +82,14 @@ public class HolidayCalculatorModel implements Serializable {
 
 	public synchronized void init(final InitialContext aInitialContext) throws HolidayCalculatorModelInitException {
 		Runnable run = new Runnable() {
-
+			/**
+			 * {@inheritDoc}
+			 */
 			@Override
 			public void run() {
 				try {
-					new ServerEventsSubscriber().subscribe(aInitialContext, new HolidayCalculatorEventListener());
+					new ServerEventsSubscriber().subscribe(aInitialContext,
+							new HolidayCalculatorEventListener(HolidayCalculatorModel.this));
 				} catch (NamingException | JMSException e) {
 					// TODO логировать в клиентский логгер
 					e.printStackTrace();
@@ -122,6 +132,30 @@ public class HolidayCalculatorModel implements Serializable {
 
 	public void reject(Statement aStatement) {
 		_service.reject(aStatement);
+	}
+
+	public void addListener(IHolidayCalculatorModelListener aListener) {
+		getListeners().add(aListener);
+	}
+
+	public void removeListener(IHolidayCalculatorModelListener aListener) {
+		getListeners().remove(aListener);
+	}
+
+	/**
+	 * @return the listeners
+	 */
+	private CopyOnWriteArrayList<IHolidayCalculatorModelListener> getListeners() {
+		if (_listeners == null) {
+			_listeners = new CopyOnWriteArrayList<>();
+		}
+		return _listeners;
+	}
+
+	void fireHolidayStatementSended(HolidayStatementSendedEvent aEvent) {
+		for (IHolidayCalculatorModelListener listener : getListeners()) {
+			listener.holidayStatementSended(aEvent);
+		}
 	}
 
 }

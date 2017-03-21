@@ -12,6 +12,8 @@ import org.eclipse.ui.statushandlers.StatusManager;
 
 import ru.iskandar.holiday.calculator.dataconnection.ClientConnector;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
+import ru.iskandar.holiday.calculator.service.model.HolidayStatementSendedEvent;
+import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorModelListener;
 
 public class HolidayCalculatorModelProvider implements ILoadingProvider {
 
@@ -20,6 +22,12 @@ public class HolidayCalculatorModelProvider implements ILoadingProvider {
 
 	/** Слушатели изменения статуса загрузки */
 	private final CopyOnWriteArrayList<ILoadListener> _loadListeners = new CopyOnWriteArrayList<>();
+
+	/** Слушатели модели */
+	private final CopyOnWriteArrayList<IHolidayCalculatorModelListener> _modelListeners = new CopyOnWriteArrayList<>();
+
+	/** Внутренний слушатель модели */
+	private final InternalHolidayCalculatorModelListener _internalModelListener = new InternalHolidayCalculatorModelListener();
 
 	/**
 	 * Конструктор
@@ -126,8 +134,11 @@ public class HolidayCalculatorModelProvider implements ILoadingProvider {
 		 */
 		@Override
 		protected void done() {
+
 			try {
-				get();
+				HolidayCalculatorModel newModel = get();
+				// FIXME переделать подписку
+				newModel.addListener(_internalModelListener);
 			} catch (InterruptedException | ExecutionException e) {
 				StatusManager.getManager().handle(
 						new Status(IStatus.ERROR, Activator.PLUGIN_ID, Messages.modelLoadError, e), StatusManager.LOG);
@@ -139,6 +150,41 @@ public class HolidayCalculatorModelProvider implements ILoadingProvider {
 				StatusManager.getManager().handle(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
 						Messages.modelLoadStatusChangedNotificationError, e), StatusManager.LOG);
 			}
+		}
+
+	}
+
+	/**
+	 * Добавляет слушателя
+	 *
+	 * @param aListener
+	 *            слушатель
+	 */
+	public void addListener(IHolidayCalculatorModelListener aListener) {
+		_modelListeners.add(aListener);
+	}
+
+	/**
+	 * Удаляет слушателя
+	 *
+	 * @param aListener
+	 *            слушатель
+	 */
+	public void removeListener(IHolidayCalculatorModelListener aListener) {
+		_modelListeners.remove(aListener);
+	}
+
+	private class InternalHolidayCalculatorModelListener implements IHolidayCalculatorModelListener {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void holidayStatementSended(HolidayStatementSendedEvent aEvent) {
+			for (IHolidayCalculatorModelListener listener : _modelListeners) {
+				listener.holidayStatementSended(aEvent);
+			}
+
 		}
 
 	}

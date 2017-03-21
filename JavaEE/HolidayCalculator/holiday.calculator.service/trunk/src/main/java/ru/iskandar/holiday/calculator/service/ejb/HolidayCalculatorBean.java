@@ -16,6 +16,7 @@ import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelFactory;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelLoadException;
 import ru.iskandar.holiday.calculator.service.model.HolidayStatement;
+import ru.iskandar.holiday.calculator.service.model.HolidayStatementSendedEvent;
 import ru.iskandar.holiday.calculator.service.model.Statement;
 import ru.iskandar.holiday.calculator.service.model.StatementStatus;
 
@@ -95,11 +96,16 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public HolidayStatement sendStatement(HolidayStatement aStatement) {
+	public HolidayStatement sendStatement(HolidayStatement aStatement) throws HolidayCalculatorServiceException {
 		if (_statements.contains(aStatement)) {
 			throw new IllegalStateException(String.format("Заявление %s уже подано", aStatement));
 		}
 		_statements.add(aStatement);
+		try {
+			_messageSender.send(new HolidayStatementSendedEvent(aStatement));
+		} catch (JMSException e) {
+			throw new HolidayCalculatorServiceException("Ошибка оповещения об отправки заявления на отгул", e);
+		}
 		return aStatement;
 	}
 

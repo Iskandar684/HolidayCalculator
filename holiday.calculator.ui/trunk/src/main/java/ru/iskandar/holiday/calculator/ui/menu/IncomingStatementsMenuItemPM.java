@@ -6,8 +6,13 @@ package ru.iskandar.holiday.calculator.ui.menu;
 import java.util.Objects;
 
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MenuItem;
 
+import ru.iskandar.holiday.calculator.service.model.HolidayStatementSendedEvent;
+import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorModelListener;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
 import ru.iskandar.holiday.calculator.ui.Messages;
@@ -20,10 +25,48 @@ public class IncomingStatementsMenuItemPM {
 
 	private final MenuItem _item;
 
-	IncomingStatementsMenuItemPM(MenuItem aItem) {
+	IncomingStatementsMenuItemPM(MenuItem aItem, final HolidayCalculatorModelProvider aHolidayCalculatorModelProvider) {
 		Objects.requireNonNull(aItem);
+		Objects.requireNonNull(aHolidayCalculatorModelProvider);
 		_item = aItem;
 		update();
+		final HolidayCalculatorModelListener modelListener = new HolidayCalculatorModelListener();
+		aHolidayCalculatorModelProvider.addListener(modelListener);
+		aItem.addDisposeListener(new DisposeListener() {
+
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public void widgetDisposed(DisposeEvent aE) {
+				aHolidayCalculatorModelProvider.removeListener(modelListener);
+			}
+
+		});
+	}
+
+	private class HolidayCalculatorModelListener implements IHolidayCalculatorModelListener {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void holidayStatementSended(HolidayStatementSendedEvent aAEvent) {
+			Display.getDefault().asyncExec(new Runnable() {
+
+				/**
+				 * {@inheritDoc}
+				 */
+				@Override
+				public void run() {
+					IncomingStatementsMenuItemPM.this.update();
+
+				}
+
+			});
+
+		}
+
 	}
 
 	private void update() {

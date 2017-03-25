@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Display;
 import ru.iskandar.holiday.calculator.service.model.HolidayStatementSendedEvent;
 import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorModelListener;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
+import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
 import ru.iskandar.holiday.calculator.ui.Messages;
 import ru.iskandar.holiday.calculator.ui.ModelProviderHolder;
@@ -28,6 +29,31 @@ public class StatementsMenuPM {
 		update();
 		final HolidayCalculatorModelListener modelListener = new HolidayCalculatorModelListener();
 		aHolidayCalculatorModelProvider.addListener(modelListener);
+		aHolidayCalculatorModelProvider.addLoadListener(new LoadListener());
+	}
+
+	private class LoadListener implements ILoadListener {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void loadStatusChanged() {
+			Display.getDefault().asyncExec(new Runnable() {
+
+				/**
+				 * {@inheritDoc}
+				 */
+				@Override
+				public void run() {
+					StatementsMenuPM.this.update();
+
+				}
+
+			});
+
+		}
+
 	}
 
 	private class HolidayCalculatorModelListener implements IHolidayCalculatorModelListener {

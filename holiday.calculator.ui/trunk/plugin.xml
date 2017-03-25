@@ -36,26 +36,14 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
+            class="ru.iskandar.holiday.calculator.ui.menu.RootMenuContribution"
             locationURI="menu:org.eclipse.ui.main.menu">
-         <menu
-               id="statements.menu"
-               label="%statements.menu.name">
-            <dynamic
-                  class="ru.iskandar.holiday.calculator.ui.menu.IncomingStatementsContributionItem"
-                  id="holiday.calculator.ui.dynamic1">
-            </dynamic>
-            <command
-                  commandId="holiday.calculator.ui.command.take.holiday"
-                  label="%take.holiday.menuitem.name"
-                  style="push">
-            </command>
-         </menu>
       </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="ru.iskandar.holiday.calculator.ui.menu.handlers.TakeHolidayMenuHandler"
+            class="ru.iskandar.holiday.calculator.ui.menu.handlers.TakeHolidayAction"
             commandId="holiday.calculator.ui.command.take.holiday">
       </handler>
    </extension>

@@ -35,9 +35,36 @@ public interface IHolidayCalculatorRemote {
 	 */
 	public Set<Statement> loadStatements(EnumSet<StatementStatus> aStatuses);
 
-	public Statement approve(Statement aStatement);
+	/**
+	 * Одобряет заявление
+	 *
+	 * @param aStatement
+	 *            заявление
+	 * @return заявление
+	 * @throws HolidayCalculatorServiceException
+	 *             если произошла ошибка при одобрении
+	 */
+	public Statement approve(Statement aStatement) throws HolidayCalculatorServiceException;
 
-	public Statement reject(Statement aStatement);
+	/**
+	 * Отклоняет заявление
+	 *
+	 * @param aStatement
+	 *            заявление
+	 * @return заявление
+	 * @throws HolidayCalculatorServiceException
+	 *             если произошла ошибка при отклонении
+	 */
+	public Statement reject(Statement aStatement) throws HolidayCalculatorServiceException;
 
+	/**
+	 * Подает заявление на рассмотрение
+	 * 
+	 * @param aStatement
+	 *            заявление
+	 * @return заявление
+	 * @throws HolidayCalculatorServiceException
+	 *             если произошла ошибка при подачи заявления
+	 */
 	public HolidayStatement sendStatement(HolidayStatement aStatement) throws HolidayCalculatorServiceException;
 }

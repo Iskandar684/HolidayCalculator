@@ -2,11 +2,10 @@ package ru.iskandar.holiday.calculator.ui.menu;
 
 import java.util.Objects;
 
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.MenuItem;
 
 import ru.iskandar.holiday.calculator.service.model.HolidayStatementSendedEvent;
 import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorModelListener;
@@ -16,30 +15,19 @@ import ru.iskandar.holiday.calculator.ui.Messages;
 import ru.iskandar.holiday.calculator.ui.ModelProviderHolder;
 
 /**
- * Контроллер пункта меню "Входящие заявления"
+ * Контроллер меню "Заявления"
  */
-public class IncomingStatementsMenuItemPM {
+public class StatementsMenuPM {
 
-	private final MenuItem _item;
+	private final MenuManager _menuManager;
 
-	IncomingStatementsMenuItemPM(MenuItem aItem, final HolidayCalculatorModelProvider aHolidayCalculatorModelProvider) {
-		Objects.requireNonNull(aItem);
+	StatementsMenuPM(MenuManager aMenuManager, final HolidayCalculatorModelProvider aHolidayCalculatorModelProvider) {
+		Objects.requireNonNull(aMenuManager);
 		Objects.requireNonNull(aHolidayCalculatorModelProvider);
-		_item = aItem;
+		_menuManager = aMenuManager;
 		update();
 		final HolidayCalculatorModelListener modelListener = new HolidayCalculatorModelListener();
 		aHolidayCalculatorModelProvider.addListener(modelListener);
-		aItem.addDisposeListener(new DisposeListener() {
-
-			/**
-			 * {@inheritDoc}
-			 */
-			@Override
-			public void widgetDisposed(DisposeEvent aE) {
-				aHolidayCalculatorModelProvider.removeListener(modelListener);
-			}
-
-		});
 	}
 
 	private class HolidayCalculatorModelListener implements IHolidayCalculatorModelListener {
@@ -56,7 +44,7 @@ public class IncomingStatementsMenuItemPM {
 				 */
 				@Override
 				public void run() {
-					IncomingStatementsMenuItemPM.this.update();
+					StatementsMenuPM.this.update();
 
 				}
 
@@ -67,8 +55,8 @@ public class IncomingStatementsMenuItemPM {
 	}
 
 	private void update() {
-		_item.setText(getText());
-		_item.setEnabled(isEnabled());
+		_menuManager.setMenuText(getText());
+		_menuManager.update(IAction.TEXT);
 	}
 
 	private String getText() {
@@ -77,20 +65,11 @@ public class IncomingStatementsMenuItemPM {
 			if (provider.getModel().canConsider()) {
 				int count = provider.getModel().getUnConsideredStatementsCount();
 				if (count != 0) {
-					return NLS.bind(Messages.openIncomingStatementsMenuItemWithCount, count);
+					return NLS.bind(Messages.statementsRootMenuNameWithCount, count);
 				}
 			}
 		}
-		return Messages.openIncomingStatementsMenuItem;
-	}
-
-	private boolean isEnabled() {
-		HolidayCalculatorModelProvider provider = ModelProviderHolder.getInstance().getModelProvider();
-		boolean enabled = false;
-		if (LoadStatus.LOADED.equals(provider.getLoadStatus())) {
-			enabled = provider.getModel().canConsider();
-		}
-		return enabled;
+		return Messages.statementsRootMenuName;
 	}
 
 }

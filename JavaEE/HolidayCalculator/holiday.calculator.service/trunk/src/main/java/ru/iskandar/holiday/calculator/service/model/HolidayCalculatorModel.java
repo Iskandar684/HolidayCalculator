@@ -126,12 +126,20 @@ public class HolidayCalculatorModel implements Serializable {
 		return statements.size();
 	}
 
-	public void approve(Statement aStatement) {
-		_service.approve(aStatement);
+	public void approve(Statement aStatement) throws HolidayCalculatorModelException {
+		try {
+			_service.approve(aStatement);
+		} catch (HolidayCalculatorServiceException e) {
+			throw new HolidayCalculatorModelException("Ошибка одобрения заявления", e);
+		}
 	}
 
-	public void reject(Statement aStatement) {
-		_service.reject(aStatement);
+	public void reject(Statement aStatement) throws HolidayCalculatorModelException {
+		try {
+			_service.reject(aStatement);
+		} catch (HolidayCalculatorServiceException e) {
+			throw new HolidayCalculatorModelException("Ошибка отклонения заявления", e);
+		}
 	}
 
 	public void addListener(IHolidayCalculatorModelListener aListener) {

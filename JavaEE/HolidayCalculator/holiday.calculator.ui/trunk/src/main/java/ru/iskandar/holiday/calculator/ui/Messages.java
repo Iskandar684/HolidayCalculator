@@ -61,6 +61,15 @@ public class Messages extends NLS {
 	/** Текст пункта меню открытия входящих заявлений со счетчиком */
 	public static String openIncomingStatementsMenuItemWithCount;
 
+	/** Тест корневой меню для заявлений */
+	public static String statementsRootMenuName;
+
+	/** Тест корневой меню для заявлений со счетчиком */
+	public static String statementsRootMenuNameWithCount;
+
+	/** Текст элемента меню взять отгул */
+	public static String takeHolidayMenuItem;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

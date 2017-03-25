@@ -1,6 +1,7 @@
 package ru.iskandar.holiday.calculator.service.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -17,8 +18,14 @@ public abstract class Statement implements Serializable {
 	/** Идентификатор заявления */
 	private final UUID _uuid;
 
+	/** Автор заявления */
+	private final User _author;
+
 	/** Статус заявления */
 	private StatementStatus _status = StatementStatus.NOT_CONSIDERED;
+
+	/** Время подачи заявления */
+	private Date _createDate = new Date();
 
 	/**
 	 * Конструктор
@@ -26,8 +33,11 @@ public abstract class Statement implements Serializable {
 	 * @param aUUID
 	 *            идентификатор заявления
 	 */
-	public Statement(UUID aUUID) {
+	public Statement(UUID aUUID, User aAuthor) {
+		Objects.requireNonNull(aUUID, "Не указан идентификатор заявления");
+		Objects.requireNonNull(aAuthor, "Не указан автор заявления");
 		_uuid = aUUID;
+		_author = aAuthor;
 	}
 
 	/**
@@ -51,6 +61,28 @@ public abstract class Statement implements Serializable {
 	public void setStatus(StatementStatus aStatus) {
 		Objects.requireNonNull(aStatus);
 		_status = aStatus;
+	}
+
+	/**
+	 * @return the author
+	 */
+	public User getAuthor() {
+		return _author;
+	}
+
+	/**
+	 * @return the createDate
+	 */
+	public Date getCreateDate() {
+		return _createDate;
+	}
+
+	/**
+	 * @param aCreateDate
+	 *            the createDate to set
+	 */
+	public void setCreateDate(Date aCreateDate) {
+		_createDate = aCreateDate;
 	}
 
 	/**

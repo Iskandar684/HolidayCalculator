@@ -1,11 +1,14 @@
 package ru.iskandar.holiday.calculator.service.model;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+
+import ru.iskandar.holiday.calculator.service.ejb.StatementAlreadySendedException;
 
 /**
  * Формирователь заявления на отгул
@@ -30,19 +33,23 @@ public class TakeHolidayStatementBuilder implements Serializable {
 	TakeHolidayStatementBuilder(HolidayCalculatorModel aModel) {
 		Objects.requireNonNull(aModel);
 		_model = aModel;
+		// TODO временно
+		_days.add(new Date());
 	}
 
 	/**
 	 * Подает заявление на отгул
 	 *
-	 * @throws HolidayCalculatorModelException
-	 *             ошибка подачи заявления на отгул
+	 * @throws StatementAlreadySendedException
+	 *             если заявление уже было подано (например, при попытке подать
+	 *             второй раз заявление на один и тот же день)
 	 */
-	public void sendHolidayStatement() throws HolidayCalculatorModelException {
-		if (!canSendHolidayStatement()) {
-			throw new HolidayCalculatorModelException("Подача заявления на отгул запрещено");
-		}
-		HolidayStatement statement = new HolidayStatement(UUID.randomUUID());
+	public void sendHolidayStatement() throws StatementAlreadySendedException {
+		// if (!canSendHolidayStatement()) {
+		// throw new HolidayCalculatorModelException("Подача заявления на отгул
+		// запрещено");
+		// }
+		HolidayStatement statement = new HolidayStatement(UUID.randomUUID(), _days, _model.getCurrentUser());
 		_model.sendHolidayStatement(statement);
 	}
 
@@ -80,6 +87,13 @@ public class TakeHolidayStatementBuilder implements Serializable {
 
 	public void clearDates() {
 		_days.clear();
+	}
+
+	/**
+	 * @return the days
+	 */
+	public Set<Date> getDays() {
+		return Collections.unmodifiableSet(_days);
 	}
 
 }

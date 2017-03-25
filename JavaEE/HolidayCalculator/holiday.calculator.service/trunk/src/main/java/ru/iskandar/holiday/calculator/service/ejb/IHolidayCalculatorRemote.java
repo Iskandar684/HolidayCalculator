@@ -41,10 +41,10 @@ public interface IHolidayCalculatorRemote {
 	 * @param aStatement
 	 *            заявление
 	 * @return заявление
-	 * @throws HolidayCalculatorServiceException
+	 * @throws HolidayCalculatorException
 	 *             если произошла ошибка при одобрении
 	 */
-	public Statement approve(Statement aStatement) throws HolidayCalculatorServiceException;
+	public Statement approve(Statement aStatement) throws HolidayCalculatorException;
 
 	/**
 	 * Отклоняет заявление
@@ -52,19 +52,22 @@ public interface IHolidayCalculatorRemote {
 	 * @param aStatement
 	 *            заявление
 	 * @return заявление
-	 * @throws HolidayCalculatorServiceException
+	 * @throws HolidayCalculatorException
 	 *             если произошла ошибка при отклонении
 	 */
-	public Statement reject(Statement aStatement) throws HolidayCalculatorServiceException;
+	public Statement reject(Statement aStatement) throws HolidayCalculatorException;
 
 	/**
 	 * Подает заявление на рассмотрение
-	 * 
+	 *
 	 * @param aStatement
 	 *            заявление
 	 * @return заявление
-	 * @throws HolidayCalculatorServiceException
-	 *             если произошла ошибка при подачи заявления
+	 * @throws StatementAlreadySendedException
+	 *             если заявление уже было подано (например, при попытке подать
+	 *             второй раз заявление на один и тот же день)
+	 * @throws NullPointerException
+	 *             если aStatement {@code null}
 	 */
-	public HolidayStatement sendStatement(HolidayStatement aStatement) throws HolidayCalculatorServiceException;
+	public HolidayStatement sendStatement(HolidayStatement aStatement) throws StatementAlreadySendedException;
 }

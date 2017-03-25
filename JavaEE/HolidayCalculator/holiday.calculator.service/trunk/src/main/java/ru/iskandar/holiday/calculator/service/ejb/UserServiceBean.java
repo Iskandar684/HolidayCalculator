@@ -3,6 +3,7 @@ package ru.iskandar.holiday.calculator.service.ejb;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
@@ -27,11 +28,11 @@ public class UserServiceBean implements IUserServiceLocal {
 	 */
 	public UserServiceBean() {
 		String login1 = "user1";
-		User user1 = new User("Анисимов", "Олег", "Артёмович", login1);
+		User user1 = new User(UUID.randomUUID(), "Анисимов", "Олег", "Артёмович", login1);
 		_loginToUserMap.put(login1, user1);
 
 		String login2 = "user2";
-		User user2 = new User("Григорьев", "Федор", "Михалович", login1);
+		User user2 = new User(UUID.randomUUID(), "Григорьев", "Федор", "Михалович", login1);
 		_loginToUserMap.put(login2, user2);
 	}
 

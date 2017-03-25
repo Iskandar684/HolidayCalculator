@@ -70,6 +70,15 @@ public class Messages extends NLS {
 	/** Текст элемента меню взять отгул */
 	public static String takeHolidayMenuItem;
 
+	/** Текст заголовка диалога заявление уже подано */
+	public static String holidayStatementAlreadySendedDialogTitle;
+
+	/** Текст диалога заявление уже подано */
+	public static String holidayStatementAlreadySendedDialogTextForDay;
+
+	/** Текст диалога заявление уже подано */
+	public static String holidayStatementAlreadySendedDialogTextForDays;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

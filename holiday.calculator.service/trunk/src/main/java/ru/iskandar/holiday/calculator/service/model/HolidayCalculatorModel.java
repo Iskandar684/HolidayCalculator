@@ -11,9 +11,10 @@ import javax.jms.JMSException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import ru.iskandar.holiday.calculator.service.ejb.HolidayCalculatorServiceException;
+import ru.iskandar.holiday.calculator.service.ejb.HolidayCalculatorException;
 import ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorRemote;
 import ru.iskandar.holiday.calculator.service.ejb.IPermissionsService;
+import ru.iskandar.holiday.calculator.service.ejb.StatementAlreadySendedException;
 
 /**
  * Модель учета отгулов
@@ -63,12 +64,17 @@ public class HolidayCalculatorModel implements Serializable {
 		return new TakeHolidayStatementBuilder(this);
 	}
 
-	void sendHolidayStatement(HolidayStatement aStatement) throws HolidayCalculatorModelException {
-		try {
-			_service.sendStatement(aStatement);
-		} catch (HolidayCalculatorServiceException e) {
-			throw new HolidayCalculatorModelException("Ошибка отправки заявления на отгул", e);
-		}
+	/**
+	 * Подает заявление
+	 * 
+	 * @param aStatement
+	 *            заявление
+	 * @throws StatementAlreadySendedException
+	 *             если заявление уже было подано (например, при попытке подать
+	 *             второй раз заявление на один и тот же день)
+	 */
+	void sendHolidayStatement(HolidayStatement aStatement) throws StatementAlreadySendedException {
+		_service.sendStatement(aStatement);
 	}
 
 	/**
@@ -129,7 +135,7 @@ public class HolidayCalculatorModel implements Serializable {
 	public void approve(Statement aStatement) throws HolidayCalculatorModelException {
 		try {
 			_service.approve(aStatement);
-		} catch (HolidayCalculatorServiceException e) {
+		} catch (HolidayCalculatorException e) {
 			throw new HolidayCalculatorModelException("Ошибка одобрения заявления", e);
 		}
 	}
@@ -137,7 +143,7 @@ public class HolidayCalculatorModel implements Serializable {
 	public void reject(Statement aStatement) throws HolidayCalculatorModelException {
 		try {
 			_service.reject(aStatement);
-		} catch (HolidayCalculatorServiceException e) {
+		} catch (HolidayCalculatorException e) {
 			throw new HolidayCalculatorModelException("Ошибка отклонения заявления", e);
 		}
 	}

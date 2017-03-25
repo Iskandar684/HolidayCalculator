@@ -7,18 +7,18 @@ package ru.iskandar.holiday.calculator.service.ejb;
  * @author Искандар
  *
  */
-public class HolidayCalculatorServiceException extends Exception {
+public class HolidayCalculatorException extends Exception {
 
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 6418817234419893147L;
 
-	public HolidayCalculatorServiceException(String message, Throwable cause) {
+	public HolidayCalculatorException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public HolidayCalculatorServiceException(String message) {
+	public HolidayCalculatorException(String message) {
 		super(message);
 	}
 

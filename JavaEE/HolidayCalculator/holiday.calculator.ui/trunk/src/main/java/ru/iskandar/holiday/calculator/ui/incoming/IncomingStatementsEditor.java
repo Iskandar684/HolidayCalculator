@@ -73,7 +73,6 @@ public class IncomingStatementsEditor extends EditorPart {
 	 */
 	@Override
 	public void createPartControl(Composite aParent) {
-		aParent.setLayout(new GridLayout());
 		FormToolkit toolkit = new FormToolkit(Display.getCurrent());
 		Composite main = toolkit.createComposite(aParent);
 		GridLayout mainLayout = new GridLayout();

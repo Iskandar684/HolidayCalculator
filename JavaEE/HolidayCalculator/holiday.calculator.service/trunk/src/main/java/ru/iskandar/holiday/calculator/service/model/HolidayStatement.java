@@ -39,4 +39,12 @@ public class HolidayStatement extends Statement {
 		return Collections.unmodifiableSet(_days);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public StatementType getStatementType() {
+		return StatementType.HOLIDAY_STATEMENT;
+	}
+
 }

@@ -44,4 +44,12 @@ public class RecallStatement extends Statement {
 		return Collections.unmodifiableSet(_recallDates);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public StatementType getStatementType() {
+		return StatementType.RECALL_STATEMENT;
+	}
+
 }

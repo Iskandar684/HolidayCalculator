@@ -133,19 +133,23 @@ public class HolidayCalculatorModel implements Serializable {
 		return statements.size();
 	}
 
-	public void approve(Statement aStatement) throws HolidayCalculatorModelException {
+	public void approve(Statement aStatement) {
+		Objects.requireNonNull(aStatement);
 		try {
 			_service.approve(aStatement);
 		} catch (HolidayCalculatorException e) {
-			throw new HolidayCalculatorModelException("Ошибка одобрения заявления", e);
+			// FIXME
+			throw new RuntimeException("Ошибка одобрения заявления", e);
 		}
 	}
 
-	public void reject(Statement aStatement) throws HolidayCalculatorModelException {
+	public void reject(Statement aStatement) {
+		Objects.requireNonNull(aStatement);
 		try {
 			_service.reject(aStatement);
 		} catch (HolidayCalculatorException e) {
-			throw new HolidayCalculatorModelException("Ошибка отклонения заявления", e);
+			// FIXME
+			throw new RuntimeException("Ошибка отклонения заявления", e);
 		}
 	}
 

@@ -79,6 +79,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	 */
 	@Override
 	public Statement approve(Statement aStatement) {
+		Objects.requireNonNull(aStatement);
 		Statement statement = _statements.get(aStatement.getUuid());
 		statement.setStatus(StatementStatus.APPROVE);
 		return statement;
@@ -89,6 +90,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	 */
 	@Override
 	public Statement reject(Statement aStatement) {
+		Objects.requireNonNull(aStatement);
 		Statement statement = _statements.get(aStatement.getUuid());
 		statement.setStatus(StatementStatus.REJECTED);
 		return statement;

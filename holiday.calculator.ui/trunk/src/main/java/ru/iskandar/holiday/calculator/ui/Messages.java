@@ -98,6 +98,10 @@ public class Messages extends NLS {
 	/** Отклонено */
 	public static String rejected;
 
+	public static String holidayStatement;
+
+	public static String recallStatement;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

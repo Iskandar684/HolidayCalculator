@@ -8,6 +8,7 @@ import org.eclipse.swt.graphics.Image;
 
 import ru.iskandar.holiday.calculator.service.model.Statement;
 import ru.iskandar.holiday.calculator.service.model.StatementStatus;
+import ru.iskandar.holiday.calculator.service.model.StatementType;
 import ru.iskandar.holiday.calculator.service.model.User;
 import ru.iskandar.holiday.calculator.ui.Messages;
 import ru.iskandar.holiday.calculator.ui.incoming.StatementsTableCreator.StatementsTableColumn;
@@ -64,6 +65,19 @@ public class StatementsTableLabelProvider implements ITableLabelProvider {
 		String text = "";
 		switch (col) {
 		case TYPE:
+			StatementType stType = statement.getStatementType();
+			switch (stType) {
+			case HOLIDAY_STATEMENT:
+				text = Messages.holidayStatement;
+				break;
+
+			case RECALL_STATEMENT:
+				text = Messages.recallStatement;
+				break;
+
+			default:
+				break;
+			}
 			break;
 
 		case AUTHOR:
@@ -78,6 +92,7 @@ public class StatementsTableLabelProvider implements ITableLabelProvider {
 
 		case REVIEW_DATE:
 			// TODO
+			text = "-";
 			break;
 
 		case STATUS:

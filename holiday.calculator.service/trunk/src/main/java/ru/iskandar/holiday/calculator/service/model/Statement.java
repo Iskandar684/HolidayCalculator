@@ -116,4 +116,6 @@ public abstract class Statement implements Serializable {
 		return true;
 	}
 
+	public abstract StatementType getStatementType();
+
 }

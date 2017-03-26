@@ -19,10 +19,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 
-import ru.iskandar.holiday.calculator.service.model.User;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
-import ru.iskandar.holiday.calculator.ui.UserAttributesForm.IUserProvider;
 import ru.iskandar.holiday.calculator.ui.takeholiday.TakeHolidayButtonPM;
 
 /**
@@ -176,7 +174,7 @@ public class NavigationViewPart extends ViewPart {
 		main.setLayout(new GridLayout(columns, false));
 		main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		UserAttributesForm form = new UserAttributesForm(main, aToolkit, new FormUserProvider());
+		UserAttributesForm form = new UserAttributesForm(main, aToolkit, _modelProvider);
 		form.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, columns, 1));
 
 		DateTime dateTime = new DateTime(main, SWT.CALENDAR);
@@ -199,47 +197,6 @@ public class NavigationViewPart extends ViewPart {
 		btGridData.heightHint = buttonHeight;
 		getLeaveBt.setLayoutData(btGridData);
 		return main;
-	}
-
-	/**
-	 * Поставщик пользователя для формы
-	 *
-	 */
-	private class FormUserProvider implements IUserProvider {
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public User getUser() {
-			User user = _modelProvider.getModel().getCurrentUser();
-			return user;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public LoadStatus getLoadStatus() {
-			return _modelProvider.getLoadStatus();
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void addLoadListener(ILoadListener aLoadListener) {
-			_modelProvider.addLoadListener(aLoadListener);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void removeLoadListener(ILoadListener aLoadListener) {
-			_modelProvider.removeLoadListener(aLoadListener);
-		}
-
 	}
 
 	/**

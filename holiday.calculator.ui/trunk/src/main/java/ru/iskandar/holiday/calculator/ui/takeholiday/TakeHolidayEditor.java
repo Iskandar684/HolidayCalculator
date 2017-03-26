@@ -146,7 +146,7 @@ public class TakeHolidayEditor extends EditorPart {
 		byHolidaysBt.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 		new ByHolidaysButtonPM(byHolidaysBt, builder);
 
-		int days = _modelProvider.getModel().getCurrentUser().getHolidaysQuantity();
+		int days = _modelProvider.getModel().getHolidaysQuantity();
 		String daysAsStr = String.format("(%s)", days);
 		Hyperlink link = _toolkit.createHyperlink(main, daysAsStr, SWT.NONE);
 		link.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));

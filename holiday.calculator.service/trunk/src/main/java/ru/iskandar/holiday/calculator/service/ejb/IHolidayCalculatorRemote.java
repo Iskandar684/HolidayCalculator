@@ -8,6 +8,7 @@ import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelLoadEx
 import ru.iskandar.holiday.calculator.service.model.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.Statement;
 import ru.iskandar.holiday.calculator.service.model.StatementStatus;
+import ru.iskandar.holiday.calculator.service.model.User;
 
 /**
  * Сервис учета отгулов
@@ -70,4 +71,31 @@ public interface IHolidayCalculatorRemote {
 	 *             если aStatement {@code null}
 	 */
 	public HolidayStatement sendStatement(HolidayStatement aStatement) throws StatementAlreadySendedException;
+
+	/**
+	 * Возвращает количество отгулов у указанного пользователя
+	 *
+	 * @param aUser
+	 *            пользователь
+	 * @return количество отгулов
+	 */
+	public int getHolidaysQuantity(User aUser);
+
+	/**
+	 * Возвращает количество исходящих дней отгула. Это количество дней, на
+	 * которое уменьшется количество общее дней отгула, после того как заявление
+	 * на отгул будет принят.
+	 *
+	 * @return не отрицательное количество исходящих дней отгула
+	 */
+	public int getOutgoingHolidaysQuantity(User aUser);
+
+	/**
+	 * Возвращает количество приходящих отгулов. Это количество дней, на которое
+	 * будет увеличино общее количество отгулов, после того как засчитают отзыв.
+	 *
+	 * @return количество приходящих отгулов
+	 */
+	public int getIncomingHolidaysQuantity(User aUser);
+
 }

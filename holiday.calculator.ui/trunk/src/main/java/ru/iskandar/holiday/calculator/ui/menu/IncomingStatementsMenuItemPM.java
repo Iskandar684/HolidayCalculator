@@ -5,8 +5,13 @@ import java.util.Objects;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 
 import ru.iskandar.holiday.calculator.service.model.HolidayStatementSendedEvent;
 import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorModelListener;
@@ -15,6 +20,8 @@ import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
 import ru.iskandar.holiday.calculator.ui.Messages;
 import ru.iskandar.holiday.calculator.ui.ModelProviderHolder;
+import ru.iskandar.holiday.calculator.ui.incoming.IncomingStatementsEditor;
+import ru.iskandar.holiday.calculator.ui.incoming.IncomingStatementsEditorInput;
 
 /**
  * Контроллер пункта меню "Входящие заявления"
@@ -23,9 +30,12 @@ public class IncomingStatementsMenuItemPM {
 
 	private final MenuItem _item;
 
+	private final HolidayCalculatorModelProvider _modelProvider;
+
 	IncomingStatementsMenuItemPM(MenuItem aItem, final HolidayCalculatorModelProvider aHolidayCalculatorModelProvider) {
 		Objects.requireNonNull(aItem);
 		Objects.requireNonNull(aHolidayCalculatorModelProvider);
+		_modelProvider = aHolidayCalculatorModelProvider;
 		_item = aItem;
 		update();
 		final HolidayCalculatorModelListener modelListener = new HolidayCalculatorModelListener();
@@ -62,6 +72,7 @@ public class IncomingStatementsMenuItemPM {
 
 			}
 		});
+		aItem.addSelectionListener(new SelectionHandler());
 	}
 
 	private class HolidayCalculatorModelListener implements IHolidayCalculatorModelListener {
@@ -113,6 +124,26 @@ public class IncomingStatementsMenuItemPM {
 			enabled = provider.getModel().canConsider();
 		}
 		return enabled;
+	}
+
+	/**
+	 *
+	 */
+	private class SelectionHandler extends SelectionAdapter {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void widgetSelected(SelectionEvent aE) {
+			try {
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(
+						new IncomingStatementsEditorInput(_modelProvider), IncomingStatementsEditor.EDITOR_ID, true,
+						IWorkbenchPage.MATCH_ID);
+			} catch (PartInitException e) {
+				throw new RuntimeException("Ошибка открытия формы подачи заявления на отгул", e);
+			}
+		}
 	}
 
 }

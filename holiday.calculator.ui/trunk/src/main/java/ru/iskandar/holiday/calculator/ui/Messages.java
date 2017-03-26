@@ -79,6 +79,25 @@ public class Messages extends NLS {
 	/** Текст диалога заявление уже подано */
 	public static String holidayStatementAlreadySendedDialogTextForDays;
 
+	public static String statementsTableTypeColumnText;
+
+	public static String statementsTableAuthorColumnText;
+
+	public static String statementsTableCreateDateColumnText;
+
+	public static String statementsTableReviewDateColumnText;
+
+	public static String statementsTableStatusColumnText;
+
+	/** Не рассмотрено */
+	public static String notConsidered;
+
+	/** Одобрено */
+	public static String approve;
+
+	/** Отклонено */
+	public static String rejected;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

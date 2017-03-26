@@ -1,5 +1,6 @@
 package ru.iskandar.holiday.calculator.service.ejb;
 
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -97,5 +98,7 @@ public interface IHolidayCalculatorRemote {
 	 * @return количество приходящих отгулов
 	 */
 	public int getIncomingHolidaysQuantity(User aUser);
+
+	public Collection<Statement> getIncomingStatements();
 
 }

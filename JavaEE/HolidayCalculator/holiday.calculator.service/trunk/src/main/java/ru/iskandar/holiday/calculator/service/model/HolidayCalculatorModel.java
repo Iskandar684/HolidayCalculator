@@ -1,6 +1,7 @@
 package ru.iskandar.holiday.calculator.service.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Set;
@@ -200,6 +201,10 @@ public class HolidayCalculatorModel implements Serializable {
 	 */
 	public int getIncomingHolidaysQuantity() {
 		return 7;
+	}
+
+	public Collection<Statement> getIncomingStatements() {
+		return _service.getIncomingStatements();
 	}
 
 }

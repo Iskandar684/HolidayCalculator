@@ -1,5 +1,6 @@
 package ru.iskandar.holiday.calculator.service.ejb;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -197,6 +198,20 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 			}
 		}
 		return incomingHolidays;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<Statement> getIncomingStatements() {
+		Collection<Statement> incoming = new HashSet<>();
+		for (Statement st : _statements.values()) {
+			if (StatementStatus.NOT_CONSIDERED.equals(st.getStatus())) {
+				incoming.add(st);
+			}
+		}
+		return incoming;
 	}
 
 }

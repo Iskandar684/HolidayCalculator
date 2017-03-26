@@ -31,6 +31,12 @@
             id="ru.iskandar.holiday.take.editor"
             name="%holiday.take.view.name">
       </editor>
+      <editor
+            class="ru.iskandar.holiday.calculator.ui.incoming.IncomingStatementsEditor"
+            default="false"
+            id="holiday.calculator.ui.editor.incoming"
+            name="%incoming.statements.editor.name">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.menus">

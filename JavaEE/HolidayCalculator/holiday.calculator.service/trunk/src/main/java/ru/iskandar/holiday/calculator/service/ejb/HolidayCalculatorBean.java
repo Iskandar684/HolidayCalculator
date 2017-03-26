@@ -22,6 +22,7 @@ import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelFactor
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelLoadException;
 import ru.iskandar.holiday.calculator.service.model.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.HolidayStatementSendedEvent;
+import ru.iskandar.holiday.calculator.service.model.RecallStatement;
 import ru.iskandar.holiday.calculator.service.model.Statement;
 import ru.iskandar.holiday.calculator.service.model.StatementStatus;
 import ru.iskandar.holiday.calculator.service.model.User;
@@ -127,6 +128,75 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 			}
 		}
 		return currentUserStatements;
+	}
+
+	private Set<Statement> getStatementsByUser(User aUser) {
+		Objects.requireNonNull(aUser);
+		Set<Statement> statementsByUser = new HashSet<>();
+		for (Statement st : _statements.values()) {
+			if (st.getAuthor().equals(aUser)) {
+				statementsByUser.add(st);
+			}
+		}
+		return statementsByUser;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int getHolidaysQuantity(User aUser) {
+		int recallCount = 0;
+		int holidayCount = 0;
+		for (Statement st : getStatementsByUser(aUser)) {
+			if (st instanceof HolidayStatement) {
+				HolidayStatement holidaySt = (HolidayStatement) st;
+				if (StatementStatus.APPROVE.equals(holidaySt.getStatus())) {
+					holidayCount += holidaySt.getDays().size();
+				}
+			} else if (st instanceof RecallStatement) {
+				RecallStatement recallStatement = (RecallStatement) st;
+				if (StatementStatus.APPROVE.equals(recallStatement.getStatus())) {
+					recallCount += ((RecallStatement) st).getRecallDates().size();
+				}
+			}
+		}
+		int holidaysQuantity = recallCount - holidayCount;
+		return holidaysQuantity;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int getOutgoingHolidaysQuantity(User aUser) {
+		int outgoingHolidayCount = 0;
+		for (Statement st : getStatementsByUser(aUser)) {
+			if (st instanceof HolidayStatement) {
+				HolidayStatement holidaySt = (HolidayStatement) st;
+				if (StatementStatus.NOT_CONSIDERED.equals(holidaySt.getStatus())) {
+					outgoingHolidayCount += holidaySt.getDays().size();
+				}
+			}
+		}
+		return outgoingHolidayCount;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int getIncomingHolidaysQuantity(User aUser) {
+		int incomingHolidays = 0;
+		for (Statement st : getStatementsByUser(aUser)) {
+			if (st instanceof RecallStatement) {
+				RecallStatement recallStatement = (RecallStatement) st;
+				if (StatementStatus.NOT_CONSIDERED.equals(recallStatement.getStatus())) {
+					incomingHolidays += ((RecallStatement) st).getRecallDates().size();
+				}
+			}
+		}
+		return incomingHolidays;
 	}
 
 }

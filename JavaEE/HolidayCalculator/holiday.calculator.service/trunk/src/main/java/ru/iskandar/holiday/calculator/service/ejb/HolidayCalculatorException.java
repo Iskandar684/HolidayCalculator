@@ -1,25 +1,35 @@
-/**
- *
- */
 package ru.iskandar.holiday.calculator.service.ejb;
 
 /**
- * @author Искандар
- *
+ * Базовое исключение сервиса учета отгулов
  */
 public class HolidayCalculatorException extends Exception {
 
 	/**
-	 *
+	 * Идентификатор для сериализации
 	 */
 	private static final long serialVersionUID = 6418817234419893147L;
 
-	public HolidayCalculatorException(String message, Throwable cause) {
-		super(message, cause);
+	/**
+	 * Конструктор
+	 *
+	 * @param aMessage
+	 *            сообщение
+	 * @param aCause
+	 *            причина
+	 */
+	public HolidayCalculatorException(String aMessage, Throwable aCause) {
+		super(aMessage, aCause);
 	}
 
-	public HolidayCalculatorException(String message) {
-		super(message);
+	/**
+	 * Конструктор
+	 *
+	 * @param aMessage
+	 *            сообщение
+	 */
+	public HolidayCalculatorException(String aMessage) {
+		super(aMessage);
 	}
 
 }

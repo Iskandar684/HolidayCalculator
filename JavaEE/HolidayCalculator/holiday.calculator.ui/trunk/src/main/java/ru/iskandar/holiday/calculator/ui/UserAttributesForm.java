@@ -15,6 +15,9 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 
+import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
+import ru.iskandar.holiday.calculator.service.model.HolidayStatementSendedEvent;
+import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorModelListener;
 import ru.iskandar.holiday.calculator.service.model.User;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
@@ -24,8 +27,8 @@ import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
  */
 public class UserAttributesForm extends Composite {
 
-	/** Поставщик пользователя */
-	private final IUserProvider _userProvider;
+	/** Поставщик модели */
+	private final HolidayCalculatorModelProvider _modelProvider;
 	/***/
 	private Hyperlink _lcLink;
 	/***/
@@ -50,13 +53,14 @@ public class UserAttributesForm extends Composite {
 	 * @param aParent
 	 *            родитель
 	 * @param aUserProvider
-	 *            поставщик пользователя
+	 *            поставщик модели
 	 */
-	public UserAttributesForm(Composite aParent, FormToolkit aFormToolkit, IUserProvider aUserProvider) {
+	public UserAttributesForm(Composite aParent, FormToolkit aFormToolkit,
+			HolidayCalculatorModelProvider aUserProvider) {
 		super(aParent, SWT.NONE);
 		Objects.requireNonNull(aUserProvider);
 		Objects.requireNonNull(aFormToolkit);
-		_userProvider = aUserProvider;
+		_modelProvider = aUserProvider;
 		_formToolkit = aFormToolkit;
 		create();
 		initListeners();
@@ -191,7 +195,30 @@ public class UserAttributesForm extends Composite {
 			}
 
 		};
-		_userProvider.addLoadListener(loadListener);
+		_modelProvider.addLoadListener(loadListener);
+		final IHolidayCalculatorModelListener holidayModelListener = new IHolidayCalculatorModelListener() {
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public void holidayStatementSended(HolidayStatementSendedEvent aAEvent) {
+				Display.getDefault().asyncExec(new Runnable() {
+
+					/**
+					 * {@inheritDoc}
+					 */
+					@Override
+					public void run() {
+						UserAttributesForm.this.refresh();
+					}
+
+				});
+
+			}
+		};
+
+		_modelProvider.addListener(holidayModelListener);
+
 		addDisposeListener(new DisposeListener() {
 
 			/**
@@ -199,7 +226,8 @@ public class UserAttributesForm extends Composite {
 			 */
 			@Override
 			public void widgetDisposed(DisposeEvent aE) {
-				_userProvider.removeLoadListener(loadListener);
+				_modelProvider.removeLoadListener(loadListener);
+				_modelProvider.removeListener(holidayModelListener);
 			}
 		});
 	}
@@ -208,7 +236,7 @@ public class UserAttributesForm extends Composite {
 	 * Обновляет UI
 	 */
 	void refresh() {
-		boolean loaded = LoadStatus.LOADED.equals(_userProvider.getLoadStatus());
+		boolean loaded = LoadStatus.LOADED.equals(_modelProvider.getLoadStatus());
 		String fio = Messages.EMPTY;
 		String hqStr = Messages.EMPTY;
 		String dateAsStr = Messages.EMPTY;
@@ -217,13 +245,14 @@ public class UserAttributesForm extends Composite {
 		String lcStr = Messages.EMPTY;
 		String outLCStr = Messages.EMPTY;
 		if (loaded) {
-			User user = _userProvider.getUser();
+			HolidayCalculatorModel model = _modelProvider.getModel();
+			User user = model.getCurrentUser();
 			Objects.requireNonNull(user);
 			fio = String.format("%s %s %s", user.getLastName(), user.getFirstName(), user.getPatronymic());
-			int hq = user.getHolidaysQuantity();
+			int hq = model.getHolidaysQuantity();
 			hqStr = String.valueOf(hq);
-			int outHQ = user.getOutgoingHolidaysQuantity();
-			int inHQ = user.getIncomingHolidaysQuantity();
+			int outHQ = model.getOutgoingHolidaysQuantity();
+			int inHQ = model.getIncomingHolidaysQuantity();
 			int outLC = user.getOutgoingLeaveCount();
 
 			int lc = user.getLeaveCount();
@@ -247,19 +276,6 @@ public class UserAttributesForm extends Composite {
 		_outHQLink.getParent().layout();
 		_lcLink.getParent().layout();
 		_nextLeaveStartDateLink.getParent().layout();
-	}
-
-	/**
-	 * Поставщик пользователя
-	 *
-	 */
-	public static interface IUserProvider extends ILoadingProvider {
-		/**
-		 * Возвращает пользователя
-		 *
-		 * @return пользователь
-		 */
-		public User getUser();
 	}
 
 }

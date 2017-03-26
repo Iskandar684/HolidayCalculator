@@ -66,7 +66,7 @@ public class HolidayCalculatorModel implements Serializable {
 
 	/**
 	 * Подает заявление
-	 * 
+	 *
 	 * @param aStatement
 	 *            заявление
 	 * @throws StatementAlreadySendedException
@@ -170,6 +170,36 @@ public class HolidayCalculatorModel implements Serializable {
 		for (IHolidayCalculatorModelListener listener : getListeners()) {
 			listener.holidayStatementSended(aEvent);
 		}
+	}
+
+	/**
+	 * Возвращает общее количество отгулов
+	 *
+	 * @return количество отгулов
+	 */
+	public int getHolidaysQuantity() {
+		return _service.getHolidaysQuantity(_currenUser);
+	}
+
+	/**
+	 * Возвращает количество исходящих дней отгула. Это количество дней, на
+	 * которое уменьшется количество общее дней отгула, после того как заявление
+	 * на отгул будет принят.
+	 *
+	 * @return не отрицательное количество исходящих дней отгула
+	 */
+	public int getOutgoingHolidaysQuantity() {
+		return 1;
+	}
+
+	/**
+	 * Возвращает количество приходящих отгулов. Это количество дней, на которое
+	 * будет увеличино общее количество отгулов, после того как засчитают отзыв.
+	 *
+	 * @return количество приходящих отгулов
+	 */
+	public int getIncomingHolidaysQuantity() {
+		return 7;
 	}
 
 }

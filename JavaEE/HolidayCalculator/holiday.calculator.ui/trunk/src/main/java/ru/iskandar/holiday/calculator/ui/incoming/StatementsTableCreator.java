@@ -31,9 +31,7 @@ public class StatementsTableCreator {
 
 		CREATE_DATE(Messages.statementsTableCreateDateColumnText, 2),
 
-		REVIEW_DATE(Messages.statementsTableReviewDateColumnText, 3),
-
-		STATUS(Messages.statementsTableStatusColumnText, 4);
+		STATUS(Messages.statementsTableStatusColumnText, 3);
 
 		private String _text;
 

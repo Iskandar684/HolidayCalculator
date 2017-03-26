@@ -90,11 +90,6 @@ public class StatementsTableLabelProvider implements ITableLabelProvider {
 			text = dateFormatter.format(statement.getCreateDate());
 			break;
 
-		case REVIEW_DATE:
-			// TODO
-			text = "-";
-			break;
-
 		case STATUS:
 			StatementStatus status = statement.getStatus();
 			switch (status) {

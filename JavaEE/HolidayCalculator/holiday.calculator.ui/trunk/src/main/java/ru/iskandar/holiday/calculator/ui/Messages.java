@@ -102,6 +102,14 @@ public class Messages extends NLS {
 
 	public static String recallStatement;
 
+	public static String reviewHolidayStatementHeader;
+
+	public static String reviewRecallStatementHeader;
+
+	public static String approveBt;
+
+	public static String rejectBt;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

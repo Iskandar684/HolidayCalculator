@@ -3,6 +3,8 @@ package ru.iskandar.holiday.calculator.ui.menu;
 import java.util.Objects;
 
 import org.eclipse.jface.action.ContributionItem;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
@@ -22,8 +24,11 @@ public class IncomingStatementsContributionItem extends ContributionItem {
 
 	private final HolidayCalculatorModelProvider _provider;
 
-	public IncomingStatementsContributionItem(HolidayCalculatorModelProvider aProvider) {
+	private final MenuManager _menuManager;
+
+	public IncomingStatementsContributionItem(HolidayCalculatorModelProvider aProvider, MenuManager aMenuManager) {
 		Objects.requireNonNull(aProvider);
+		_menuManager = aMenuManager;
 		_provider = aProvider;
 		_provider.addListener(new HolidayCalculatorModelListener());
 		_provider.addLoadListener(new ILoadListener() {
@@ -40,19 +45,28 @@ public class IncomingStatementsContributionItem extends ContributionItem {
 					 */
 					@Override
 					public void run() {
-						IncomingStatementsContributionItem.this.updateState();
+						IncomingStatementsContributionItem.this.update();
 					}
 
 				});
 
 			}
 		});
-		updateState();
+		update();
 	}
 
-	private void updateState() {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void update() {
 		setVisible(mustBeVisible());
-		update();
+		IContributionItem[] items = _menuManager.getItems();
+		_menuManager.update(true);
+		_menuManager.removeAll();
+		for (IContributionItem item : items) {
+			_menuManager.add(item);
+		}
 	}
 
 	private boolean mustBeVisible() {
@@ -87,7 +101,7 @@ public class IncomingStatementsContributionItem extends ContributionItem {
 				 */
 				@Override
 				public void run() {
-					IncomingStatementsContributionItem.this.updateState();
+					IncomingStatementsContributionItem.this.update();
 				}
 
 			});

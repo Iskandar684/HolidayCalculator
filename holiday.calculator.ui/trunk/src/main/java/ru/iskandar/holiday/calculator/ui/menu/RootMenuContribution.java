@@ -22,8 +22,9 @@ public class RootMenuContribution extends ExtensionContributionFactory {
 	@Override
 	public void createContributionItems(IServiceLocator aServiceLocator, IContributionRoot aAdditions) {
 		HolidayCalculatorModelProvider provider = ModelProviderHolder.getInstance().getModelProvider();
-		IncomingStatementsContributionItem incomingContributionItem = new IncomingStatementsContributionItem(provider);
 		MenuManager menuManager = new MenuManager();
+		IncomingStatementsContributionItem incomingContributionItem = new IncomingStatementsContributionItem(provider,
+				menuManager);
 		menuManager.add(incomingContributionItem);
 		menuManager.add(new TakeHolidayAction(provider));
 		new StatementsMenuPM(menuManager, provider);

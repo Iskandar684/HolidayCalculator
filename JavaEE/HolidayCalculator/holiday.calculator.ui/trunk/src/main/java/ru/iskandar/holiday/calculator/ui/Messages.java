@@ -110,6 +110,12 @@ public class Messages extends NLS {
 
 	public static String rejectBt;
 
+	public static String statementAlreadyConsideredDialogTitle;
+
+	public static String statementAlreadyConsideredByYouDialogText;
+
+	public static String statementAlreadyConsideredByOtherDialogText;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

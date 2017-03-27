@@ -21,11 +21,17 @@ public abstract class Statement implements Serializable {
 	/** Автор заявления */
 	private final User _author;
 
+	/** Пользователь, который рассмотрел заявление */
+	private User _consider;
+
 	/** Статус заявления */
 	private StatementStatus _status = StatementStatus.NOT_CONSIDERED;
 
 	/** Время подачи заявления */
 	private Date _createDate = new Date();
+
+	/** Время рассмотрения */
+	private Date _considerDate;
 
 	/**
 	 * Конструктор
@@ -86,6 +92,36 @@ public abstract class Statement implements Serializable {
 	}
 
 	/**
+	 * @return the consider
+	 */
+	public User getConsider() {
+		return _consider;
+	}
+
+	/**
+	 * @param aConsider
+	 *            the consider to set
+	 */
+	public void setConsider(User aConsider) {
+		_consider = aConsider;
+	}
+
+	/**
+	 * @return the considerDate
+	 */
+	public Date getConsiderDate() {
+		return _considerDate;
+	}
+
+	/**
+	 * @param aConsiderDate
+	 *            the considerDate to set
+	 */
+	public void setConsiderDate(Date aConsiderDate) {
+		_considerDate = aConsiderDate;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -117,5 +153,17 @@ public abstract class Statement implements Serializable {
 	}
 
 	public abstract StatementType getStatementType();
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(getClass());
+		builder.append(" uuid=");
+		builder.append(_uuid);
+		return builder.toString();
+	}
 
 }

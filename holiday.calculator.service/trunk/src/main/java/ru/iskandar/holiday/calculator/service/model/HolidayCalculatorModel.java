@@ -12,10 +12,12 @@ import javax.jms.JMSException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import ru.iskandar.holiday.calculator.service.ejb.HolidayCalculatorException;
 import ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorRemote;
 import ru.iskandar.holiday.calculator.service.ejb.IPermissionsService;
+import ru.iskandar.holiday.calculator.service.ejb.InvalidStatementException;
+import ru.iskandar.holiday.calculator.service.ejb.StatementAlreadyConsideredException;
 import ru.iskandar.holiday.calculator.service.ejb.StatementAlreadySendedException;
+import ru.iskandar.holiday.calculator.service.ejb.StatementNotFoundException;
 
 /**
  * Модель учета отгулов
@@ -133,24 +135,44 @@ public class HolidayCalculatorModel implements Serializable {
 		return statements.size();
 	}
 
-	public void approve(Statement aStatement) {
+	/**
+	 * Одобряет заявление
+	 *
+	 * @param aStatement
+	 *            заявление
+	 * @return заявление
+	 * @throws StatementAlreadyConsideredException
+	 *             если заявление уже было рассмотрено
+	 * @throws NullPointerException
+	 *             если aStatement {@code null}
+	 * @throws InvalidStatementException
+	 *             если заявление заполнено некорректно
+	 * @throws StatementNotFoundException
+	 *             если заявление с указанным UUID не найдено
+	 */
+	public void approve(Statement aStatement) throws StatementAlreadyConsideredException {
 		Objects.requireNonNull(aStatement);
-		try {
-			_service.approve(aStatement);
-		} catch (HolidayCalculatorException e) {
-			// FIXME
-			throw new RuntimeException("Ошибка одобрения заявления", e);
-		}
+		_service.approve(aStatement);
 	}
 
-	public void reject(Statement aStatement) {
+	/**
+	 * Отклоняет заявление
+	 *
+	 * @param aStatement
+	 *            заявление
+	 * @return заявление
+	 * @throws StatementAlreadyConsideredException
+	 *             если заявление уже было рассмотрено
+	 * @throws NullPointerException
+	 *             если aStatement {@code null}
+	 * @throws InvalidStatementException
+	 *             если заявление заполнено некорректно
+	 * @throws StatementNotFoundException
+	 *             если заявление с указанным UUID не найдено
+	 */
+	public void reject(Statement aStatement) throws StatementAlreadyConsideredException {
 		Objects.requireNonNull(aStatement);
-		try {
-			_service.reject(aStatement);
-		} catch (HolidayCalculatorException e) {
-			// FIXME
-			throw new RuntimeException("Ошибка отклонения заявления", e);
-		}
+		_service.reject(aStatement);
 	}
 
 	public void addListener(IHolidayCalculatorModelListener aListener) {

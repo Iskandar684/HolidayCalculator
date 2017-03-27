@@ -43,10 +43,16 @@ public interface IHolidayCalculatorRemote {
 	 * @param aStatement
 	 *            заявление
 	 * @return заявление
-	 * @throws HolidayCalculatorException
-	 *             если произошла ошибка при одобрении
+	 * @throws StatementAlreadyConsideredException
+	 *             если заявление уже было рассмотрено
+	 * @throws NullPointerException
+	 *             если aStatement {@code null}
+	 * @throws InvalidStatementException
+	 *             если заявление заполнено некорректно
+	 * @throws StatementNotFoundException
+	 *             если заявление с указанным UUID не найдено
 	 */
-	public Statement approve(Statement aStatement) throws HolidayCalculatorException;
+	public Statement approve(Statement aStatement) throws StatementAlreadyConsideredException;
 
 	/**
 	 * Отклоняет заявление
@@ -54,10 +60,16 @@ public interface IHolidayCalculatorRemote {
 	 * @param aStatement
 	 *            заявление
 	 * @return заявление
-	 * @throws HolidayCalculatorException
-	 *             если произошла ошибка при отклонении
+	 * @throws StatementAlreadyConsideredException
+	 *             если заявление уже было рассмотрено
+	 * @throws NullPointerException
+	 *             если aStatement {@code null}
+	 * @throws InvalidStatementException
+	 *             если заявление заполнено некорректно
+	 * @throws StatementNotFoundException
+	 *             если заявление с указанным UUID не найдено
 	 */
-	public Statement reject(Statement aStatement) throws HolidayCalculatorException;
+	public Statement reject(Statement aStatement) throws StatementAlreadyConsideredException;
 
 	/**
 	 * Подает заявление на рассмотрение
@@ -70,6 +82,8 @@ public interface IHolidayCalculatorRemote {
 	 *             второй раз заявление на один и тот же день)
 	 * @throws NullPointerException
 	 *             если aStatement {@code null}
+	 * @throws InvalidStatementException
+	 *             если заявление заполнено некорректно
 	 */
 	public HolidayStatement sendStatement(HolidayStatement aStatement) throws StatementAlreadySendedException;
 
@@ -99,6 +113,11 @@ public interface IHolidayCalculatorRemote {
 	 */
 	public int getIncomingHolidaysQuantity(User aUser);
 
+	/**
+	 * Возвращает входящие заявления
+	 *
+	 * @return входящие заявления
+	 */
 	public Collection<Statement> getIncomingStatements();
 
 }

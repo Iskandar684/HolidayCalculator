@@ -1,7 +1,11 @@
 package ru.iskandar.holiday.calculator.ui.incoming;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -15,6 +19,7 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+import ru.iskandar.holiday.calculator.service.ejb.StatementAlreadyConsideredException;
 import ru.iskandar.holiday.calculator.service.model.Statement;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.Messages;
@@ -82,7 +87,7 @@ public class StatementReviewForm {
 	 */
 	private Composite createLeft(Composite aParent) {
 
-		Composite main = _toolkit.createComposite(aParent);
+		final Composite main = _toolkit.createComposite(aParent);
 		final int columns = 2;
 		GridLayout leftLayout = new GridLayout(columns, false);
 		leftLayout.marginHeight = 0;
@@ -108,7 +113,20 @@ public class StatementReviewForm {
 			 */
 			@Override
 			public void widgetSelected(SelectionEvent aE) {
-				_modelProvider.getModel().approve(getStatement());
+				try {
+					_modelProvider.getModel().approve(getStatement());
+				} catch (StatementAlreadyConsideredException e) {
+					Statement st = e.getStatement();
+					SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+					Date considerDate = st.getConsiderDate();
+					String text = NLS.bind(Messages.statementAlreadyConsideredByOtherDialogText,
+							formatter.format(considerDate));
+					if (_modelProvider.getModel().getCurrentUser().equals(st.getConsider())) {
+						text = NLS.bind(Messages.statementAlreadyConsideredByYouDialogText,
+								formatter.format(considerDate));
+					}
+					MessageDialog.openWarning(main.getShell(), Messages.statementAlreadyConsideredDialogTitle, text);
+				}
 			}
 		});
 
@@ -120,7 +138,20 @@ public class StatementReviewForm {
 			 */
 			@Override
 			public void widgetSelected(SelectionEvent aE) {
-				_modelProvider.getModel().reject(getStatement());
+				try {
+					_modelProvider.getModel().reject(getStatement());
+				} catch (StatementAlreadyConsideredException e) {
+					Statement st = e.getStatement();
+					SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+					Date considerDate = st.getConsiderDate();
+					String text = NLS.bind(Messages.statementAlreadyConsideredByOtherDialogText,
+							formatter.format(considerDate));
+					if (_modelProvider.getModel().getCurrentUser().equals(st.getConsider())) {
+						text = NLS.bind(Messages.statementAlreadyConsideredByYouDialogText,
+								formatter.format(considerDate));
+					}
+					MessageDialog.openWarning(main.getShell(), Messages.statementAlreadyConsideredDialogTitle, text);
+				}
 			}
 		});
 		return main;

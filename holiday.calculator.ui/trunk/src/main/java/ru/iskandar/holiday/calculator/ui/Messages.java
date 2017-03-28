@@ -116,6 +116,10 @@ public class Messages extends NLS {
 
 	public static String statementAlreadyConsideredByOtherDialogText;
 
+	public static String statementForConsiderNotSelectedDialogText;
+
+	public static String statementForConsiderNotSelectedDialogTitle;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

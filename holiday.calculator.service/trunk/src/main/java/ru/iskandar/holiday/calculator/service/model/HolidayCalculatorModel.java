@@ -155,6 +155,24 @@ public class HolidayCalculatorModel implements Serializable {
 		_service.approve(aStatement);
 	}
 
+	public boolean canApprove(Statement aStatement) {
+		Objects.requireNonNull(aStatement);
+		if (!canConsider()) {
+			return false;
+		}
+		StatementStatus status = aStatement.getStatus();
+		return StatementStatus.NOT_CONSIDERED.equals(status);
+	}
+
+	public boolean canReject(Statement aStatement) {
+		Objects.requireNonNull(aStatement);
+		if (!canConsider()) {
+			return false;
+		}
+		StatementStatus status = aStatement.getStatus();
+		return StatementStatus.NOT_CONSIDERED.equals(status);
+	}
+
 	/**
 	 * Отклоняет заявление
 	 *
@@ -195,7 +213,7 @@ public class HolidayCalculatorModel implements Serializable {
 
 	/**
 	 * Оповещает слушателей
-	 * 
+	 *
 	 * @param aEvent
 	 *            событие
 	 */
@@ -222,7 +240,7 @@ public class HolidayCalculatorModel implements Serializable {
 	 * @return не отрицательное количество исходящих дней отгула
 	 */
 	public int getOutgoingHolidaysQuantity() {
-		return 1;
+		return _service.getOutgoingHolidaysQuantity(_currenUser);
 	}
 
 	/**
@@ -232,7 +250,7 @@ public class HolidayCalculatorModel implements Serializable {
 	 * @return количество приходящих отгулов
 	 */
 	public int getIncomingHolidaysQuantity() {
-		return 7;
+		return _service.getIncomingHolidaysQuantity(_currenUser);
 	}
 
 	public Collection<Statement> getIncomingStatements() {

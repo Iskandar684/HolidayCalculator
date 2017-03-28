@@ -132,8 +132,10 @@ public class UserAttributesForm extends Composite {
 		leaveCountLabel.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 
 		_lcLink = _formToolkit.createHyperlink(main, Messages.EMPTY, SWT.NONE);
+		_lcLink.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
 		_outLCLink = _formToolkit.createHyperlink(main, Messages.EMPTY, SWT.NONE);
+		_outLCLink.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
 		return main;
 	}
@@ -161,11 +163,12 @@ public class UserAttributesForm extends Composite {
 		_hqLink.setLayoutData(new GridData(SWT.CENTER, SWT.LEFT, false, false));
 
 		_outHQLink = _formToolkit.createHyperlink(main, Messages.EMPTY, SWT.NONE);
+		_outHQLink.setLayoutData(new GridData(SWT.CENTER, SWT.LEFT, false, false));
 		_outHQLink.addHyperlinkListener(new HyperlinkAdapter() {
 		});
 
 		_inHQLink = _formToolkit.createHyperlink(main, Messages.EMPTY, SWT.NONE);
-
+		_inHQLink.setLayoutData(new GridData(SWT.CENTER, SWT.LEFT, false, false));
 		return main;
 	}
 
@@ -244,6 +247,9 @@ public class UserAttributesForm extends Composite {
 		String inHQStr = Messages.EMPTY;
 		String lcStr = Messages.EMPTY;
 		String outLCStr = Messages.EMPTY;
+		boolean outHQLinkVisible = false;
+		boolean inHQLinkVisible = false;
+		boolean outLCVisible = false;
 		if (loaded) {
 			HolidayCalculatorModel model = _modelProvider.getModel();
 			User user = model.getCurrentUser();
@@ -252,23 +258,37 @@ public class UserAttributesForm extends Composite {
 			int hq = model.getHolidaysQuantity();
 			hqStr = String.valueOf(hq);
 			int outHQ = model.getOutgoingHolidaysQuantity();
+			outHQLinkVisible = outHQ != 0;
 			int inHQ = model.getIncomingHolidaysQuantity();
+			inHQLinkVisible = inHQ != 0;
 			int outLC = user.getOutgoingLeaveCount();
 
 			int lc = user.getLeaveCount();
 			dateAsStr = new SimpleDateFormat("dd.MM.yyyy").format(user.getNextLeaveStartDate());
 			outHQStr = String.format("(-%s)", outHQ);
+
 			inHQStr = String.format("(+%s)", inHQ);
 			lcStr = String.valueOf(lc);
 			outLCStr = String.format("(-%s)", outLC);
+			outLCVisible = outLC != 0;
 		}
 
 		_fioLabel.setText(fio);
 		_hqLink.setText(hqStr);
 		_outHQLink.setText(outHQStr);
+
+		_outHQLink.setVisible(outHQLinkVisible);
+		((GridData) _outHQLink.getLayoutData()).exclude = !outHQLinkVisible;
+
 		_inHQLink.setText(inHQStr);
+		_inHQLink.setVisible(inHQLinkVisible);
+		((GridData) _inHQLink.getLayoutData()).exclude = !inHQLinkVisible;
+
 		_lcLink.setText(lcStr);
 		_outLCLink.setText(outLCStr);
+		_outLCLink.setVisible(outLCVisible);
+		((GridData) _outLCLink.getLayoutData()).exclude = !outLCVisible;
+
 		_nextLeaveStartDateLink.setText(dateAsStr);
 
 		_fioLabel.getParent().layout();

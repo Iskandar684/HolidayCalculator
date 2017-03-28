@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-import ru.iskandar.holiday.calculator.service.model.HolidayStatementSendedEvent;
+import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorEvent;
 import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorModelListener;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
@@ -93,7 +93,7 @@ public class IncomingStatementsContributionItem extends ContributionItem {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void holidayStatementSended(HolidayStatementSendedEvent aAEvent) {
+		public void handleEvent(HolidayCalculatorEvent aAEvent) {
 			Display.getDefault().asyncExec(new Runnable() {
 
 				/**

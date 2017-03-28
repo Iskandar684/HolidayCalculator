@@ -15,8 +15,8 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 
+import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorEvent;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
-import ru.iskandar.holiday.calculator.service.model.HolidayStatementSendedEvent;
 import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorModelListener;
 import ru.iskandar.holiday.calculator.service.model.User;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
@@ -201,7 +201,7 @@ public class UserAttributesForm extends Composite {
 			 * {@inheritDoc}
 			 */
 			@Override
-			public void holidayStatementSended(HolidayStatementSendedEvent aAEvent) {
+			public void handleEvent(HolidayCalculatorEvent aAEvent) {
 				Display.getDefault().asyncExec(new Runnable() {
 
 					/**

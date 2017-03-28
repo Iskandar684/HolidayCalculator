@@ -1,14 +1,16 @@
-/**
- *
- */
 package ru.iskandar.holiday.calculator.service.model;
 
 /**
- * @author Искандар
- *
+ * Обработчик события
  */
 public interface IHolidayCalculatorModelListener {
 
-	public void holidayStatementSended(HolidayStatementSendedEvent aEvent);
+	/**
+	 * Обрабатывает событие
+	 *
+	 * @param aEvent
+	 *            событие
+	 */
+	public void handleEvent(HolidayCalculatorEvent aEvent);
 
 }

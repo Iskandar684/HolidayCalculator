@@ -193,9 +193,15 @@ public class HolidayCalculatorModel implements Serializable {
 		return _listeners;
 	}
 
-	void fireHolidayStatementSended(HolidayStatementSendedEvent aEvent) {
+	/**
+	 * Оповещает слушателей
+	 * 
+	 * @param aEvent
+	 *            событие
+	 */
+	void fireEvent(HolidayCalculatorEvent aEvent) {
 		for (IHolidayCalculatorModelListener listener : getListeners()) {
-			listener.holidayStatementSended(aEvent);
+			listener.handleEvent(aEvent);
 		}
 	}
 

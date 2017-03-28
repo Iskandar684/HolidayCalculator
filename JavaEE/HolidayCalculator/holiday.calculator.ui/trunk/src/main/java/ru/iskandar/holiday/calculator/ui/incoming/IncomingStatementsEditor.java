@@ -1,8 +1,13 @@
 package ru.iskandar.holiday.calculator.ui.incoming;
 
+import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -18,6 +23,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import ru.iskandar.holiday.calculator.service.model.Statement;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
+import ru.iskandar.holiday.calculator.ui.incoming.StatementReviewForm.IStatementChangedListener;
 import ru.iskandar.holiday.calculator.ui.incoming.StatementReviewForm.IStatementProvider;
 
 public class IncomingStatementsEditor extends EditorPart {
@@ -93,24 +99,64 @@ public class IncomingStatementsEditor extends EditorPart {
 		_statementsViewer = creator.create(sash);
 		_statementsViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		//
-		StatementReviewForm reviewForm = new StatementReviewForm(_holidayModelProvider, new StatementProvider());
+		StatementReviewForm reviewForm = new StatementReviewForm(_holidayModelProvider,
+				new StatementProvider(_statementsViewer));
 		reviewForm.create(sash);
 	}
 
-	private class StatementProvider implements IStatementProvider {
+	private static class StatementProvider implements IStatementProvider {
+
+		private final CopyOnWriteArrayList<IStatementChangedListener> _listeners = new CopyOnWriteArrayList<>();
+
+		private final TableViewer _viewer;
+
+		/**
+		 * Конструктор
+		 */
+		public StatementProvider(TableViewer aViewer) {
+			Objects.requireNonNull(aViewer);
+			_viewer = aViewer;
+			aViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+				/**
+				 * {@inheritDoc}
+				 */
+				@Override
+				public void selectionChanged(SelectionChangedEvent aEvent) {
+					for (IStatementChangedListener listeners : _listeners) {
+						listeners.statementChanged();
+					}
+				}
+			});
+		}
 
 		/**
 		 * {@inheritDoc}
 		 */
 		@Override
 		public Statement getStatement() {
-
-			ISelection sel = _statementsViewer.getSelection();
+			ISelection sel = _viewer.getSelection();
 			if (sel instanceof IStructuredSelection) {
 				Object firstElement = ((IStructuredSelection) sel).getFirstElement();
 				return (Statement) firstElement;
 			}
 			return null;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void addStatementChangedListener(IStatementChangedListener aListener) {
+			_listeners.add(aListener);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void removeStatementChangedListener(IStatementChangedListener aListener) {
+			_listeners.remove(aListener);
 		}
 
 	}

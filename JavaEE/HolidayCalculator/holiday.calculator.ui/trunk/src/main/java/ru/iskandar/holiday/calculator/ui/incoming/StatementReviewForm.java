@@ -8,6 +8,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -16,12 +18,16 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import ru.iskandar.holiday.calculator.service.ejb.StatementAlreadyConsideredException;
+import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 import ru.iskandar.holiday.calculator.service.model.Statement;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
+import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
+import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
 import ru.iskandar.holiday.calculator.ui.Messages;
 
 /**
@@ -36,6 +42,9 @@ public class StatementReviewForm {
 	private final HolidayCalculatorModelProvider _modelProvider;
 
 	private final IStatementProvider _statementProvider;
+
+	private Button _approveBt;
+	private Button _rejectBt;
 
 	/**
 	 * Конструктор
@@ -59,7 +68,51 @@ public class StatementReviewForm {
 
 		createLeft(sash);
 		createRight(sash);
+
+		initListeners(main);
+		refresh();
 		return main;
+	}
+
+	private void initListeners(Control aControl) {
+		StatementChangedListener listener = new StatementChangedListener();
+		_statementProvider.addStatementChangedListener(listener);
+		LoadListener loadListener = new LoadListener();
+		_modelProvider.addLoadListener(loadListener);
+		aControl.addDisposeListener(new DisposeListener() {
+
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public void widgetDisposed(DisposeEvent aE) {
+				_statementProvider.removeStatementChangedListener(listener);
+				_modelProvider.removeLoadListener(loadListener);
+			}
+		});
+	}
+
+	private class LoadListener implements ILoadListener {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void loadStatusChanged() {
+			Display.getDefault().asyncExec(new Runnable() {
+
+				/**
+				 * {@inheritDoc}
+				 */
+				@Override
+				public void run() {
+					refresh();
+				}
+
+			});
+
+		}
+
 	}
 
 	/**
@@ -105,16 +158,22 @@ public class StatementReviewForm {
 		_toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
 
-		Button approveBt = _toolkit.createButton(main, Messages.approveBt, SWT.NONE);
-		approveBt.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, true));
-		approveBt.addSelectionListener(new SelectionAdapter() {
+		_approveBt = _toolkit.createButton(main, Messages.approveBt, SWT.NONE);
+		_approveBt.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, true));
+		_approveBt.addSelectionListener(new SelectionAdapter() {
 			/**
 			 * {@inheritDoc}
 			 */
 			@Override
 			public void widgetSelected(SelectionEvent aE) {
+				Statement statement = getStatement();
+				if (statement == null) {
+					MessageDialog.openWarning(main.getShell(), Messages.statementForConsiderNotSelectedDialogTitle,
+							Messages.statementForConsiderNotSelectedDialogText);
+					return;
+				}
 				try {
-					_modelProvider.getModel().approve(getStatement());
+					_modelProvider.getModel().approve(statement);
 				} catch (StatementAlreadyConsideredException e) {
 					Statement st = e.getStatement();
 					SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
@@ -130,16 +189,22 @@ public class StatementReviewForm {
 			}
 		});
 
-		Button rejectBt = _toolkit.createButton(main, Messages.rejectBt, SWT.NONE);
-		rejectBt.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, false, true));
-		rejectBt.addSelectionListener(new SelectionAdapter() {
+		_rejectBt = _toolkit.createButton(main, Messages.rejectBt, SWT.NONE);
+		_rejectBt.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, false, true));
+		_rejectBt.addSelectionListener(new SelectionAdapter() {
 			/**
 			 * {@inheritDoc}
 			 */
 			@Override
 			public void widgetSelected(SelectionEvent aE) {
+				Statement statement = getStatement();
+				if (statement == null) {
+					MessageDialog.openWarning(main.getShell(), Messages.statementForConsiderNotSelectedDialogTitle,
+							Messages.statementForConsiderNotSelectedDialogText);
+					return;
+				}
 				try {
-					_modelProvider.getModel().reject(getStatement());
+					_modelProvider.getModel().reject(statement);
 				} catch (StatementAlreadyConsideredException e) {
 					Statement st = e.getStatement();
 					SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
@@ -161,9 +226,56 @@ public class StatementReviewForm {
 		return _statementProvider.getStatement();
 	}
 
+	/**
+	 * Поставщик заявления
+	 */
 	public static interface IStatementProvider {
 
+		/**
+		 * Возвращает заявление
+		 *
+		 * @return заявление или {@code null}
+		 */
 		public Statement getStatement();
+
+		public void addStatementChangedListener(IStatementChangedListener aListener);
+
+		public void removeStatementChangedListener(IStatementChangedListener aListener);
+	}
+
+	public static interface IStatementChangedListener {
+		public void statementChanged();
+	}
+
+	private class StatementChangedListener implements IStatementChangedListener {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void statementChanged() {
+			refresh();
+		}
+
+	}
+
+	/**
+	 * Обновляет UI
+	 */
+	private void refresh() {
+		boolean canApprove = false;
+		boolean canReject = false;
+		LoadStatus status = _modelProvider.getLoadStatus();
+		if (LoadStatus.LOADED.equals(status)) {
+			Statement statement = getStatement();
+			if (statement != null) {
+				HolidayCalculatorModel model = _modelProvider.getModel();
+				canApprove = model.canApprove(statement);
+				canReject = model.canReject(statement);
+			}
+		}
+		_approveBt.setEnabled(canApprove);
+		_rejectBt.setEnabled(canReject);
 	}
 
 }

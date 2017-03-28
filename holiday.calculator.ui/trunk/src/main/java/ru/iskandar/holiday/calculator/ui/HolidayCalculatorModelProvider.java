@@ -11,8 +11,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import ru.iskandar.holiday.calculator.dataconnection.ClientConnector;
+import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorEvent;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
-import ru.iskandar.holiday.calculator.service.model.HolidayStatementSendedEvent;
 import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorModelListener;
 
 public class HolidayCalculatorModelProvider implements ILoadingProvider {
@@ -180,9 +180,9 @@ public class HolidayCalculatorModelProvider implements ILoadingProvider {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void holidayStatementSended(HolidayStatementSendedEvent aEvent) {
+		public void handleEvent(HolidayCalculatorEvent aEvent) {
 			for (IHolidayCalculatorModelListener listener : _modelListeners) {
-				listener.holidayStatementSended(aEvent);
+				listener.handleEvent(aEvent);
 			}
 
 		}

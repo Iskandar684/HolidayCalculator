@@ -3,10 +3,12 @@
  */
 package ru.iskandar.holiday.calculator.service.model;
 
+import ru.iskandar.holiday.calculator.service.ejb.HolidayCalculatorException;
+
 /**
  * Исключение модели учета отгулов
  */
-public class HolidayCalculatorModelException extends Exception {
+public class HolidayCalculatorModelException extends HolidayCalculatorException {
 
 	/**
 	 * Идентификатор

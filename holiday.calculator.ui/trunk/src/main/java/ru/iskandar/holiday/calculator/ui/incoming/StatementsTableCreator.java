@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TableColumn;
 
-import ru.iskandar.holiday.calculator.service.model.HolidayStatementSendedEvent;
+import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorEvent;
 import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorModelListener;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
@@ -121,7 +121,7 @@ public class StatementsTableCreator {
 			 * @param aAEvent
 			 */
 			@Override
-			public void holidayStatementSended(HolidayStatementSendedEvent aAEvent) {
+			public void handleEvent(HolidayCalculatorEvent aAEvent) {
 				Display.getDefault().asyncExec(new Runnable() {
 
 					/**

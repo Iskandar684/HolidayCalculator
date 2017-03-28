@@ -1,6 +1,3 @@
-/**
- *
- */
 package ru.iskandar.holiday.calculator.service.model;
 
 import java.util.Objects;
@@ -11,35 +8,36 @@ import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
 /**
- * @author Windows 7 x64
- *
+ * Слушатетель JMS
  */
 public class HolidayCalculatorEventListener implements MessageListener {
-	/***/
+
+	/** Модель учета отгулов */
 	private final HolidayCalculatorModel _model;
 
 	/**
-	 *
+	 * Конструктор
+	 * 
+	 * @param aModel
+	 *            модель учета отгулов
 	 */
 	public HolidayCalculatorEventListener(HolidayCalculatorModel aModel) {
 		Objects.requireNonNull(aModel);
 		_model = aModel;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void onMessage(Message aMessage) {
-		// TODO
-		System.out.println("onEvent in model " + aMessage);
 		HolidayCalculatorEvent event;
 		try {
 			event = (HolidayCalculatorEvent) ((ObjectMessage) aMessage).getObject();
 		} catch (JMSException e) {
 			throw new IllegalStateException("Ошибка получения содержимого сообщения", e);
 		}
-
-		if (event instanceof HolidayStatementSendedEvent) {
-			_model.fireHolidayStatementSended((HolidayStatementSendedEvent) event);
-		}
+		_model.fireEvent(event);
 	}
 
 }

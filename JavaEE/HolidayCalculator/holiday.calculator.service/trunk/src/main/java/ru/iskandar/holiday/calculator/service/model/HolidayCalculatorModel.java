@@ -79,7 +79,9 @@ public class HolidayCalculatorModel implements Serializable {
 	 *             если не удалось получить сервис учета отгулов
 	 */
 	void sendHolidayStatement(HolidayStatement aStatement) throws StatementAlreadySendedException {
-		_servicesProvider.getHolidayCalculatorService().sendStatement(aStatement);
+		HolidayStatement statement = _servicesProvider.getHolidayCalculatorService().sendStatement(aStatement);
+		HolidayStatementSendedEvent event = new HolidayStatementSendedEvent(statement);
+		fireEvent(event);
 	}
 
 	/**

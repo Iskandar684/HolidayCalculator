@@ -120,6 +120,10 @@ public class Messages extends NLS {
 
 	public static String statementForConsiderNotSelectedDialogTitle;
 
+	public static String holidayStatementSendErrorBecauseCannotLookupRemoteServiceDialogTitle;
+
+	public static String holidayStatementSendErrorBecauseCannotLookupRemoteServiceDialogText;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

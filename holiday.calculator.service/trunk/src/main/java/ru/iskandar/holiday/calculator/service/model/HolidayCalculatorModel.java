@@ -193,11 +193,15 @@ public class HolidayCalculatorModel implements Serializable {
 	public void approve(Statement aStatement) throws StatementAlreadyConsideredException {
 		Objects.requireNonNull(aStatement);
 		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
+		Statement statement;
 		try {
-			service.approve(aStatement);
+			statement = service.approve(aStatement);
 		} catch (EJBAccessException e) {
 			throw new PermissionDeniedException("Нет прав на рассмотрение заявлений", e);
 		}
+		StatementConsideredEvent event = new StatementConsideredEvent(statement);
+		event.setInitiator(_clientId);
+		fireEvent(event);
 	}
 
 	/**
@@ -253,11 +257,15 @@ public class HolidayCalculatorModel implements Serializable {
 	public void reject(Statement aStatement) throws StatementAlreadyConsideredException {
 		Objects.requireNonNull(aStatement);
 		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
+		Statement statement;
 		try {
-			service.reject(aStatement);
+			statement = service.reject(aStatement);
 		} catch (EJBAccessException e) {
 			throw new PermissionDeniedException("Нет прав на рассмотрение заявлений", e);
 		}
+		StatementConsideredEvent event = new StatementConsideredEvent(statement);
+		event.setInitiator(_clientId);
+		fireEvent(event);
 	}
 
 	public void addListener(IHolidayCalculatorModelListener aListener) {

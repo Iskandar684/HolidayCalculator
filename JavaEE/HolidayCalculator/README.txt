@@ -27,7 +27,11 @@ wildfly-10.1.0.Final\standalone\configuration\standalone.xml
     </interface>
 </interfaces>
 
-7. Запустить wildfly-10.1.0.Final/bin/standalone.bat
+7. Разрешить вызов методов, для которых не определено полномочие
+wildfly-10.1.0.Final\standalone\configuration\standalone.xml
+<default-missing-method-permissions-deny-access value="false"/>
+
+8. Запустить wildfly-10.1.0.Final/bin/standalone.bat
 
 
 Добавление пользователей.

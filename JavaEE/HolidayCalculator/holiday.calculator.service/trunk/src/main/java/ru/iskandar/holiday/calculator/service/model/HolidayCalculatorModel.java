@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 
+import javax.ejb.EJBAccessException;
 import javax.jms.JMSException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -20,7 +21,6 @@ import ru.iskandar.holiday.calculator.service.ejb.StatementNotFoundException;
 
 /**
  * Модель учета отгулов
- *
  */
 public class HolidayCalculatorModel implements Serializable {
 	/**
@@ -151,16 +151,23 @@ public class HolidayCalculatorModel implements Serializable {
 	}
 
 	/**
-	 * @return
+	 * Возвращает количество нерассмотренных заявлений
+	 *
+	 * @return количество нерассмотренных заявлений
 	 * @throws ServiceLookupException
 	 *             если не удалось получить сервис учета отгулов
+	 * @throws PermissionDeniedException
+	 *             если нет прав на получение количества нерассмотренных
+	 *             заявлений
 	 */
 	public int getUnConsideredStatementsCount() {
-		if (!canConsider()) {
-			throw new PermissionDeniedException("Нет прав на получение количества нерассмотренных заявлений");
+		Set<Statement> statements;
+		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
+		try {
+			statements = service.loadStatements(EnumSet.of(StatementStatus.NOT_CONSIDERED));
+		} catch (EJBAccessException e) {
+			throw new PermissionDeniedException("Нет прав на получение количества нерассмотренных заявлений", e);
 		}
-		Set<Statement> statements = _servicesProvider.getHolidayCalculatorService()
-				.loadStatements(EnumSet.of(StatementStatus.NOT_CONSIDERED));
 		return statements.size();
 	}
 
@@ -180,10 +187,17 @@ public class HolidayCalculatorModel implements Serializable {
 	 *             если заявление с указанным UUID не найдено
 	 * @throws ServiceLookupException
 	 *             если не удалось получить сервис учета отгулов
+	 * @throws PermissionDeniedException
+	 *             если нет прав на рассмотрение заявлений
 	 */
 	public void approve(Statement aStatement) throws StatementAlreadyConsideredException {
 		Objects.requireNonNull(aStatement);
-		_servicesProvider.getHolidayCalculatorService().approve(aStatement);
+		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
+		try {
+			service.approve(aStatement);
+		} catch (EJBAccessException e) {
+			throw new PermissionDeniedException("Нет прав на рассмотрение заявлений", e);
+		}
 	}
 
 	/**
@@ -205,6 +219,7 @@ public class HolidayCalculatorModel implements Serializable {
 	 * @param aStatement
 	 * @throws ServiceLookupException
 	 *             если не удалось получить сервис учета отгулов
+	 *
 	 * @return
 	 */
 	public boolean canReject(Statement aStatement) {
@@ -232,10 +247,17 @@ public class HolidayCalculatorModel implements Serializable {
 	 *             если заявление с указанным UUID не найдено
 	 * @throws ServiceLookupException
 	 *             если не удалось получить сервис учета отгулов
+	 * @throws PermissionDeniedException
+	 *             если нет прав на рассмотрение заявлений
 	 */
 	public void reject(Statement aStatement) throws StatementAlreadyConsideredException {
 		Objects.requireNonNull(aStatement);
-		_servicesProvider.getHolidayCalculatorService().reject(aStatement);
+		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
+		try {
+			service.reject(aStatement);
+		} catch (EJBAccessException e) {
+			throw new PermissionDeniedException("Нет прав на рассмотрение заявлений", e);
+		}
 	}
 
 	public void addListener(IHolidayCalculatorModelListener aListener) {
@@ -305,12 +327,21 @@ public class HolidayCalculatorModel implements Serializable {
 	}
 
 	/**
-	 * @return
+	 * Возвращает входящие заявления
+	 *
+	 * @return входящие заявления
 	 * @throws ServiceLookupException
 	 *             если не удалось получить сервис учета отгулов
+	 * @throws PermissionDeniedException
+	 *             если нет прав на рассмотрение заявлений
 	 */
 	public Collection<Statement> getIncomingStatements() {
-		return _servicesProvider.getHolidayCalculatorService().getIncomingStatements();
+		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
+		try {
+			return service.getIncomingStatements();
+		} catch (EJBAccessException e) {
+			throw new PermissionDeniedException("Нет прав на загрузку входящих заявлений", e);
+		}
 	}
 
 	/**

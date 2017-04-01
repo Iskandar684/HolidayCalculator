@@ -2,7 +2,7 @@ package ru.iskandar.holiday.calculator.service.ejb;
 
 import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
-import javax.ejb.Remote;
+import javax.ejb.Local;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 
@@ -12,8 +12,8 @@ import ru.iskandar.holiday.calculator.service.model.UserId;
  * Сервис работы с полномочиями
  */
 @Stateless
-@Remote(IPermissionsService.class)
-public class PermissionsServiceBean implements IPermissionsService {
+@Local(IPermissionsServiceLocal.class)
+public class PermissionsServiceBean implements IPermissionsServiceLocal {
 
 	/** Контекст сессии */
 	@Resource

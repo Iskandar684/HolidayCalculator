@@ -3,12 +3,12 @@ package ru.iskandar.holiday.calculator.service.ejb;
 import ru.iskandar.holiday.calculator.service.model.UserId;
 
 /**
- * Сервис проверки полномочий у пользователя
+ * Локальный сервис проверки полномочий у пользователя
  */
-public interface IPermissionsService {
+public interface IPermissionsServiceLocal {
 
 	/** JNDI имя */
-	public static String JNDI_NAME = "holiday.calculator.service/PermissionsServiceBean!ru.iskandar.holiday.calculator.service.ejb.IPermissionsService";
+	public static String JNDI_NAME = "holiday.calculator.service/PermissionsServiceBean!ru.iskandar.holiday.calculator.service.ejb.IPermissionsServiceLocal";
 
 	/**
 	 * Возвращает наличие указанных полномочий у указанного пользователя

@@ -35,7 +35,7 @@ public class UserServiceBean implements IUserServiceLocal {
 
 			@Override
 			protected UUID getUUID() {
-				return UUID.randomUUID();
+				return UUID.fromString("ae155d60-916b-4d35-93a2-04b7ce46b6ba");
 			}
 
 			@Override
@@ -66,7 +66,7 @@ public class UserServiceBean implements IUserServiceLocal {
 
 			@Override
 			protected UUID getUUID() {
-				return UUID.randomUUID();
+				return UUID.fromString("13dd034b-94a9-491d-bdf4-d36cbace7140");
 			}
 
 			@Override

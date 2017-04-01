@@ -2,6 +2,7 @@ package ru.iskandar.holiday.calculator.service.model;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Set;
@@ -255,6 +256,35 @@ public class HolidayCalculatorModel implements Serializable {
 
 	public Collection<Statement> getIncomingStatements() {
 		return _service.getIncomingStatements();
+	}
+
+	/**
+	 * Возвращает количество не использованных дней отпуска в этом периоде
+	 *
+	 * @return количество дней
+	 */
+	public int getLeaveCount() {
+		return 28;
+	}
+
+	/**
+	 * Возвращает количество исходящих дней отпуска. Это количество дней, на
+	 * которое уменьшется количество дней отпуска в этом периоде, после того как
+	 * заявление на отпуск будет принят.
+	 *
+	 * @return не отрицательное количество исходящих дней отпуска.
+	 */
+	public int getOutgoingLeaveCount() {
+		return 14;
+	}
+
+	/**
+	 * Возвращает дату начала следующего периода
+	 *
+	 * @return дата начала следующего периода
+	 */
+	public Date getNextLeaveStartDate() {
+		return new Date();
 	}
 
 }

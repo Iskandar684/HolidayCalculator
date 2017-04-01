@@ -12,6 +12,7 @@ import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 
 import ru.iskandar.holiday.calculator.service.model.User;
+import ru.iskandar.holiday.calculator.service.model.UserFactory;
 
 /**
  * Сервис работы с пользователями
@@ -27,12 +28,68 @@ public class UserServiceBean implements IUserServiceLocal {
 	 *
 	 */
 	public UserServiceBean() {
+		// TODO временно
 		String login1 = "user1";
-		User user1 = new User(UUID.randomUUID(), "Анисимов", "Олег", "Артёмович", login1);
+
+		UserFactory factory1 = new UserFactory() {
+
+			@Override
+			protected UUID getUUID() {
+				return UUID.randomUUID();
+			}
+
+			@Override
+			protected String getFirstName() {
+
+				return "Олег";
+			}
+
+			@Override
+			protected String getLastName() {
+
+				return "Анисимов";
+			}
+
+			@Override
+			protected String getPatronymic() {
+
+				return "Артёмович";
+			}
+
+		};
+		User user1 = factory1.create();
 		_loginToUserMap.put(login1, user1);
 
 		String login2 = "user2";
-		User user2 = new User(UUID.randomUUID(), "Григорьев", "Федор", "Михалович", login1);
+
+		UserFactory factory2 = new UserFactory() {
+
+			@Override
+			protected UUID getUUID() {
+				return UUID.randomUUID();
+			}
+
+			@Override
+			protected String getFirstName() {
+
+				return "Федор";
+			}
+
+			@Override
+			protected String getLastName() {
+
+				return "Григорьев";
+			}
+
+			@Override
+			protected String getPatronymic() {
+
+				return "Михалович";
+			}
+
+		};
+		User user2 = factory2.create();
+
 		_loginToUserMap.put(login2, user2);
 	}
 
@@ -49,7 +106,6 @@ public class UserServiceBean implements IUserServiceLocal {
 		// TODO реализовать
 		Principal principal = _context.getCallerPrincipal();
 		String login = principal.getName();
-		System.out.println("currentUserLogin " + login);
 
 		User user = _loginToUserMap.get(login);
 		if (user == null) {

@@ -37,6 +37,9 @@ public class HolidayCalculatorModel implements Serializable {
 	/** Слушатели */
 	private transient CopyOnWriteArrayList<IHolidayCalculatorModelListener> _listeners;
 
+	/** Идентификатор клиента */
+	private ClientId _clientId;
+
 	/**
 	 * Конструктор
 	 */
@@ -81,6 +84,7 @@ public class HolidayCalculatorModel implements Serializable {
 	void sendHolidayStatement(HolidayStatement aStatement) throws StatementAlreadySendedException {
 		HolidayStatement statement = _servicesProvider.getHolidayCalculatorService().sendStatement(aStatement);
 		HolidayStatementSendedEvent event = new HolidayStatementSendedEvent(statement);
+		event.setInitiator(_clientId);
 		fireEvent(event);
 	}
 
@@ -100,15 +104,20 @@ public class HolidayCalculatorModel implements Serializable {
 	 *            контекст
 	 * @param aLogger
 	 *            логгер
+	 * @param aClientId
+	 *            идентификатор клиента
 	 * @throws HolidayCalculatorModelInitException
 	 *             если произошла ошибка при инициализации
 	 * @throws NullPointerException
-	 *             если aInitialContext или aLogger равны {@code null}
+	 *             если aInitialContext или aLogger или aClientId равны
+	 *             {@code null}
 	 */
-	public synchronized void init(final InitialContext aInitialContext, final IHolidayCalculatorModelLogger aLogger)
-			throws HolidayCalculatorModelInitException {
+	public synchronized void init(final InitialContext aInitialContext, final IHolidayCalculatorModelLogger aLogger,
+			ClientId aClientId) throws HolidayCalculatorModelInitException {
 		Objects.requireNonNull(aLogger, "Не указан логгер");
 		Objects.requireNonNull(aInitialContext, "Не указан контекст");
+		Objects.requireNonNull(aClientId, "Не указан идентификатор клиента");
+		_clientId = aClientId;
 		_servicesProvider = new RemoteServicesProvider(aInitialContext);
 		Runnable run = new Runnable() {
 			/**
@@ -357,6 +366,10 @@ public class HolidayCalculatorModel implements Serializable {
 		 */
 		public void logError(String aMessage, Exception aException);
 
+	}
+
+	public ClientId getClientId() {
+		return _clientId;
 	}
 
 }

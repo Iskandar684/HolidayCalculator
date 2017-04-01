@@ -1,5 +1,7 @@
 package ru.iskandar.holiday.calculator.dataconnection;
 
+import java.util.UUID;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
@@ -9,6 +11,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
 
 import ru.iskandar.holiday.calculator.clientlibraries.Activator;
 import ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorRemote;
+import ru.iskandar.holiday.calculator.service.model.ClientId;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel.IHolidayCalculatorModelLogger;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelInitException;
@@ -21,6 +24,9 @@ public class ClientConnector {
 
 	/** Логгер */
 	private final Logger _logger = new Logger();
+
+	/** Идентификатор клиента */
+	private final ClientId _clientId = ClientId.fromUUID(UUID.randomUUID());
 
 	/**
 	 * Загружает модель
@@ -54,7 +60,7 @@ public class ClientConnector {
 			throw new ConnectionException("Ошибка создания модели учета отгулов", e);
 		}
 		try {
-			model.init(ctx, _logger);
+			model.init(ctx, _logger, _clientId);
 		} catch (HolidayCalculatorModelInitException e) {
 			throw new ConnectionException("Ошибка инициализации модели учета отгулов", e);
 		}

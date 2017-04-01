@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Set;
 
+import javax.ejb.EJBAccessException;
+
 import ru.iskandar.holiday.calculator.service.ejb.InvalidStatementException;
 import ru.iskandar.holiday.calculator.service.ejb.StatementAlreadyConsideredException;
 import ru.iskandar.holiday.calculator.service.ejb.StatementAlreadySendedException;
@@ -29,6 +31,8 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @param aStatuses
 	 *            статусы
 	 * @return заявления
+	 * @throws EJBAccessException
+	 *             если нет прав на рассмотрение заявлений
 	 */
 	public Set<Statement> loadStatements(EnumSet<StatementStatus> aStatuses);
 
@@ -46,6 +50,8 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 *             если заявление заполнено некорректно
 	 * @throws StatementNotFoundException
 	 *             если заявление с указанным UUID не найдено
+	 * @throws EJBAccessException
+	 *             если нет прав на рассмотрение заявлений
 	 */
 	public Statement approve(Statement aStatement) throws StatementAlreadyConsideredException;
 
@@ -63,6 +69,8 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 *             если заявление заполнено некорректно
 	 * @throws StatementNotFoundException
 	 *             если заявление с указанным UUID не найдено
+	 * @throws EJBAccessException
+	 *             если нет прав на рассмотрение заявлений
 	 */
 	public Statement reject(Statement aStatement) throws StatementAlreadyConsideredException;
 

@@ -10,6 +10,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
@@ -37,6 +39,7 @@ import ru.iskandar.holiday.calculator.service.utils.DateUtils;
  */
 @Stateless
 @Remote(IHolidayCalculatorRemote.class)
+@DeclareRoles({ Permissions.CONSIDER })
 public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 
 	/** Логгер */
@@ -69,7 +72,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	/**
 	 * {@inheritDoc}
 	 */
-	// @RolesAllowed (Permissions.CONSIDER.getId())
+	@RolesAllowed(Permissions.CONSIDER)
 	@Override
 	public Set<Statement> loadStatements(EnumSet<StatementStatus> aStatuses) {
 		Objects.requireNonNull(aStatuses);
@@ -85,6 +88,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	/**
 	 * {@inheritDoc}
 	 */
+	@RolesAllowed(Permissions.CONSIDER)
 	@Override
 	public Statement approve(Statement aStatement) throws StatementAlreadyConsideredException {
 		Objects.requireNonNull(aStatement);
@@ -112,6 +116,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	/**
 	 * {@inheritDoc}
 	 */
+	@RolesAllowed(Permissions.CONSIDER)
 	@Override
 	public Statement reject(Statement aStatement) throws StatementAlreadyConsideredException {
 		Objects.requireNonNull(aStatement);
@@ -250,6 +255,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	/**
 	 * {@inheritDoc}
 	 */
+	@RolesAllowed(Permissions.CONSIDER)
 	@Override
 	public Collection<Statement> getIncomingStatements() {
 		Collection<Statement> incoming = new HashSet<>();
@@ -329,7 +335,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	 */
 	@Override
 	public boolean canConsider() {
-		boolean canConsider = _permissionsService.hasPermission(PermissionId.from(Permissions.CONSIDER.getId()));
+		boolean canConsider = _permissionsService.hasPermission(PermissionId.from(Permissions.CONSIDER));
 		return canConsider;
 	}
 

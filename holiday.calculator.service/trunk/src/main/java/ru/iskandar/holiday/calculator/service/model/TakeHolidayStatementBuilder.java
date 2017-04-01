@@ -25,6 +25,7 @@ public class TakeHolidayStatementBuilder implements Serializable {
 	/** Дни на отгул */
 	private final Set<Date> _days = new HashSet<>();
 
+	/** Модель */
 	private final HolidayCalculatorModel _model;
 
 	/**
@@ -43,6 +44,8 @@ public class TakeHolidayStatementBuilder implements Serializable {
 	 * @throws StatementAlreadySendedException
 	 *             если заявление уже было подано (например, при попытке подать
 	 *             второй раз заявление на один и тот же день)
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
 	 */
 	public void sendHolidayStatement() throws StatementAlreadySendedException {
 		// if (!canSendHolidayStatement()) {

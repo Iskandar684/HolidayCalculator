@@ -5,6 +5,8 @@ import java.util.Objects;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -18,6 +20,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.part.EditorPart;
 
+import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorEvent;
+import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorModelListener;
 import ru.iskandar.holiday.calculator.service.model.TakeHolidayStatementBuilder;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.Messages;
@@ -65,6 +69,19 @@ public class TakeHolidayEditor extends EditorPart {
 		Objects.requireNonNull(_modelProvider);
 	}
 
+	private class HolidayCalculatorModelListener implements IHolidayCalculatorModelListener {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void handleEvent(HolidayCalculatorEvent aEvent) {
+			// TODO закрыть редактор после отправки
+
+		}
+
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -97,6 +114,19 @@ public class TakeHolidayEditor extends EditorPart {
 
 		createLeft(sash);
 		createRight(sash);
+
+		final HolidayCalculatorModelListener modelListener = new HolidayCalculatorModelListener();
+		_modelProvider.addListener(modelListener);
+		main.addDisposeListener(new DisposeListener() {
+
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public void widgetDisposed(DisposeEvent aE) {
+				_modelProvider.removeListener(modelListener);
+			}
+		});
 	}
 
 	/**

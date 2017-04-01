@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Событие сервиса учета отгулов
  */
-public class HolidayCalculatorEvent implements Serializable {
+public abstract class HolidayCalculatorEvent implements Serializable {
 
 	/**
 	 * Идентификатор для сериализации

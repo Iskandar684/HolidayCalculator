@@ -12,6 +12,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -20,8 +21,9 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.part.EditorPart;
 
-import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorEvent;
-import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorModelListener;
+import ru.iskandar.holiday.calculator.service.model.ClientId;
+import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorListenerAdapter;
+import ru.iskandar.holiday.calculator.service.model.HolidayStatementSendedEvent;
 import ru.iskandar.holiday.calculator.service.model.TakeHolidayStatementBuilder;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.Messages;
@@ -69,17 +71,39 @@ public class TakeHolidayEditor extends EditorPart {
 		Objects.requireNonNull(_modelProvider);
 	}
 
-	private class HolidayCalculatorModelListener implements IHolidayCalculatorModelListener {
+	/**
+	 * Слушатель модели
+	 */
+	private class HolidayCalculatorModelListener extends HolidayCalculatorListenerAdapter {
 
 		/**
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void handleEvent(HolidayCalculatorEvent aEvent) {
-			// TODO закрыть редактор после отправки
+		protected void holidayStatementSended(HolidayStatementSendedEvent aEvent) {
+			ClientId currentClientId = _modelProvider.getModel().getClientId();
+			if (currentClientId.equals(aEvent.getInitiator())) {
+				Display.getDefault().asyncExec(new Runnable() {
 
+					/**
+					 * {@inheritDoc}
+					 */
+					@Override
+					public void run() {
+						TakeHolidayEditor.this.close();
+					}
+
+				});
+			}
 		}
 
+	}
+
+	/**
+	 * Закрывает редактор
+	 */
+	private void close() {
+		getEditorSite().getPage().closeEditor(this, false);
 	}
 
 	/**

@@ -3,6 +3,7 @@ package ru.iskandar.holiday.calculator.ui.incoming;
 import java.util.Collection;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.Viewer;
 
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 import ru.iskandar.holiday.calculator.service.model.Statement;
@@ -33,6 +34,20 @@ public class IncomingTableContentProvider implements IStructuredContentProvider 
 		}
 		Collection<Statement> statements = model.getIncomingStatements();
 		return statements.toArray();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void dispose() {
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void inputChanged(Viewer aViewer, Object aOldInput, Object aNewInput) {
 	}
 
 }

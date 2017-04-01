@@ -23,6 +23,7 @@ import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelFactor
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelLoadException;
 import ru.iskandar.holiday.calculator.service.model.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.HolidayStatementSendedEvent;
+import ru.iskandar.holiday.calculator.service.model.Permissions;
 import ru.iskandar.holiday.calculator.service.model.RecallStatement;
 import ru.iskandar.holiday.calculator.service.model.Statement;
 import ru.iskandar.holiday.calculator.service.model.StatementConsideredEvent;
@@ -48,6 +49,10 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	/** Отправитель сообщения */
 	@EJB
 	private MessageSenderBean _messageSender;
+
+	/** Сервис полномочий */
+	@EJB
+	private IPermissionsServiceLocal _permissionsService;
 
 	// TODO имитация БД
 	private static Map<UUID, Statement> _statements = new HashMap<>();
@@ -317,6 +322,15 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		default:
 			break;
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean canConsider() {
+		boolean canConsider = _permissionsService.hasPermission(PermissionId.from(Permissions.CONSIDER.getId()));
+		return canConsider;
 	}
 
 }

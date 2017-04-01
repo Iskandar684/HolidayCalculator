@@ -13,8 +13,6 @@ import javax.jms.JMSException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorRemote;
-import ru.iskandar.holiday.calculator.service.ejb.IPermissionsService;
 import ru.iskandar.holiday.calculator.service.ejb.InvalidStatementException;
 import ru.iskandar.holiday.calculator.service.ejb.StatementAlreadyConsideredException;
 import ru.iskandar.holiday.calculator.service.ejb.StatementAlreadySendedException;
@@ -29,13 +27,14 @@ public class HolidayCalculatorModel implements Serializable {
 	 * Индентификатор для сериализации
 	 */
 	private static final long serialVersionUID = -2279698461127019581L;
+
 	/** Текущий пользователь */
 	private final User _currenUser;
 
-	private IHolidayCalculatorModelPermissions _permissions;
+	/** Поставщик сервисов */
+	private IServicesProvider _servicesProvider;
 
-	private IHolidayCalculatorRemote _service;
-
+	/** Слушатели */
 	private transient CopyOnWriteArrayList<IHolidayCalculatorModelListener> _listeners;
 
 	/**
@@ -76,9 +75,11 @@ public class HolidayCalculatorModel implements Serializable {
 	 * @throws StatementAlreadySendedException
 	 *             если заявление уже было подано (например, при попытке подать
 	 *             второй раз заявление на один и тот же день)
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
 	 */
 	void sendHolidayStatement(HolidayStatement aStatement) throws StatementAlreadySendedException {
-		_service.sendStatement(aStatement);
+		_servicesProvider.getHolidayCalculatorService().sendStatement(aStatement);
 	}
 
 	/**
@@ -91,6 +92,7 @@ public class HolidayCalculatorModel implements Serializable {
 	}
 
 	public synchronized void init(final InitialContext aInitialContext) throws HolidayCalculatorModelInitException {
+		_servicesProvider = new RemoteServicesProvider(aInitialContext);
 		Runnable run = new Runnable() {
 			/**
 			 * {@inheritDoc}
@@ -109,30 +111,31 @@ public class HolidayCalculatorModel implements Serializable {
 
 		};
 		Executors.newSingleThreadExecutor().submit(run);
-
-		IPermissionsService permService;
-		try {
-			permService = (IPermissionsService) aInitialContext.lookup(IPermissionsService.JNDI_NAME);
-		} catch (NamingException e) {
-			throw new HolidayCalculatorModelInitException("Ошибка получения сервиса работы с полномочиями", e);
-		}
-		_permissions = new CurrentUserHolidayCalculatorModelPermissions(permService);
-		try {
-			_service = (IHolidayCalculatorRemote) aInitialContext.lookup(IHolidayCalculatorRemote.JNDI_NAME);
-		} catch (NamingException e) {
-			throw new HolidayCalculatorModelInitException("Ошибка получения сервиса учета отгулов", e);
-		}
 	}
 
+	/**
+	 * Возвращает наличие полномочий на рассмотрение заявлений
+	 *
+	 * @return {@code true}, если текущий пользователь имеет полномочие
+	 *         рассматривать заявления
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
+	 */
 	public boolean canConsider() {
-		return _permissions.canConsider();
+		return _servicesProvider.getHolidayCalculatorService().canConsider();
 	}
 
+	/**
+	 * @return
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
+	 */
 	public int getUnConsideredStatementsCount() {
 		if (!canConsider()) {
 			throw new PermissionDeniedException("Нет прав на получение количества нерассмотренных заявлений");
 		}
-		Set<Statement> statements = _service.loadStatements(EnumSet.of(StatementStatus.NOT_CONSIDERED));
+		Set<Statement> statements = _servicesProvider.getHolidayCalculatorService()
+				.loadStatements(EnumSet.of(StatementStatus.NOT_CONSIDERED));
 		return statements.size();
 	}
 
@@ -150,12 +153,20 @@ public class HolidayCalculatorModel implements Serializable {
 	 *             если заявление заполнено некорректно
 	 * @throws StatementNotFoundException
 	 *             если заявление с указанным UUID не найдено
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
 	 */
 	public void approve(Statement aStatement) throws StatementAlreadyConsideredException {
 		Objects.requireNonNull(aStatement);
-		_service.approve(aStatement);
+		_servicesProvider.getHolidayCalculatorService().approve(aStatement);
 	}
 
+	/**
+	 * @param aStatement
+	 * @return
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
+	 */
 	public boolean canApprove(Statement aStatement) {
 		Objects.requireNonNull(aStatement);
 		if (!canConsider()) {
@@ -165,6 +176,12 @@ public class HolidayCalculatorModel implements Serializable {
 		return StatementStatus.NOT_CONSIDERED.equals(status);
 	}
 
+	/**
+	 * @param aStatement
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
+	 * @return
+	 */
 	public boolean canReject(Statement aStatement) {
 		Objects.requireNonNull(aStatement);
 		if (!canConsider()) {
@@ -188,10 +205,12 @@ public class HolidayCalculatorModel implements Serializable {
 	 *             если заявление заполнено некорректно
 	 * @throws StatementNotFoundException
 	 *             если заявление с указанным UUID не найдено
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
 	 */
 	public void reject(Statement aStatement) throws StatementAlreadyConsideredException {
 		Objects.requireNonNull(aStatement);
-		_service.reject(aStatement);
+		_servicesProvider.getHolidayCalculatorService().reject(aStatement);
 	}
 
 	public void addListener(IHolidayCalculatorModelListener aListener) {
@@ -228,9 +247,11 @@ public class HolidayCalculatorModel implements Serializable {
 	 * Возвращает общее количество отгулов
 	 *
 	 * @return количество отгулов
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
 	 */
 	public int getHolidaysQuantity() {
-		return _service.getHolidaysQuantity(_currenUser);
+		return _servicesProvider.getHolidayCalculatorService().getHolidaysQuantity(_currenUser);
 	}
 
 	/**
@@ -239,9 +260,11 @@ public class HolidayCalculatorModel implements Serializable {
 	 * на отгул будет принят.
 	 *
 	 * @return не отрицательное количество исходящих дней отгула
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
 	 */
 	public int getOutgoingHolidaysQuantity() {
-		return _service.getOutgoingHolidaysQuantity(_currenUser);
+		return _servicesProvider.getHolidayCalculatorService().getOutgoingHolidaysQuantity(_currenUser);
 	}
 
 	/**
@@ -249,21 +272,31 @@ public class HolidayCalculatorModel implements Serializable {
 	 * будет увеличино общее количество отгулов, после того как засчитают отзыв.
 	 *
 	 * @return количество приходящих отгулов
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
 	 */
 	public int getIncomingHolidaysQuantity() {
-		return _service.getIncomingHolidaysQuantity(_currenUser);
+		return _servicesProvider.getHolidayCalculatorService().getIncomingHolidaysQuantity(_currenUser);
 	}
 
+	/**
+	 * @return
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
+	 */
 	public Collection<Statement> getIncomingStatements() {
-		return _service.getIncomingStatements();
+		return _servicesProvider.getHolidayCalculatorService().getIncomingStatements();
 	}
 
 	/**
 	 * Возвращает количество не использованных дней отпуска в этом периоде
 	 *
 	 * @return количество дней
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
 	 */
 	public int getLeaveCount() {
+		// TODO
 		return 28;
 	}
 
@@ -273,8 +306,11 @@ public class HolidayCalculatorModel implements Serializable {
 	 * заявление на отпуск будет принят.
 	 *
 	 * @return не отрицательное количество исходящих дней отпуска.
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
 	 */
 	public int getOutgoingLeaveCount() {
+		// TODO
 		return 14;
 	}
 
@@ -282,8 +318,11 @@ public class HolidayCalculatorModel implements Serializable {
 	 * Возвращает дату начала следующего периода
 	 *
 	 * @return дата начала следующего периода
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
 	 */
 	public Date getNextLeaveStartDate() {
+		// TODO
 		return new Date();
 	}
 

@@ -261,10 +261,10 @@ public class UserAttributesForm extends Composite {
 			outHQLinkVisible = outHQ != 0;
 			int inHQ = model.getIncomingHolidaysQuantity();
 			inHQLinkVisible = inHQ != 0;
-			int outLC = user.getOutgoingLeaveCount();
+			int outLC = model.getOutgoingLeaveCount();
 
-			int lc = user.getLeaveCount();
-			dateAsStr = new SimpleDateFormat("dd.MM.yyyy").format(user.getNextLeaveStartDate());
+			int lc = model.getLeaveCount();
+			dateAsStr = new SimpleDateFormat("dd.MM.yyyy").format(model.getNextLeaveStartDate());
 			outHQStr = String.format("(-%s)", outHQ);
 
 			inHQStr = String.format("(+%s)", inHQ);

@@ -124,6 +124,14 @@ public class Messages extends NLS {
 
 	public static String holidayStatementSendErrorBecauseCannotLookupRemoteServiceDialogText;
 
+	public static String permissionDeniedWhenConsideringDialogTitle;
+
+	public static String permissionDeniedWhenConsideringDialogText;
+
+	public static String lookupExceptionWhenConsideringDialogTitle;
+
+	public static String lookupExceptionWhenConsideringDialogText;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

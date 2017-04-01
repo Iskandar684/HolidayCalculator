@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -21,10 +23,14 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 import ru.iskandar.holiday.calculator.service.ejb.StatementAlreadyConsideredException;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
+import ru.iskandar.holiday.calculator.service.model.PermissionDeniedException;
+import ru.iskandar.holiday.calculator.service.model.ServiceLookupException;
 import ru.iskandar.holiday.calculator.service.model.Statement;
+import ru.iskandar.holiday.calculator.ui.Activator;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
@@ -185,6 +191,16 @@ public class StatementReviewForm {
 								formatter.format(considerDate));
 					}
 					MessageDialog.openWarning(main.getShell(), Messages.statementAlreadyConsideredDialogTitle, text);
+				} catch (PermissionDeniedException e) {
+					StatusManager.getManager().handle(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+							Messages.permissionDeniedWhenConsideringDialogText, e));
+					MessageDialog.openError(main.getShell(), Messages.permissionDeniedWhenConsideringDialogTitle,
+							Messages.permissionDeniedWhenConsideringDialogText);
+				} catch (ServiceLookupException e) {
+					StatusManager.getManager().handle(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+							Messages.lookupExceptionWhenConsideringDialogText, e));
+					MessageDialog.openError(main.getShell(), Messages.lookupExceptionWhenConsideringDialogTitle,
+							Messages.lookupExceptionWhenConsideringDialogText);
 				}
 			}
 		});
@@ -216,6 +232,16 @@ public class StatementReviewForm {
 								formatter.format(considerDate));
 					}
 					MessageDialog.openWarning(main.getShell(), Messages.statementAlreadyConsideredDialogTitle, text);
+				} catch (PermissionDeniedException e) {
+					StatusManager.getManager().handle(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+							Messages.permissionDeniedWhenConsideringDialogText, e));
+					MessageDialog.openError(main.getShell(), Messages.permissionDeniedWhenConsideringDialogTitle,
+							Messages.permissionDeniedWhenConsideringDialogText);
+				} catch (ServiceLookupException e) {
+					StatusManager.getManager().handle(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+							Messages.lookupExceptionWhenConsideringDialogText, e));
+					MessageDialog.openError(main.getShell(), Messages.lookupExceptionWhenConsideringDialogTitle,
+							Messages.lookupExceptionWhenConsideringDialogText);
 				}
 			}
 		});

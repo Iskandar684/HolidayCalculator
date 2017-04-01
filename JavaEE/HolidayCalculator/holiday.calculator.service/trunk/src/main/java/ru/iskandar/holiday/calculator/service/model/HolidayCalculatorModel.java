@@ -91,7 +91,22 @@ public class HolidayCalculatorModel implements Serializable {
 		return true;
 	}
 
-	public synchronized void init(final InitialContext aInitialContext) throws HolidayCalculatorModelInitException {
+	/**
+	 * Инициализирует модель
+	 *
+	 * @param aInitialContext
+	 *            контекст
+	 * @param aLogger
+	 *            логгер
+	 * @throws HolidayCalculatorModelInitException
+	 *             если произошла ошибка при инициализации
+	 * @throws NullPointerException
+	 *             если aInitialContext или aLogger равны {@code null}
+	 */
+	public synchronized void init(final InitialContext aInitialContext, final IHolidayCalculatorModelLogger aLogger)
+			throws HolidayCalculatorModelInitException {
+		Objects.requireNonNull(aLogger, "Не указан логгер");
+		Objects.requireNonNull(aInitialContext, "Не указан контекст");
 		_servicesProvider = new RemoteServicesProvider(aInitialContext);
 		Runnable run = new Runnable() {
 			/**
@@ -103,8 +118,7 @@ public class HolidayCalculatorModel implements Serializable {
 					new ServerEventsSubscriber().subscribe(aInitialContext,
 							new HolidayCalculatorEventListener(HolidayCalculatorModel.this));
 				} catch (NamingException | JMSException e) {
-					// TODO логировать в клиентский логгер
-					e.printStackTrace();
+					aLogger.logError("Ошибка подписки на серверные события", e);
 				}
 
 			}
@@ -324,6 +338,23 @@ public class HolidayCalculatorModel implements Serializable {
 	public Date getNextLeaveStartDate() {
 		// TODO
 		return new Date();
+	}
+
+	/**
+	 * Логгер
+	 */
+	public static interface IHolidayCalculatorModelLogger {
+
+		/**
+		 * Логирует ошибку
+		 *
+		 * @param aMessage
+		 *            текст
+		 * @param aException
+		 *            причина
+		 */
+		public void logError(String aMessage, Exception aException);
+
 	}
 
 }

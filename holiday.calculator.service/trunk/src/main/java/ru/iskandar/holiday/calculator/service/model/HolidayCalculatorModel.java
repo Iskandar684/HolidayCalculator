@@ -83,7 +83,25 @@ public class HolidayCalculatorModel implements Serializable {
 	 */
 	void sendHolidayStatement(HolidayStatement aStatement) throws StatementAlreadySendedException {
 		HolidayStatement statement = _servicesProvider.getHolidayCalculatorService().sendStatement(aStatement);
-		HolidayStatementSendedEvent event = new HolidayStatementSendedEvent(statement);
+		StatementSendedEvent event = new StatementSendedEvent(statement);
+		event.setInitiator(_clientId);
+		fireEvent(event);
+	}
+
+	/**
+	 * Подает заявление на отпуск
+	 *
+	 * @param aStatement
+	 *            заявление на отпуск
+	 * @throws StatementAlreadySendedException
+	 *             если заявление уже было подано (например, при попытке подать
+	 *             второй раз заявление на один и тот же день)
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
+	 */
+	public void sendLeaveStatement(LeaveStatement aStatement) throws StatementAlreadySendedException {
+		LeaveStatement statement = _servicesProvider.getHolidayCalculatorService().sendStatement(aStatement);
+		StatementSendedEvent event = new StatementSendedEvent(statement);
 		event.setInitiator(_clientId);
 		fireEvent(event);
 	}

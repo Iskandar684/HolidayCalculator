@@ -75,10 +75,10 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	public Statement reject(Statement aStatement) throws StatementAlreadyConsideredException;
 
 	/**
-	 * Подает заявление на рассмотрение
+	 * Подает заявление на отгул рассмотрение
 	 *
 	 * @param aStatement
-	 *            заявление
+	 *            заявление на отгул
 	 * @return заявление
 	 * @throws StatementAlreadySendedException
 	 *             если заявление уже было подано (например, при попытке подать
@@ -89,6 +89,22 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 *             если заявление заполнено некорректно
 	 */
 	public HolidayStatement sendStatement(HolidayStatement aStatement) throws StatementAlreadySendedException;
+
+	/**
+	 * Подает заявление на отпуск на рассмотрение
+	 *
+	 * @param aStatement
+	 *            заявление на отпуск
+	 * @return заявление
+	 * @throws StatementAlreadySendedException
+	 *             если заявление уже было подано (например, при попытке подать
+	 *             второй раз заявление на один и тот же день)
+	 * @throws NullPointerException
+	 *             если aStatement {@code null}
+	 * @throws InvalidStatementException
+	 *             если заявление заполнено некорректно
+	 */
+	public LeaveStatement sendStatement(LeaveStatement aStatement) throws StatementAlreadySendedException;
 
 	/**
 	 * Возвращает количество отгулов у указанного пользователя

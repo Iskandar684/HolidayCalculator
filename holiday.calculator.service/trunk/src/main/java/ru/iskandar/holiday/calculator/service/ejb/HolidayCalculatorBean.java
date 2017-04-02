@@ -24,13 +24,14 @@ import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelFactory;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelLoadException;
 import ru.iskandar.holiday.calculator.service.model.HolidayStatement;
-import ru.iskandar.holiday.calculator.service.model.HolidayStatementSendedEvent;
+import ru.iskandar.holiday.calculator.service.model.LeaveStatement;
 import ru.iskandar.holiday.calculator.service.model.Permissions;
 import ru.iskandar.holiday.calculator.service.model.RecallStatement;
 import ru.iskandar.holiday.calculator.service.model.Statement;
 import ru.iskandar.holiday.calculator.service.model.StatementConsideredEvent;
+import ru.iskandar.holiday.calculator.service.model.StatementSendedEvent;
 import ru.iskandar.holiday.calculator.service.model.StatementStatus;
-import ru.iskandar.holiday.calculator.service.model.StatementType;
+import ru.iskandar.holiday.calculator.service.model.StatementValidator;
 import ru.iskandar.holiday.calculator.service.model.User;
 import ru.iskandar.holiday.calculator.service.utils.DateUtils;
 
@@ -56,6 +57,9 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	/** Сервис полномочий */
 	@EJB
 	private IPermissionsServiceLocal _permissionsService;
+
+	/** Валидатор заявления */
+	private final StatementValidator _statementValidator = new StatementValidator();
 
 	// TODO имитация БД
 	private static Map<UUID, Statement> _statements = new HashMap<>();
@@ -155,7 +159,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		if (StatementStatus.APPROVE.equals(aStatement.getStatus())
 				|| StatementStatus.REJECTED.equals(aStatement.getStatus())) {
 			throw new InvalidStatementException(
-					String.format("Подаваемое заявление не может иметь статус %s", aStatement.getStatus()));
+					String.format("Подаваемое заявление на отгул не может иметь статус %s", aStatement.getStatus()));
 		}
 		Set<Date> currentStatementDays = aStatement.getDays();
 		for (HolidayStatement st : getCurrentUserHolidayStatements()) {
@@ -165,9 +169,54 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		}
 		_statements.put(aStatement.getUuid(), aStatement);
 		try {
-			_messageSender.send(new HolidayStatementSendedEvent(aStatement));
+			_messageSender.send(new StatementSendedEvent(aStatement));
 		} catch (JMSException e) {
 			LOG.error(String.format("Ошибка оповещения об отправки заявления %s на отгул", aStatement), e);
+		}
+		return aStatement;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public LeaveStatement sendStatement(LeaveStatement aStatement) throws StatementAlreadySendedException {
+		Objects.requireNonNull(aStatement);
+		checkStatement(aStatement);
+
+		Statement sendedStatement = _statements.get(aStatement.getUuid());
+		if (sendedStatement != null) {
+			throw new StatementAlreadySendedException(aStatement, sendedStatement);
+		}
+		if (StatementStatus.APPROVE.equals(aStatement.getStatus())
+				|| StatementStatus.REJECTED.equals(aStatement.getStatus())) {
+			throw new InvalidStatementException(
+					String.format("Подаваемое заявление на отпуск не может иметь статус %s", aStatement.getStatus()));
+		}
+		Set<Date> currentStatementDays = aStatement.getLeaveDates();
+		for (Statement st : getCurrentUserStatements()) {
+			switch (st.getStatementType()) {
+			case HOLIDAY_STATEMENT:
+				if (DateUtils.hasIntersectionDays(((HolidayStatement) st).getDays(), currentStatementDays)) {
+					throw new StatementAlreadySendedException(aStatement, st);
+				}
+				break;
+			case LEAVE_STATEMENT:
+				if (DateUtils.hasIntersectionDays(((LeaveStatement) st).getLeaveDates(), currentStatementDays)) {
+					throw new StatementAlreadySendedException(aStatement, st);
+				}
+				break;
+			default:
+				break;
+
+			}
+
+		}
+		_statements.put(aStatement.getUuid(), aStatement);
+		try {
+			_messageSender.send(new StatementSendedEvent(aStatement));
+		} catch (JMSException e) {
+			LOG.error(String.format("Ошибка оповещения об отправки заявления %s на отпуск", aStatement), e);
 		}
 		return aStatement;
 	}
@@ -192,6 +241,10 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 			}
 		}
 		return statementsByUser;
+	}
+
+	private Set<Statement> getCurrentUserStatements() {
+		return getStatementsByUser(_userService.getCurrentUser());
 	}
 
 	/**
@@ -277,57 +330,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	 */
 	private void checkStatement(Statement aStatement) {
 		Objects.requireNonNull(aStatement);
-		if (aStatement.getAuthor() == null) {
-			throw new InvalidStatementException("Не указан автор заявления");
-		}
-		StatementType type = aStatement.getStatementType();
-		if (type == null) {
-			throw new InvalidStatementException("Не указан тип заявления");
-		}
-		if (aStatement.getUuid() == null) {
-			throw new InvalidStatementException("Не указан UUID заявления");
-		}
-		if (aStatement.getCreateDate() == null) {
-			throw new InvalidStatementException("Не указана дата создания заявления");
-		}
-		StatementStatus status = aStatement.getStatus();
-		if (status == null) {
-			throw new InvalidStatementException("Не указан статус заявления");
-		}
-
-		switch (status) {
-		case APPROVE:
-		case REJECTED:
-			if (aStatement.getConsider() == null) {
-				throw new InvalidStatementException("Не указан пользователь, рассмотревший заявление");
-			}
-			if (aStatement.getConsiderDate() == null) {
-				throw new InvalidStatementException("Не указана дата рассмотрения заявления");
-			}
-			break;
-
-		default:
-			break;
-		}
-
-		switch (type) {
-		case HOLIDAY_STATEMENT:
-			HolidayStatement holidayStatement = (HolidayStatement) aStatement;
-			if ((holidayStatement.getDays() == null) || holidayStatement.getDays().isEmpty()) {
-				throw new InvalidStatementException("Не указаны дни (день) на отгул");
-			}
-			break;
-
-		case RECALL_STATEMENT:
-			RecallStatement recallStatement = (RecallStatement) aStatement;
-			if ((recallStatement.getRecallDates() == null) || recallStatement.getRecallDates().isEmpty()) {
-				throw new InvalidStatementException("Не указаны дни (день) на отзыв");
-			}
-			break;
-
-		default:
-			break;
-		}
+		_statementValidator.checkStatement(aStatement);
 	}
 
 	/**

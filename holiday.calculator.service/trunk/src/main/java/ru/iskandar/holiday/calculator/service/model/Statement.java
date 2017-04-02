@@ -125,7 +125,7 @@ public abstract class Statement implements Serializable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int hashCode() {
+	public final int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = (prime * result) + ((_uuid == null) ? 0 : _uuid.hashCode());
@@ -136,19 +136,24 @@ public abstract class Statement implements Serializable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	public final boolean equals(Object obj) {
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		Statement other = (Statement) obj;
 		if (_uuid == null) {
-			if (other._uuid != null)
+			if (other._uuid != null) {
 				return false;
-		} else if (!_uuid.equals(other._uuid))
+			}
+		} else if (!_uuid.equals(other._uuid)) {
 			return false;
+		}
 		return true;
 	}
 

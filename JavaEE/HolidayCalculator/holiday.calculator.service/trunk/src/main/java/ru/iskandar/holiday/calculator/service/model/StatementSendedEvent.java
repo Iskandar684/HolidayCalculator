@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Событие о подачи заявления
  */
-public class HolidayStatementSendedEvent extends HolidayCalculatorEvent {
+public class StatementSendedEvent extends HolidayCalculatorEvent {
 
 	/**
 	 * Идентификатор для сериализации
@@ -13,12 +13,12 @@ public class HolidayStatementSendedEvent extends HolidayCalculatorEvent {
 	private static final long serialVersionUID = -3835067673271539642L;
 
 	/** Заявление, связанное с событием */
-	private final HolidayStatement _affectedStatement;
+	private final Statement _affectedStatement;
 
 	/**
 	 * Конструктор
 	 */
-	public HolidayStatementSendedEvent(HolidayStatement aHolidayStatement) {
+	public StatementSendedEvent(Statement aHolidayStatement) {
 		Objects.requireNonNull(aHolidayStatement);
 		_affectedStatement = aHolidayStatement;
 	}
@@ -26,7 +26,7 @@ public class HolidayStatementSendedEvent extends HolidayCalculatorEvent {
 	/**
 	 * @return the affectedStatement
 	 */
-	public HolidayStatement getAffectedStatement() {
+	public Statement getAffectedStatement() {
 		return _affectedStatement;
 	}
 

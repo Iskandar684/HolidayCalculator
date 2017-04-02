@@ -23,7 +23,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import ru.iskandar.holiday.calculator.service.model.ClientId;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorListenerAdapter;
-import ru.iskandar.holiday.calculator.service.model.HolidayStatementSendedEvent;
+import ru.iskandar.holiday.calculator.service.model.StatementSendedEvent;
 import ru.iskandar.holiday.calculator.service.model.TakeHolidayStatementBuilder;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.Messages;
@@ -80,7 +80,7 @@ public class TakeHolidayEditor extends EditorPart {
 		 * {@inheritDoc}
 		 */
 		@Override
-		protected void holidayStatementSended(HolidayStatementSendedEvent aEvent) {
+		protected void holidayStatementSended(StatementSendedEvent aEvent) {
 			ClientId currentClientId = _modelProvider.getModel().getClientId();
 			if (currentClientId.equals(aEvent.getInitiator())) {
 				Display.getDefault().asyncExec(new Runnable() {

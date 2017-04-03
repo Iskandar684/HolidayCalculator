@@ -40,6 +40,7 @@ public class IncomingStatementsMenuItemPM {
 		update();
 		final HolidayCalculatorModelListener modelListener = new HolidayCalculatorModelListener();
 		aHolidayCalculatorModelProvider.addListener(modelListener);
+		final LoadListener loadListener = new LoadListener();
 		aItem.addDisposeListener(new DisposeListener() {
 
 			/**
@@ -48,31 +49,34 @@ public class IncomingStatementsMenuItemPM {
 			@Override
 			public void widgetDisposed(DisposeEvent aE) {
 				aHolidayCalculatorModelProvider.removeListener(modelListener);
+				aHolidayCalculatorModelProvider.removeLoadListener(loadListener);
 			}
 
 		});
-		aHolidayCalculatorModelProvider.addLoadListener(new ILoadListener() {
-
-			/**
-			 * {@inheritDoc}
-			 */
-			@Override
-			public void loadStatusChanged() {
-				Display.getDefault().asyncExec(new Runnable() {
-
-					/**
-					 * {@inheritDoc}
-					 */
-					@Override
-					public void run() {
-						IncomingStatementsMenuItemPM.this.update();
-					}
-
-				});
-
-			}
-		});
+		aHolidayCalculatorModelProvider.addLoadListener(loadListener);
 		aItem.addSelectionListener(new SelectionHandler());
+	}
+
+	private class LoadListener implements ILoadListener {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void loadStatusChanged() {
+			Display.getDefault().asyncExec(new Runnable() {
+
+				/**
+				 * {@inheritDoc}
+				 */
+				@Override
+				public void run() {
+					IncomingStatementsMenuItemPM.this.update();
+				}
+
+			});
+
+		}
 	}
 
 	private class HolidayCalculatorModelListener implements IHolidayCalculatorModelListener {

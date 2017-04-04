@@ -1,6 +1,8 @@
 package ru.iskandar.holiday.calculator.service.ejb;
 
 import java.security.Principal;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -112,6 +114,14 @@ public class UserServiceBean implements IUserServiceLocal {
 			throw new IllegalStateException(String.format("Пользователь с логином %s не найден", login));
 		}
 		return user;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<User> getAllUsers() {
+		return Collections.unmodifiableCollection(_loginToUserMap.values());
 	}
 
 }

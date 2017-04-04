@@ -1,4 +1,7 @@
-package ru.iskandar.holiday.calculator.ui.takeholiday;
+/**
+ *
+ */
+package ru.iskandar.holiday.calculator.ui.takeleave;
 
 import java.util.Objects;
 
@@ -15,12 +18,13 @@ import org.eclipse.ui.PlatformUI;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
+import ru.iskandar.holiday.calculator.ui.takeholiday.TakeHolidayEditor;
 
 /**
- * Контроллер кнопки формирования заявления на отгул
+ * Контроллер кнопки формирования заявления на отпуск
  *
  */
-public class TakeHolidayButtonPM {
+public class TakeLeaveButtonPM {
 
 	/** Кнопка */
 	private final Button _button;
@@ -31,7 +35,7 @@ public class TakeHolidayButtonPM {
 	/**
 	 * Конструктор
 	 */
-	public TakeHolidayButtonPM(Button aButton, HolidayCalculatorModelProvider aProvider) {
+	public TakeLeaveButtonPM(Button aButton, HolidayCalculatorModelProvider aProvider) {
 		Objects.requireNonNull(aButton);
 		Objects.requireNonNull(aProvider);
 		_button = aButton;
@@ -83,7 +87,7 @@ public class TakeHolidayButtonPM {
 		boolean enabled = false;
 		LoadStatus loadStatus = _provider.getLoadStatus();
 		if (LoadStatus.LOADED.equals(loadStatus)) {
-			enabled = _provider.getModel().canCreateHolidayStatementBuilder();
+			enabled = true;
 		}
 		_button.setEnabled(enabled);
 	}
@@ -99,12 +103,11 @@ public class TakeHolidayButtonPM {
 		public void widgetSelected(SelectionEvent aE) {
 			try {
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(
-						new TakeHolidayEditorInput(_provider), TakeHolidayEditor.EDITOR_ID, true,
-						IWorkbenchPage.MATCH_ID);
+						new TakeLeaveEditorInput(_provider), TakeLeaveEditor.EDITOR_ID, true, IWorkbenchPage.MATCH_ID);
 
 			} catch (PartInitException e) {
 				throw new IllegalStateException(
-						String.format("Ошибка открытия редактора подачи заявления на отгул [viewId=%s]",
+						String.format("Ошибка открытия редактора подачи заявления на отпуск [viewId=%s]",
 								TakeHolidayEditor.EDITOR_ID),
 						e);
 			}

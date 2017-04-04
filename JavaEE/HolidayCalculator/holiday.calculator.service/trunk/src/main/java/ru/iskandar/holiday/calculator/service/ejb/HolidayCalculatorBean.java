@@ -1,5 +1,6 @@
 package ru.iskandar.holiday.calculator.service.ejb;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
@@ -10,6 +11,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -63,6 +65,16 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 
 	// TODO имитация БД
 	private static Map<UUID, Statement> _statements = new HashMap<>();
+
+	// TODO имитация БД
+	private static Map<User, Date> _usersEmploymentDateMap = new HashMap<>();
+
+	@PostConstruct
+	private void init() {
+		for (User user : _userService.getAllUsers()) {
+			_usersEmploymentDateMap.put(user, new Date());
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -340,6 +352,65 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	public boolean canConsider() {
 		boolean canConsider = _permissionsService.hasPermission(PermissionId.from(Permissions.CONSIDER));
 		return canConsider;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int getLeaveCount(User aUser) {
+		int leaveCount = 0;
+		for (Statement st : getStatementsByUser(aUser)) {
+			switch (st.getStatementType()) {
+			case LEAVE_STATEMENT:
+				LeaveStatement holidaySt = (LeaveStatement) st;
+				if (StatementStatus.APPROVE.equals(holidaySt.getStatus())) {
+					leaveCount += holidaySt.getLeaveDates().size();
+				}
+				break;
+
+			default:
+				break;
+			}
+
+		}
+		int remaining = 28 - leaveCount;
+		return remaining;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int getOutgoingLeaveCount(User aUser) {
+		int outgoing = 0;
+		for (Statement st : getStatementsByUser(aUser)) {
+			switch (st.getStatementType()) {
+			case LEAVE_STATEMENT:
+				LeaveStatement holidaySt = (LeaveStatement) st;
+				if (StatementStatus.NOT_CONSIDERED.equals(holidaySt.getStatus())) {
+					outgoing += holidaySt.getLeaveDates().size();
+				}
+				break;
+
+			default:
+				break;
+			}
+
+		}
+		return outgoing;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Date getNextLeaveStartDate(User aUser) {
+		Date employmentDate = _usersEmploymentDateMap.get(aUser);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(employmentDate);
+		cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + 1);
+		return cal.getTime();
 	}
 
 }

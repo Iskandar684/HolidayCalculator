@@ -1,5 +1,7 @@
 package ru.iskandar.holiday.calculator.service.ejb;
 
+import java.util.Collection;
+
 import ru.iskandar.holiday.calculator.service.model.User;
 
 /**
@@ -13,5 +15,12 @@ public interface IUserServiceLocal {
 	 * @return текущий пользователь
 	 */
 	public User getCurrentUser();
+
+	/**
+	 * Возвращает всех пользователей
+	 *
+	 * @return все пользователи
+	 */
+	public Collection<User> getAllUsers();
 
 }

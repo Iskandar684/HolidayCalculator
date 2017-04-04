@@ -1,6 +1,7 @@
 package ru.iskandar.holiday.calculator.service.model;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -138,5 +139,34 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @return входящие заявления
 	 */
 	public Collection<Statement> getIncomingStatements();
+
+	/**
+	 * Возвращает количество не использованных дней отпуска в этом периоде
+	 *
+	 * @return количество дней
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
+	 */
+	public int getLeaveCount(User aUser);
+
+	/**
+	 * Возвращает количество исходящих дней отпуска. Это количество дней, на
+	 * которое уменьшется количество дней отпуска в этом периоде, после того как
+	 * заявление на отпуск будет принят.
+	 *
+	 * @return не отрицательное количество исходящих дней отпуска.
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
+	 */
+	public int getOutgoingLeaveCount(User aUser);
+
+	/**
+	 * Возвращает дату начала следующего периода
+	 *
+	 * @return дата начала следующего периода
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
+	 */
+	public Date getNextLeaveStartDate(User aUser);
 
 }

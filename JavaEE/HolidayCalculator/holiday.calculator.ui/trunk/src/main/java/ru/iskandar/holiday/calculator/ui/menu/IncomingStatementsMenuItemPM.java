@@ -37,7 +37,6 @@ public class IncomingStatementsMenuItemPM {
 		Objects.requireNonNull(aHolidayCalculatorModelProvider);
 		_modelProvider = aHolidayCalculatorModelProvider;
 		_item = aItem;
-		update();
 		final HolidayCalculatorModelListener modelListener = new HolidayCalculatorModelListener();
 		aHolidayCalculatorModelProvider.addListener(modelListener);
 		final LoadListener loadListener = new LoadListener();
@@ -55,6 +54,7 @@ public class IncomingStatementsMenuItemPM {
 		});
 		aHolidayCalculatorModelProvider.addLoadListener(loadListener);
 		aItem.addSelectionListener(new SelectionHandler());
+		update();
 	}
 
 	private class LoadListener implements ILoadListener {
@@ -104,6 +104,9 @@ public class IncomingStatementsMenuItemPM {
 	}
 
 	private void update() {
+		if (_item.isDisposed()) {
+			return;
+		}
 		_item.setText(getText());
 		_item.setEnabled(isEnabled());
 	}

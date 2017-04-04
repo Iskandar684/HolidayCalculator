@@ -28,7 +28,7 @@ public class LeaveStatement extends Statement {
 	 * @param aAuthor
 	 *            автор заявления
 	 */
-	public LeaveStatement(UUID aUUID, User aAuthor, Set<Date> aLeaveDates) {
+	protected LeaveStatement(UUID aUUID, User aAuthor, Set<Date> aLeaveDates) {
 		super(aUUID, aAuthor);
 		Objects.requireNonNull(aLeaveDates);
 		_leaveDates.addAll(aLeaveDates);

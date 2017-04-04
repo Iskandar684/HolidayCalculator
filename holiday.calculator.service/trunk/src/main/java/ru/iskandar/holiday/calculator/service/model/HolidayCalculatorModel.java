@@ -70,6 +70,10 @@ public class HolidayCalculatorModel implements Serializable {
 		return new TakeHolidayStatementBuilder(this);
 	}
 
+	public TakeLeaveStatementBuilder createLeaveStatementBuilder() {
+		return new TakeLeaveStatementBuilder(this);
+	}
+
 	/**
 	 * Подает заявление
 	 *
@@ -99,7 +103,7 @@ public class HolidayCalculatorModel implements Serializable {
 	 * @throws ServiceLookupException
 	 *             если не удалось получить сервис учета отгулов
 	 */
-	public void sendLeaveStatement(LeaveStatement aStatement) throws StatementAlreadySendedException {
+	void sendLeaveStatement(LeaveStatement aStatement) throws StatementAlreadySendedException {
 		LeaveStatement statement = _servicesProvider.getHolidayCalculatorService().sendStatement(aStatement);
 		StatementSendedEvent event = new StatementSendedEvent(statement);
 		event.setInitiator(_clientId);
@@ -378,8 +382,8 @@ public class HolidayCalculatorModel implements Serializable {
 	 *             если не удалось получить сервис учета отгулов
 	 */
 	public int getLeaveCount() {
-		// TODO
-		return 28;
+		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
+		return service.getLeaveCount(_currenUser);
 	}
 
 	/**
@@ -392,8 +396,8 @@ public class HolidayCalculatorModel implements Serializable {
 	 *             если не удалось получить сервис учета отгулов
 	 */
 	public int getOutgoingLeaveCount() {
-		// TODO
-		return 14;
+		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
+		return service.getOutgoingLeaveCount(_currenUser);
 	}
 
 	/**
@@ -404,8 +408,8 @@ public class HolidayCalculatorModel implements Serializable {
 	 *             если не удалось получить сервис учета отгулов
 	 */
 	public Date getNextLeaveStartDate() {
-		// TODO
-		return new Date();
+		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
+		return service.getNextLeaveStartDate(_currenUser);
 	}
 
 	/**

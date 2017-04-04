@@ -132,6 +132,9 @@ public class Messages extends NLS {
 
 	public static String lookupExceptionWhenConsideringDialogText;
 
+	/** Текст диалога заявление уже подано */
+	public static String leaveStatementAlreadySendedDialogTextForDays;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -22,6 +22,7 @@ import org.eclipse.ui.part.ViewPart;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
 import ru.iskandar.holiday.calculator.ui.takeholiday.TakeHolidayButtonPM;
+import ru.iskandar.holiday.calculator.ui.takeleave.TakeLeaveButtonPM;
 
 /**
  * Панель навигации
@@ -196,6 +197,7 @@ public class NavigationViewPart extends ViewPart {
 		btGridData = new GridData(SWT.FILL, SWT.BOTTOM, true, false);
 		btGridData.heightHint = buttonHeight;
 		getLeaveBt.setLayoutData(btGridData);
+		new TakeLeaveButtonPM(getLeaveBt, _modelProvider);
 		return main;
 	}
 

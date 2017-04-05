@@ -135,6 +135,14 @@ public class Messages extends NLS {
 	/** Текст диалога заявление уже подано */
 	public static String leaveStatementAlreadySendedDialogTextForDays;
 
+	public static String makeRecallFormHeader;
+
+	public static String makeRecallBt;
+
+	public static String recallStatementAlreadySendedDialogTitleForDays;
+
+	public static String recallStatementAlreadySendedDialogTextForDays;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

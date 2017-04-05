@@ -244,6 +244,17 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		return currentUserStatements;
 	}
 
+	private Set<RecallStatement> getCurrentUserRecallStatements() {
+		User currentUser = _userService.getCurrentUser();
+		Set<RecallStatement> currentUserStatements = new HashSet<>();
+		for (Statement st : _statements.values()) {
+			if (st.getAuthor().equals(currentUser) && (st instanceof RecallStatement)) {
+				currentUserStatements.add((RecallStatement) st);
+			}
+		}
+		return currentUserStatements;
+	}
+
 	private Set<Statement> getStatementsByUser(User aUser) {
 		Objects.requireNonNull(aUser);
 		Set<Statement> statementsByUser = new HashSet<>();
@@ -411,6 +422,38 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		cal.setTime(employmentDate);
 		cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + 1);
 		return cal.getTime();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public RecallStatement sendStatement(RecallStatement aStatement) throws StatementAlreadySendedException {
+		Objects.requireNonNull(aStatement);
+		checkStatement(aStatement);
+
+		Statement sendedStatement = _statements.get(aStatement.getUuid());
+		if (sendedStatement != null) {
+			throw new StatementAlreadySendedException(aStatement, sendedStatement);
+		}
+		if (StatementStatus.APPROVE.equals(aStatement.getStatus())
+				|| StatementStatus.REJECTED.equals(aStatement.getStatus())) {
+			throw new InvalidStatementException(
+					String.format("Подаваемое заявление на отзыв не может иметь статус %s", aStatement.getStatus()));
+		}
+		Set<Date> currentStatementDays = aStatement.getRecallDates();
+		for (RecallStatement st : getCurrentUserRecallStatements()) {
+			if (DateUtils.hasIntersectionDays(st.getRecallDates(), currentStatementDays)) {
+				throw new StatementAlreadySendedException(aStatement, st);
+			}
+		}
+		_statements.put(aStatement.getUuid(), aStatement);
+		try {
+			_messageSender.send(new StatementSendedEvent(aStatement));
+		} catch (JMSException e) {
+			LOG.error(String.format("Ошибка оповещения об отправки заявления %s на отзыв", aStatement), e);
+		}
+		return aStatement;
 	}
 
 }

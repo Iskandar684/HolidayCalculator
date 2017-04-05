@@ -21,6 +21,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
+import ru.iskandar.holiday.calculator.ui.makerecall.MakeRecallButtonPM;
 import ru.iskandar.holiday.calculator.ui.takeholiday.TakeHolidayButtonPM;
 import ru.iskandar.holiday.calculator.ui.takeleave.TakeLeaveButtonPM;
 
@@ -192,6 +193,7 @@ public class NavigationViewPart extends ViewPart {
 		btGridData = new GridData(SWT.FILL, SWT.BOTTOM, true, false);
 		btGridData.heightHint = buttonHeight;
 		makeRecallBt.setLayoutData(btGridData);
+		new MakeRecallButtonPM(makeRecallBt, _modelProvider);
 
 		Button getLeaveBt = aToolkit.createButton(main, Messages.getLeave, SWT.NONE);
 		btGridData = new GridData(SWT.FILL, SWT.BOTTOM, true, false);

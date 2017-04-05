@@ -43,6 +43,12 @@
             id="ru.iskandar.leave.take.editor"
             name="%leave.take.view.name">
       </editor>
+      <editor
+            class="ru.iskandar.holiday.calculator.ui.makerecall.MakeRecallEditor"
+            default="false"
+            id="ru.iskandar.makerecall.editor"
+            name="%makerecall.view.name">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.menus">

@@ -1,0 +1,79 @@
+package ru.iskandar.holiday.calculator.service.model;
+
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+
+import ru.iskandar.holiday.calculator.service.ejb.StatementAlreadySendedException;
+
+/**
+ * Формирователь заявления на отзыв
+ */
+public class MakeRecallStatementBuilder implements Serializable {
+
+	/**
+	 * Идентификатор для сериализации
+	 */
+	private static final long serialVersionUID = 6191271087530860259L;
+
+	/** Дни на отзыв */
+	private final Set<Date> _days = new HashSet<>();
+
+	/** Модель */
+	private final HolidayCalculatorModel _model;
+
+	/**
+	 * Конструктор
+	 */
+	MakeRecallStatementBuilder(HolidayCalculatorModel aModel) {
+		Objects.requireNonNull(aModel);
+		_model = aModel;
+	}
+
+	/**
+	 * Подает заявление на отгул
+	 *
+	 * @throws StatementAlreadySendedException
+	 *             если заявление уже было подано (например, при попытке подать
+	 *             второй раз заявление на один и тот же день)
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
+	 */
+	public void sendRecallStatement() throws StatementAlreadySendedException {
+		RecallStatement statement = new RecallStatement(UUID.randomUUID(), _days, _model.getCurrentUser());
+		_model.sendRecallStatement(statement);
+	}
+
+	/**
+	 * Возвращает возможность подачи заявления на отзыв
+	 *
+	 * @return {@code true}, если подача заявления на отгул разрешено
+	 */
+	public boolean canSendRecallStatement() {
+		return true;
+	}
+
+	public void addDate(Date aDate) {
+		_days.add(aDate);
+	}
+
+	public void removeDate(Date aDate) {
+		_days.remove(aDate);
+	}
+
+	public void clearDates() {
+		_days.clear();
+	}
+
+	/**
+	 * @return the days
+	 */
+	public Set<Date> getDays() {
+		return Collections.unmodifiableSet(_days);
+	}
+
+}

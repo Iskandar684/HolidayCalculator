@@ -110,6 +110,33 @@ public class HolidayCalculatorModel implements Serializable {
 		fireEvent(event);
 	}
 
+	public MakeRecallStatementBuilder createMakeRecallStatementBuilder() {
+		return new MakeRecallStatementBuilder(this);
+	}
+
+	public boolean canCreateMakeRecallStatementBuilder() {
+		// TODO
+		return true;
+	}
+
+	/**
+	 * Подает заявление на отзыв
+	 *
+	 * @param aStatement
+	 *            заявление на отзыв
+	 * @throws StatementAlreadySendedException
+	 *             если заявление уже было подано (например, при попытке подать
+	 *             второй раз заявление на один и тот же день)
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
+	 */
+	void sendRecallStatement(RecallStatement aStatement) throws StatementAlreadySendedException {
+		RecallStatement statement = _servicesProvider.getHolidayCalculatorService().sendStatement(aStatement);
+		StatementSendedEvent event = new StatementSendedEvent(statement);
+		event.setInitiator(_clientId);
+		fireEvent(event);
+	}
+
 	/**
 	 * Возвращает возможность формирования заявления на отгул
 	 *

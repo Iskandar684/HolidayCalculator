@@ -31,7 +31,7 @@ public class RecallStatement extends Statement {
 	 * @param aRecallDates
 	 *            дни, в которые сотрудник работал во время отпуска
 	 */
-	public RecallStatement(UUID aUUID, User aAuthor, Set<Date> aRecallDates) {
+	public RecallStatement(UUID aUUID, Set<Date> aRecallDates, User aAuthor) {
 		super(aUUID, aAuthor);
 		Objects.requireNonNull(aRecallDates);
 		_recallDates.addAll(aRecallDates);

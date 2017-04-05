@@ -108,6 +108,22 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	public LeaveStatement sendStatement(LeaveStatement aStatement) throws StatementAlreadySendedException;
 
 	/**
+	 * Подает заявление на отзыв на рассмотрение
+	 *
+	 * @param aStatement
+	 *            заявление на отзыв
+	 * @return заявление на отзыв
+	 * @throws StatementAlreadySendedException
+	 *             если заявление уже было подано (например, при попытке подать
+	 *             второй раз заявление на один и тот же день)
+	 * @throws NullPointerException
+	 *             если aStatement {@code null}
+	 * @throws InvalidStatementException
+	 *             если заявление заполнено некорректно
+	 */
+	public RecallStatement sendStatement(RecallStatement aStatement) throws StatementAlreadySendedException;
+
+	/**
 	 * Возвращает количество отгулов у указанного пользователя
 	 *
 	 * @param aUser

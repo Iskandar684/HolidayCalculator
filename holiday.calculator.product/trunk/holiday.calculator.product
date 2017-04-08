@@ -33,7 +33,6 @@ osgi.nl=ru
 
    <plugins>
       <plugin id="com.ibm.icu"/>
-      <plugin id="javax.annotation"/>
       <plugin id="javax.inject"/>
       <plugin id="javax.xml"/>
       <plugin id="org.apache.batik.css"/>
@@ -46,9 +45,12 @@ osgi.nl=ru
       <plugin id="org.eclipse.core.databinding.observable"/>
       <plugin id="org.eclipse.core.databinding.property"/>
       <plugin id="org.eclipse.core.expressions"/>
+      <plugin id="org.eclipse.core.filesystem"/>
+      <plugin id="org.eclipse.core.filesystem.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.core.jobs"/>
+      <plugin id="org.eclipse.core.resources"/>
+      <plugin id="org.eclipse.core.resources.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.core.runtime"/>
-      <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
       <plugin id="org.eclipse.e4.core.commands"/>
       <plugin id="org.eclipse.e4.core.contexts"/>
       <plugin id="org.eclipse.e4.core.di"/>
@@ -79,7 +81,6 @@ osgi.nl=ru
       <plugin id="org.eclipse.equinox.event"/>
       <plugin id="org.eclipse.equinox.preferences"/>
       <plugin id="org.eclipse.equinox.registry"/>
-      <plugin id="org.eclipse.equinox.util"/>
       <plugin id="org.eclipse.help"/>
       <plugin id="org.eclipse.jface"/>
       <plugin id="org.eclipse.jface.databinding"/>
@@ -97,13 +98,12 @@ osgi.nl=ru
       <plugin id="org.w3c.dom.svg"/>
       <plugin id="ru.iskandar.holiday.calculator.branding"/>
       <plugin id="ru.iskandar.holiday.calculator.client-libraries"/>
-      <plugin id="ru.iskandar.holiday.calculator.ui"/>
    </plugins>
 
-   <configurations>
-      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="2" />
-      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="3" />
-      <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="3" />
-   </configurations>
+<configurations>
+   <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="2" />
+   <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="3" />
+   <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="3" />
+</configurations>
 
 </product>

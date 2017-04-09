@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Objects;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.nebula.widgets.datechooser.DateChooser;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
@@ -12,7 +13,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IEditorInput;
@@ -27,6 +27,7 @@ import ru.iskandar.holiday.calculator.service.model.MakeRecallStatementBuilder;
 import ru.iskandar.holiday.calculator.service.model.StatementSendedEvent;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.Messages;
+import ru.iskandar.holiday.calculator.ui.Utils;
 
 /**
  * Редактор подачи заявления на отпуск
@@ -192,8 +193,10 @@ public class MakeRecallEditor extends EditorPart {
 		_toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
 
-		DateTime dateTime = new DateTime(main, SWT.CALENDAR);
-		dateTime.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, columns, 1));
+		DateChooser dateChooser = Utils.createDateChooser(main, SWT.MULTI);
+		new RecallDateChooserPM(dateChooser, _modelProvider);
+
+		dateChooser.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, columns, 1));
 		_toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
 
@@ -201,7 +204,7 @@ public class MakeRecallEditor extends EditorPart {
 		makeRecallBt.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, true, true, columns, 1));
 		_toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
-		MakeRecallStatementBuilder builder = _modelProvider.getModel().createMakeRecallStatementBuilder();
+		MakeRecallStatementBuilder builder = _modelProvider.getModel().getRecallStatementBuilder();
 		builder.addDate(new Date());
 		new SendRecallStatementButtonPM(makeRecallBt, builder);
 		return main;

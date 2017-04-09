@@ -44,6 +44,8 @@ public class HolidayCalculatorModel implements Serializable {
 
 	private transient TakeLeaveStatementBuilder _takeLeaveStatementBuilder;
 
+	private transient MakeRecallStatementBuilder _makeRecallStatementBuilder;
+
 	/**
 	 * Конструктор
 	 */
@@ -120,8 +122,11 @@ public class HolidayCalculatorModel implements Serializable {
 		fireEvent(event);
 	}
 
-	public MakeRecallStatementBuilder createMakeRecallStatementBuilder() {
-		return new MakeRecallStatementBuilder(this);
+	public MakeRecallStatementBuilder getRecallStatementBuilder() {
+		if (_makeRecallStatementBuilder == null) {
+			_makeRecallStatementBuilder = new MakeRecallStatementBuilder(this);
+		}
+		return _makeRecallStatementBuilder;
 	}
 
 	public boolean canCreateMakeRecallStatementBuilder() {

@@ -102,6 +102,8 @@ public class Messages extends NLS {
 
 	public static String recallStatement;
 
+	public static String leaveStatement;
+
 	public static String reviewHolidayStatementHeader;
 
 	public static String reviewRecallStatementHeader;
@@ -149,7 +151,8 @@ public class Messages extends NLS {
 	public static String noDateSelectedForLeaveStatementDialogTitle;
 	public static String noDateSelectedForLeaveStatementDialogText;
 
-	public static String leaveStatement;
+	public static String noDateSelectedForRecallStatementDialogTitle;
+	public static String noDateSelectedForRecallStatementDialogText;
 
 	static {
 		// инициализация ресурсов бандла

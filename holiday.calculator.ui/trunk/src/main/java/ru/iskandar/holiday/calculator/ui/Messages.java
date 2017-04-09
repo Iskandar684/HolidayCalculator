@@ -143,6 +143,9 @@ public class Messages extends NLS {
 
 	public static String recallStatementAlreadySendedDialogTextForDays;
 
+	public static String noDateSelectedForHolidayStatementDialogTitle;
+	public static String noDateSelectedForHolidayStatementDialogText;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

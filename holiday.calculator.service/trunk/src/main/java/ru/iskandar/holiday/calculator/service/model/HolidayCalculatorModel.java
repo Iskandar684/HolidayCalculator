@@ -40,6 +40,8 @@ public class HolidayCalculatorModel implements Serializable {
 	/** Идентификатор клиента */
 	private ClientId _clientId;
 
+	private transient TakeHolidayStatementBuilder _takeHolidayStatementBuilder;
+
 	/**
 	 * Конструктор
 	 */
@@ -59,15 +61,18 @@ public class HolidayCalculatorModel implements Serializable {
 	}
 
 	/**
-	 * Создает формирователь заявления на отгул
+	 * Возвращает формирователь заявления на отгул
 	 *
 	 * @return формирователь заявления на отгул
 	 */
-	public TakeHolidayStatementBuilder createHolidayStatementBuilder() {
+	public TakeHolidayStatementBuilder getHolidayStatementBuilder() {
 		if (!canCreateHolidayStatementBuilder()) {
 			throw new IllegalStateException("Формирование заявления на отгул запрещено");
 		}
-		return new TakeHolidayStatementBuilder(this);
+		if (_takeHolidayStatementBuilder == null) {
+			_takeHolidayStatementBuilder = new TakeHolidayStatementBuilder(this);
+		}
+		return _takeHolidayStatementBuilder;
 	}
 
 	public TakeLeaveStatementBuilder createLeaveStatementBuilder() {

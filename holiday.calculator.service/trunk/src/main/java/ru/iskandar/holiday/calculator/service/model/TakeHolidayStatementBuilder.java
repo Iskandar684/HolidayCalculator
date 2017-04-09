@@ -1,6 +1,7 @@
 package ru.iskandar.holiday.calculator.service.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -34,8 +35,15 @@ public class TakeHolidayStatementBuilder implements Serializable {
 	TakeHolidayStatementBuilder(HolidayCalculatorModel aModel) {
 		Objects.requireNonNull(aModel);
 		_model = aModel;
-		// TODO временно
-		_days.add(new Date());
+	}
+
+	public void setDates(Collection<Date> aDates) {
+		Objects.requireNonNull(aDates);
+		if (aDates.contains(null)) {
+			throw new IllegalArgumentException("Список дат содержит null");
+		}
+		_days.clear();
+		_days.addAll(aDates);
 	}
 
 	/**

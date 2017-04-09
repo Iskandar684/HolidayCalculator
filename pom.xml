@@ -22,6 +22,11 @@
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/releases/neon</url>
 		</repository>
+		<repository>
+			<id>nebula</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/nebula/incubation/snapshot</url>
+		</repository>
 	</repositories>
 
 

@@ -27,6 +27,7 @@ import ru.iskandar.holiday.calculator.service.model.StatementSendedEvent;
 import ru.iskandar.holiday.calculator.service.model.TakeHolidayStatementBuilder;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.Messages;
+import ru.iskandar.holiday.calculator.ui.Utils;
 
 /** Редактор подачи заявления на отгул */
 public class TakeHolidayEditor extends EditorPart {
@@ -191,8 +192,8 @@ public class TakeHolidayEditor extends EditorPart {
 		_toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
 
-		DateChooser dateChooser = new DateChooser(main, SWT.MULTI);
-		new DateChooserPM(dateChooser, _modelProvider);
+		DateChooser dateChooser = Utils.createDateChooser(main, SWT.MULTI);
+		new HolidayDateChooserPM(dateChooser, _modelProvider);
 
 		dateChooser.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, columns, 1));
 		_toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)

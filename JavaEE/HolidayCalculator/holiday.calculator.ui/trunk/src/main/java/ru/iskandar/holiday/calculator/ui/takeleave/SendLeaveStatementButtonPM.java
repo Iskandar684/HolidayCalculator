@@ -49,6 +49,11 @@ public class SendLeaveStatementButtonPM {
 		 */
 		@Override
 		public void widgetSelected(SelectionEvent aE) {
+			if (_statementBuilder.getDays().isEmpty()) {
+				MessageDialog.openWarning(_button.getShell(), Messages.noDateSelectedForLeaveStatementDialogTitle,
+						Messages.noDateSelectedForLeaveStatementDialogText);
+				return;
+			}
 			try {
 				_statementBuilder.sendLeaveStatement();
 			} catch (StatementAlreadySendedException e) {

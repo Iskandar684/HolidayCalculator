@@ -146,6 +146,11 @@ public class Messages extends NLS {
 	public static String noDateSelectedForHolidayStatementDialogTitle;
 	public static String noDateSelectedForHolidayStatementDialogText;
 
+	public static String noDateSelectedForLeaveStatementDialogTitle;
+	public static String noDateSelectedForLeaveStatementDialogText;
+
+	public static String leaveStatement;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -19,7 +19,7 @@ import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
 /**
  *
  */
-public class DateChooserPM {
+public class HolidayDateChooserPM {
 
 	private final DateChooser _dateTime;
 
@@ -29,7 +29,7 @@ public class DateChooserPM {
 	/**
 	 * Конструктор
 	 */
-	public DateChooserPM(DateChooser aDateTime, HolidayCalculatorModelProvider aModelProvider) {
+	public HolidayDateChooserPM(DateChooser aDateTime, HolidayCalculatorModelProvider aModelProvider) {
 		Objects.requireNonNull(aDateTime);
 		Objects.requireNonNull(aModelProvider);
 		_dateTime = aDateTime;
@@ -77,7 +77,7 @@ public class DateChooserPM {
 				 */
 				@Override
 				public void run() {
-					DateChooserPM.this.update();
+					HolidayDateChooserPM.this.update();
 				}
 
 			});

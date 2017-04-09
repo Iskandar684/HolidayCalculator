@@ -19,13 +19,24 @@ public class HolidayCalculatorListenerAdapter implements IHolidayCalculatorModel
 		case HOLIDAY_STATEMENT:
 			holidayStatementSended(aEvent);
 			break;
-
+		case LEAVE_STATEMENT:
+			leaveStatementSended(aEvent);
+			break;
+		case RECALL_STATEMENT:
+			recallStatementSended(aEvent);
+			break;
 		default:
 			break;
 		}
 	}
 
+	protected void recallStatementSended(StatementSendedEvent aEvent) {
+	}
+
 	protected void holidayStatementSended(StatementSendedEvent aEvent) {
+	}
+
+	protected void leaveStatementSended(StatementSendedEvent aEvent) {
 	}
 
 	protected void statementConsidered(StatementConsideredEvent aEvent) {

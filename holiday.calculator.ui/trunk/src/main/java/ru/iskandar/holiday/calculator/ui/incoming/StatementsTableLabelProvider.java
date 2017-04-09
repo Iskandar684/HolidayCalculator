@@ -75,6 +75,10 @@ public class StatementsTableLabelProvider implements ITableLabelProvider {
 				text = Messages.recallStatement;
 				break;
 
+			case LEAVE_STATEMENT:
+				text = Messages.leaveStatement;
+				break;
+
 			default:
 				break;
 			}

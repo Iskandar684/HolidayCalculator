@@ -82,7 +82,7 @@ public class MakeRecallEditor extends EditorPart {
 		 * {@inheritDoc}
 		 */
 		@Override
-		protected void holidayStatementSended(StatementSendedEvent aEvent) {
+		protected void recallStatementSended(StatementSendedEvent aEvent) {
 			ClientId currentClientId = _modelProvider.getModel().getClientId();
 			if (currentClientId.equals(aEvent.getInitiator())) {
 				Display.getDefault().asyncExec(new Runnable() {

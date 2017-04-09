@@ -70,7 +70,7 @@ public class HolidayCalculatorModel implements Serializable {
 	 * @return формирователь заявления на отгул
 	 */
 	public TakeHolidayStatementBuilder getHolidayStatementBuilder() {
-		if (!canCreateHolidayStatementBuilder()) {
+		if (!canCreateHolidayStatement()) {
 			throw new IllegalStateException("Формирование заявления на отгул запрещено");
 		}
 		if (_takeHolidayStatementBuilder == null) {
@@ -84,6 +84,22 @@ public class HolidayCalculatorModel implements Serializable {
 			_takeLeaveStatementBuilder = new TakeLeaveStatementBuilder(this);
 		}
 		return _takeLeaveStatementBuilder;
+	}
+
+	LeaveStatement getLastLeaveStatement() {
+		IHolidayCalculatorService holidayCalculatorService = _servicesProvider.getHolidayCalculatorService();
+		LeaveStatement leaveStatement = null;
+		for (Statement statement : holidayCalculatorService.getAllStatements(_currenUser)) {
+			if (StatementType.LEAVE_STATEMENT.equals(statement.getStatementType())) {
+				if (leaveStatement == null) {
+					leaveStatement = (LeaveStatement) statement;
+				}
+				if ((leaveStatement != null) && leaveStatement.getCreateDate().before(statement.getCreateDate())) {
+					leaveStatement = (LeaveStatement) statement;
+				}
+			}
+		}
+		return leaveStatement;
 	}
 
 	/**
@@ -129,7 +145,12 @@ public class HolidayCalculatorModel implements Serializable {
 		return _makeRecallStatementBuilder;
 	}
 
-	public boolean canCreateMakeRecallStatementBuilder() {
+	public boolean canCreateMakeRecallStatement() {
+		LeaveStatement statement = getLastLeaveStatement();
+		return statement != null;
+	}
+
+	public boolean canCreateLeaveStatement() {
 		// TODO
 		return true;
 	}
@@ -157,7 +178,7 @@ public class HolidayCalculatorModel implements Serializable {
 	 *
 	 * @return возможность формирования заявления на отгул
 	 */
-	public boolean canCreateHolidayStatementBuilder() {
+	public boolean canCreateHolidayStatement() {
 		return true;
 	}
 

@@ -186,7 +186,7 @@ public class TakeLeaveEditor extends EditorPart {
 		_toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
 
-		Label header = _toolkit.createLabel(main, Messages.getHolidayFormHeader);
+		Label header = _toolkit.createLabel(main, Messages.getLeaveFormHeader);
 		header.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false, false, columns, 1));
 		_toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
@@ -198,7 +198,7 @@ public class TakeLeaveEditor extends EditorPart {
 		_toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
 
-		Button takeLeaveBt = _toolkit.createButton(main, Messages.takeHoliday, SWT.NONE);
+		Button takeLeaveBt = _toolkit.createButton(main, Messages.takeLeaveBt, SWT.NONE);
 		takeLeaveBt.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, true, true, columns, 1));
 		_toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));

@@ -33,6 +33,15 @@ public class MakeRecallStatementBuilder implements Serializable {
 	MakeRecallStatementBuilder(HolidayCalculatorModel aModel) {
 		Objects.requireNonNull(aModel);
 		_model = aModel;
+		fillDefault();
+	}
+
+	public void fillDefault() {
+		_days.clear();
+		LeaveStatement statement = _model.getLastLeaveStatement();
+		if (statement != null) {
+			_days.addAll(statement.getLeaveDates());
+		}
 	}
 
 	/**

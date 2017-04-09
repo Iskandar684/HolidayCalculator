@@ -83,7 +83,7 @@ public class TakeHolidayButtonPM {
 		boolean enabled = false;
 		LoadStatus loadStatus = _provider.getLoadStatus();
 		if (LoadStatus.LOADED.equals(loadStatus)) {
-			enabled = _provider.getModel().canCreateHolidayStatementBuilder();
+			enabled = _provider.getModel().canCreateHolidayStatement();
 		}
 		_button.setEnabled(enabled);
 	}

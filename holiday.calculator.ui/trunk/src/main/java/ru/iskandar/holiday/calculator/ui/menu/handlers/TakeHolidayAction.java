@@ -85,7 +85,7 @@ public class TakeHolidayAction extends Action {
 	private void update() {
 		boolean enabled = false;
 		if (LoadStatus.LOADED.equals(_modelProvider.getLoadStatus())) {
-			enabled = _modelProvider.getModel().canCreateHolidayStatementBuilder();
+			enabled = _modelProvider.getModel().canCreateHolidayStatement();
 		}
 		setEnabled(enabled);
 	}

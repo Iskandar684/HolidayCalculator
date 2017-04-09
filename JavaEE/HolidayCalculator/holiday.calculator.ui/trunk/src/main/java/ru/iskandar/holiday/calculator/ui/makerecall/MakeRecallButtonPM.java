@@ -12,6 +12,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorEvent;
+import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorModelListener;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
@@ -41,6 +43,9 @@ public class MakeRecallButtonPM {
 
 		final LoadListener loadListener = new LoadListener();
 		_provider.addLoadListener(loadListener);
+		final ModelListener modelListener = new ModelListener();
+		_provider.addListener(modelListener);
+
 		aButton.addDisposeListener(new DisposeListener() {
 
 			/**
@@ -49,9 +54,33 @@ public class MakeRecallButtonPM {
 			@Override
 			public void widgetDisposed(DisposeEvent aE) {
 				_provider.removeLoadListener(loadListener);
+				_provider.removeListener(modelListener);
 			}
 		});
 		update();
+	}
+
+	private class ModelListener implements IHolidayCalculatorModelListener {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void handleEvent(HolidayCalculatorEvent aEvent) {
+			Display.getDefault().asyncExec(new Runnable() {
+
+				/**
+				 * {@inheritDoc}
+				 */
+				@Override
+				public void run() {
+					update();
+				}
+
+			});
+
+		}
+
 	}
 
 	private class LoadListener implements ILoadListener {
@@ -84,7 +113,7 @@ public class MakeRecallButtonPM {
 		boolean enabled = false;
 		LoadStatus loadStatus = _provider.getLoadStatus();
 		if (LoadStatus.LOADED.equals(loadStatus)) {
-			enabled = true;
+			enabled = _provider.getModel().canCreateMakeRecallStatement();
 		}
 		_button.setEnabled(enabled);
 	}

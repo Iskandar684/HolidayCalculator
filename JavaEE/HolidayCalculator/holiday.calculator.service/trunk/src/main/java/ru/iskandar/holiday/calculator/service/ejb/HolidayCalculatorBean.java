@@ -456,4 +456,13 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		return aStatement;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<Statement> getAllStatements(User aUser) {
+		Objects.requireNonNull(aUser);
+		return getStatementsByUser(aUser);
+	}
+
 }

@@ -154,6 +154,10 @@ public class Messages extends NLS {
 	public static String noDateSelectedForRecallStatementDialogTitle;
 	public static String noDateSelectedForRecallStatementDialogText;
 
+	public static String getLeaveFormHeader;
+
+	public static String takeLeaveBt;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

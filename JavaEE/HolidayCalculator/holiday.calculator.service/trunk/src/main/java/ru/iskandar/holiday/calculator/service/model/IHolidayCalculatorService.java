@@ -34,6 +34,8 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @return заявления
 	 * @throws EJBAccessException
 	 *             если нет прав на рассмотрение заявлений
+	 * @throws NullPointerException
+	 *             если aStatuses {@code null}
 	 */
 	public Set<Statement> loadStatements(EnumSet<StatementStatus> aStatuses);
 
@@ -129,6 +131,8 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @param aUser
 	 *            пользователь
 	 * @return количество отгулов
+	 * @throws NullPointerException
+	 *             если aUser {@code null}
 	 */
 	public int getHolidaysQuantity(User aUser);
 
@@ -137,6 +141,8 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * которое уменьшется количество общее дней отгула, после того как заявление
 	 * на отгул будет принят.
 	 *
+	 * @throws NullPointerException
+	 *             если aUser {@code null}
 	 * @return не отрицательное количество исходящих дней отгула
 	 */
 	public int getOutgoingHolidaysQuantity(User aUser);
@@ -145,6 +151,8 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * Возвращает количество приходящих отгулов. Это количество дней, на которое
 	 * будет увеличино общее количество отгулов, после того как засчитают отзыв.
 	 *
+	 * @throws NullPointerException
+	 *             если aUser {@code null}
 	 * @return количество приходящих отгулов
 	 */
 	public int getIncomingHolidaysQuantity(User aUser);
@@ -152,6 +160,8 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	/**
 	 * Возвращает входящие заявления
 	 *
+	 * @throws NullPointerException
+	 *             если aUser {@code null}
 	 * @return входящие заявления
 	 */
 	public Collection<Statement> getIncomingStatements();
@@ -160,8 +170,8 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * Возвращает количество не использованных дней отпуска в этом периоде
 	 *
 	 * @return количество дней
-	 * @throws ServiceLookupException
-	 *             если не удалось получить сервис учета отгулов
+	 * @throws NullPointerException
+	 *             если aUser {@code null}
 	 */
 	public int getLeaveCount(User aUser);
 
@@ -171,8 +181,8 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * заявление на отпуск будет принят.
 	 *
 	 * @return не отрицательное количество исходящих дней отпуска.
-	 * @throws ServiceLookupException
-	 *             если не удалось получить сервис учета отгулов
+	 * @throws NullPointerException
+	 *             если aUser {@code null}
 	 */
 	public int getOutgoingLeaveCount(User aUser);
 
@@ -180,9 +190,20 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * Возвращает дату начала следующего периода
 	 *
 	 * @return дата начала следующего периода
-	 * @throws ServiceLookupException
-	 *             если не удалось получить сервис учета отгулов
+	 * @throws NullPointerException
+	 *             если aUser {@code null}
 	 */
 	public Date getNextLeaveStartDate(User aUser);
+
+	/**
+	 * Возвращает все заявления пользователя
+	 *
+	 * @param aUser
+	 *            пользователь
+	 * @return заявления
+	 * @throws NullPointerException
+	 *             если aUser {@code null}
+	 */
+	public Collection<Statement> getAllStatements(User aUser);
 
 }

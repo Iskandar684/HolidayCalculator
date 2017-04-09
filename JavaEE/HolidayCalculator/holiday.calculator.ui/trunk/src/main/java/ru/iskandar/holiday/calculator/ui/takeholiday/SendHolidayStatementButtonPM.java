@@ -49,6 +49,11 @@ public class SendHolidayStatementButtonPM {
 		 */
 		@Override
 		public void widgetSelected(SelectionEvent aE) {
+			if (_statementBuilder.getDays().isEmpty()) {
+				MessageDialog.openWarning(_button.getShell(), Messages.noDateSelectedForHolidayStatementDialogTitle,
+						Messages.noDateSelectedForHolidayStatementDialogText);
+				return;
+			}
 			try {
 				_statementBuilder.sendHolidayStatement();
 			} catch (StatementAlreadySendedException e) {

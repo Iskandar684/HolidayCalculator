@@ -3,6 +3,7 @@ package ru.iskandar.holiday.calculator.ui.takeholiday;
 import java.util.Objects;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.nebula.widgets.datechooser.DateChooser;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
@@ -11,7 +12,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IEditorInput;
@@ -177,7 +177,7 @@ public class TakeHolidayEditor extends EditorPart {
 	 * @return корневой элемент управления
 	 */
 	private Composite createLeft(Composite aParent) {
-		TakeHolidayStatementBuilder builder = _modelProvider.getModel().createHolidayStatementBuilder();
+		TakeHolidayStatementBuilder builder = _modelProvider.getModel().getHolidayStatementBuilder();
 		Composite main = _toolkit.createComposite(aParent);
 		final int columns = 2;
 		GridLayout leftLayout = new GridLayout(columns, false);
@@ -191,8 +191,10 @@ public class TakeHolidayEditor extends EditorPart {
 		_toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
 
-		DateTime dateTime = new DateTime(main, SWT.CALENDAR);
-		dateTime.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, columns, 1));
+		DateChooser dateChooser = new DateChooser(main, SWT.MULTI);
+		new DateChooserPM(dateChooser, _modelProvider);
+
+		dateChooser.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, columns, 1));
 		_toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
 

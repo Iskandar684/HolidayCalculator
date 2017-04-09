@@ -49,6 +49,12 @@ public class SendRecallStatementButtonPM {
 		 */
 		@Override
 		public void widgetSelected(SelectionEvent aE) {
+			if (_statementBuilder.getDays().isEmpty()) {
+				MessageDialog.openWarning(_button.getShell(), Messages.noDateSelectedForRecallStatementDialogTitle,
+						Messages.noDateSelectedForRecallStatementDialogText);
+				return;
+			}
+
 			try {
 				_statementBuilder.sendRecallStatement();
 			} catch (StatementAlreadySendedException e) {

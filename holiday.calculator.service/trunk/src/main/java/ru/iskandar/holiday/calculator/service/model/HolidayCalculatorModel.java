@@ -496,4 +496,16 @@ public class HolidayCalculatorModel implements Serializable {
 		return _clientId;
 	}
 
+	/**
+	 * Возвращает все заявления пользователя
+	 *
+	 * @return заявления
+	 * @throws ServiceLookupException
+	 *             если не удалось получить сервис учета отгулов
+	 */
+	public Collection<Statement> getCurrentUserStatements() {
+		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
+		return service.getAllStatements(_currenUser);
+	}
+
 }

@@ -49,6 +49,12 @@
             id="ru.iskandar.makerecall.editor"
             name="%makerecall.view.name">
       </editor>
+      <editor
+            class="ru.iskandar.holiday.calculator.ui.outgoing.OutgoingStatementsEditor"
+            default="false"
+            id="holiday.calculator.ui.editor.outgoing"
+            name="%outgoing.statements.editor.name">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.menus">

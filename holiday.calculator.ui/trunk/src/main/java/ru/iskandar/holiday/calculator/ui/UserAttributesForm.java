@@ -11,7 +11,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 
@@ -21,6 +25,8 @@ import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorModelListe
 import ru.iskandar.holiday.calculator.service.model.User;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
+import ru.iskandar.holiday.calculator.ui.outgoing.OutgoingStatementsEditor;
+import ru.iskandar.holiday.calculator.ui.outgoing.OutgoingStatementsEditorInput;
 
 /**
  * Форма отображения атрибутов пользователя
@@ -43,6 +49,8 @@ public class UserAttributesForm extends Composite {
 	private Label _fioLabel;
 	/***/
 	private Hyperlink _outLCLink;
+
+	private final LinkSelectionHandler _linkSelectionHandler = new LinkSelectionHandler();
 
 	/** Инструментарий для создания пользовательского интерфейса */
 	private final FormToolkit _formToolkit;
@@ -112,6 +120,13 @@ public class UserAttributesForm extends Composite {
 	}
 
 	/**
+	 * @return the nextLeaveStartDateLink
+	 */
+	Hyperlink getNextLeaveStartDateLink() {
+		return _nextLeaveStartDateLink;
+	}
+
+	/**
 	 * Создает строку "Количество дней отпуска"
 	 *
 	 * @param aParent
@@ -133,9 +148,11 @@ public class UserAttributesForm extends Composite {
 
 		_lcLink = _formToolkit.createHyperlink(main, Messages.EMPTY, SWT.NONE);
 		_lcLink.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+		_lcLink.addHyperlinkListener(_linkSelectionHandler);
 
 		_outLCLink = _formToolkit.createHyperlink(main, Messages.EMPTY, SWT.NONE);
 		_outLCLink.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+		_outHQLink.addHyperlinkListener(_linkSelectionHandler);
 
 		return main;
 	}
@@ -161,14 +178,15 @@ public class UserAttributesForm extends Composite {
 
 		_hqLink = _formToolkit.createHyperlink(main, Messages.EMPTY, SWT.NONE);
 		_hqLink.setLayoutData(new GridData(SWT.CENTER, SWT.LEFT, false, false));
+		_hqLink.addHyperlinkListener(_linkSelectionHandler);
 
 		_outHQLink = _formToolkit.createHyperlink(main, Messages.EMPTY, SWT.NONE);
 		_outHQLink.setLayoutData(new GridData(SWT.CENTER, SWT.LEFT, false, false));
-		_outHQLink.addHyperlinkListener(new HyperlinkAdapter() {
-		});
+		_outHQLink.addHyperlinkListener(_linkSelectionHandler);
 
 		_inHQLink = _formToolkit.createHyperlink(main, Messages.EMPTY, SWT.NONE);
 		_inHQLink.setLayoutData(new GridData(SWT.CENTER, SWT.LEFT, false, false));
+		_inHQLink.addHyperlinkListener(_linkSelectionHandler);
 		return main;
 	}
 
@@ -296,6 +314,26 @@ public class UserAttributesForm extends Composite {
 		_outHQLink.getParent().layout();
 		_lcLink.getParent().layout();
 		_nextLeaveStartDateLink.getParent().layout();
+	}
+
+	/**
+	 *
+	 */
+	private class LinkSelectionHandler extends HyperlinkAdapter {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void linkActivated(HyperlinkEvent aE) {
+			try {
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(
+						new OutgoingStatementsEditorInput(_modelProvider), OutgoingStatementsEditor.EDITOR_ID, true,
+						IWorkbenchPage.MATCH_ID);
+			} catch (PartInitException e) {
+				throw new RuntimeException("Ошибка открытия формы подачи заявления на отгул", e);
+			}
+		}
 	}
 
 }

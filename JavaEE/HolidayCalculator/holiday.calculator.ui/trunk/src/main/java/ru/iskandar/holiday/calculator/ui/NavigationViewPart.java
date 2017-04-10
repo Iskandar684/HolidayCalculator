@@ -1,5 +1,7 @@
 package ru.iskandar.holiday.calculator.ui;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 import org.eclipse.swt.SWT;
@@ -16,6 +18,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 
@@ -179,8 +183,23 @@ public class NavigationViewPart extends ViewPart {
 		UserAttributesForm form = new UserAttributesForm(main, aToolkit, _modelProvider);
 		form.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, columns, 1));
 
-		DateTime dateTime = new DateTime(main, SWT.CALENDAR);
+		final DateTime dateTime = new DateTime(main, SWT.CALENDAR);
 		dateTime.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, columns, 1));
+		form.getNextLeaveStartDateLink().addHyperlinkListener(new HyperlinkAdapter() {
+
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public void linkActivated(HyperlinkEvent aE) {
+				Date date = _modelProvider.getModel().getNextLeaveStartDate();
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(date);
+				dateTime.setDay(cal.get(Calendar.DATE));
+				dateTime.setYear(cal.get(Calendar.YEAR));
+				dateTime.setMonth(cal.get(Calendar.MONTH));
+			}
+		});
 
 		final int buttonHeight = 60;
 		Button takeHolidayBt = aToolkit.createButton(main, Messages.getHoliday, SWT.NONE);

@@ -25,6 +25,7 @@ import ru.iskandar.holiday.calculator.service.model.Statement;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.incoming.StatementReviewForm.IStatementChangedListener;
 import ru.iskandar.holiday.calculator.ui.incoming.StatementReviewForm.IStatementProvider;
+import ru.iskandar.holiday.calculator.ui.statement.StatementsTableCreator;
 
 public class IncomingStatementsEditor extends EditorPart {
 
@@ -95,7 +96,8 @@ public class IncomingStatementsEditor extends EditorPart {
 		SashForm sash = new SashForm(main, SWT.HORIZONTAL);
 		sash.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		StatementsTableCreator creator = new StatementsTableCreator(_holidayModelProvider);
+		StatementsTableCreator creator = new StatementsTableCreator(
+				new IncomingStatementsProvider(_holidayModelProvider));
 		_statementsViewer = creator.create(sash);
 		_statementsViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		//

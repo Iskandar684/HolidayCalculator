@@ -1,4 +1,4 @@
-package ru.iskandar.holiday.calculator.ui.incoming;
+package ru.iskandar.holiday.calculator.ui.statement;
 
 import java.util.Objects;
 
@@ -10,14 +10,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TableColumn;
 
-import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorEvent;
-import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorModelListener;
-import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
 import ru.iskandar.holiday.calculator.ui.Messages;
+import ru.iskandar.holiday.calculator.ui.statement.IStatementsProvider.IStatementsChangedListener;
 
 /**
-  *
+ * Создаватель таблицы просмотра заявлений
  */
 public class StatementsTableCreator {
 
@@ -67,9 +65,9 @@ public class StatementsTableCreator {
 
 	}
 
-	private final HolidayCalculatorModelProvider _modelProvider;
+	private final IStatementsProvider _modelProvider;
 
-	public StatementsTableCreator(HolidayCalculatorModelProvider aHolidayCalculatorModelProvider) {
+	public StatementsTableCreator(IStatementsProvider aHolidayCalculatorModelProvider) {
 		Objects.requireNonNull(aHolidayCalculatorModelProvider);
 		_modelProvider = aHolidayCalculatorModelProvider;
 	}
@@ -85,7 +83,7 @@ public class StatementsTableCreator {
 		_viewer.getTable().setLinesVisible(true);
 
 		initListeners();
-		_viewer.setContentProvider(new IncomingTableContentProvider());
+		_viewer.setContentProvider(new StatementTableContentProvider());
 		_viewer.setLabelProvider(new StatementsTableLabelProvider());
 		_viewer.setInput(_modelProvider);
 		refreshAndPack();
@@ -115,13 +113,13 @@ public class StatementsTableCreator {
 			}
 
 		};
-		IHolidayCalculatorModelListener modelListener = new IHolidayCalculatorModelListener() {
+		IStatementsChangedListener modelListener = new IStatementsChangedListener() {
 
 			/**
 			 * @param aAEvent
 			 */
 			@Override
-			public void handleEvent(HolidayCalculatorEvent aAEvent) {
+			public void statementsChanged() {
 				Display.getDefault().asyncExec(new Runnable() {
 
 					/**
@@ -136,7 +134,7 @@ public class StatementsTableCreator {
 
 			}
 		};
-		_modelProvider.addListener(modelListener);
+		_modelProvider.addStatementsChangedListener(modelListener);
 		_modelProvider.addLoadListener(loadListener);
 		_viewer.getControl().addDisposeListener(new DisposeListener() {
 
@@ -146,7 +144,7 @@ public class StatementsTableCreator {
 			@Override
 			public void widgetDisposed(DisposeEvent aE) {
 				_modelProvider.removeLoadListener(loadListener);
-				_modelProvider.removeListener(modelListener);
+				_modelProvider.removeStatementsChangedListener(modelListener);
 			}
 		});
 	}

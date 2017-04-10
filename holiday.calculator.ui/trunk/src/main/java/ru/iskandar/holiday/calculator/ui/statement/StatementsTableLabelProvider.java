@@ -1,4 +1,4 @@
-package ru.iskandar.holiday.calculator.ui.incoming;
+package ru.iskandar.holiday.calculator.ui.statement;
 
 import java.text.SimpleDateFormat;
 
@@ -11,7 +11,7 @@ import ru.iskandar.holiday.calculator.service.model.StatementStatus;
 import ru.iskandar.holiday.calculator.service.model.StatementType;
 import ru.iskandar.holiday.calculator.service.model.User;
 import ru.iskandar.holiday.calculator.ui.Messages;
-import ru.iskandar.holiday.calculator.ui.incoming.StatementsTableCreator.StatementsTableColumn;
+import ru.iskandar.holiday.calculator.ui.statement.StatementsTableCreator.StatementsTableColumn;
 
 /**
  * Поставщик текста таблицы заявлений

@@ -6,11 +6,15 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TableColumn;
 
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
+import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
+import ru.iskandar.holiday.calculator.ui.Messages;
 import ru.iskandar.holiday.calculator.ui.statement.IStatementsProvider.IStatementsChangedListener;
 
 /**
@@ -92,8 +96,47 @@ public class StatementsTableCreator {
 		_viewer.setContentProvider(new StatementTableContentProvider());
 		_viewer.setLabelProvider(new StatementsTableLabelProvider());
 		_viewer.setInput(_modelProvider);
+
+		_viewer.getTable().addPaintListener(new PaintHandler());
+		_viewer.getTable().setLinesVisible(false);
+
 		refreshAndPack();
 		return _viewer;
+	}
+
+	private class PaintHandler implements PaintListener {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void paintControl(PaintEvent aE) {
+			LoadStatus status = _modelProvider.getLoadStatus();
+			String text = Messages.EMPTY;
+			switch (status) {
+			case LOADING:
+				text = StatementsTableProperties.statementsTableLoadingText;
+				break;
+
+			case LOAD_ERROR:
+				text = StatementsTableProperties.statementsTableLoadErrorText;
+				break;
+
+			case LOADED:
+				text = Messages.EMPTY;
+				break;
+
+			default:
+				break;
+			}
+
+			int x = (aE.width - aE.gc.textExtent(text).x) / 2;
+			int y = (aE.height + aE.gc.textExtent(text).y) / 2;
+
+			aE.gc.drawText(text, x, y);
+
+		}
+
 	}
 
 	private void initListeners() {

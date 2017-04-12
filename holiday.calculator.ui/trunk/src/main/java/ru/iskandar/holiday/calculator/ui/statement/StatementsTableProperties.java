@@ -25,7 +25,9 @@ public class StatementsTableProperties extends NLS {
 
 	public static String statementsTableConsiderColumnText;
 
-	public static String statementsTableConsiderDateText;
+	public static String statementsTableConsiderDateColumnText;
+
+	public static String statementsTableContentColumnText;
 
 	static {
 		// инициализация ресурсов бандла

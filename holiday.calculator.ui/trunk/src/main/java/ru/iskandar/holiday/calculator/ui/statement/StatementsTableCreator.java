@@ -32,7 +32,9 @@ public class StatementsTableCreator {
 
 		CONSIDER(StatementsTableProperties.statementsTableConsiderColumnText, 4),
 
-		CONSIDER_DATE(StatementsTableProperties.statementsTableConsiderDateText, 5);
+		CONSIDER_DATE(StatementsTableProperties.statementsTableConsiderDateColumnText, 5),
+
+		CONTENT(StatementsTableProperties.statementsTableContentColumnText, 6);
 
 		private String _text;
 

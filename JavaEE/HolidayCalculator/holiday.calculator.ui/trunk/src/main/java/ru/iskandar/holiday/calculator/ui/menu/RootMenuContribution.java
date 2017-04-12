@@ -8,6 +8,7 @@ import org.eclipse.ui.services.IServiceLocator;
 
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.ModelProviderHolder;
+import ru.iskandar.holiday.calculator.ui.menu.handlers.OpenCurrentUserStatementsAction;
 import ru.iskandar.holiday.calculator.ui.menu.handlers.TakeHolidayAction;
 
 public class RootMenuContribution extends ExtensionContributionFactory {
@@ -27,6 +28,7 @@ public class RootMenuContribution extends ExtensionContributionFactory {
 				menuManager);
 		menuManager.add(incomingContributionItem);
 		menuManager.add(new TakeHolidayAction(provider));
+		menuManager.add(new OpenCurrentUserStatementsAction(provider));
 		new StatementsMenuPM(menuManager, provider);
 
 		aAdditions.addContributionItem(menuManager, Expression.TRUE);

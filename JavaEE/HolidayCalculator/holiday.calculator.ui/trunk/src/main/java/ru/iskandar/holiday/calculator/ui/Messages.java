@@ -79,16 +79,6 @@ public class Messages extends NLS {
 	/** Текст диалога заявление уже подано */
 	public static String holidayStatementAlreadySendedDialogTextForDays;
 
-	public static String statementsTableTypeColumnText;
-
-	public static String statementsTableAuthorColumnText;
-
-	public static String statementsTableCreateDateColumnText;
-
-	public static String statementsTableReviewDateColumnText;
-
-	public static String statementsTableStatusColumnText;
-
 	/** Не рассмотрено */
 	public static String notConsidered;
 
@@ -157,6 +147,8 @@ public class Messages extends NLS {
 	public static String getLeaveFormHeader;
 
 	public static String takeLeaveBt;
+
+	public static String openCurrentUserStatementsActionText;
 
 	static {
 		// инициализация ресурсов бандла

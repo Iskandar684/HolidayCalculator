@@ -1,6 +1,7 @@
 package ru.iskandar.holiday.calculator.ui.statement;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -86,12 +87,11 @@ public class StatementsTableLabelProvider implements ITableLabelProvider {
 
 		case AUTHOR:
 			User author = statement.getAuthor();
-			text = String.format("%s %s %s", author.getLastName(), author.getFirstName(), author.getPatronymic());
+			text = toString(author);
 			break;
 
 		case CREATE_DATE:
-			SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-			text = dateFormatter.format(statement.getCreateDate());
+			text = toString(statement.getCreateDate());
 			break;
 
 		case STATUS:
@@ -114,10 +114,36 @@ public class StatementsTableLabelProvider implements ITableLabelProvider {
 			}
 			break;
 
+		case CONSIDER:
+			text = toString(statement.getConsider());
+			break;
+
+		case CONSIDER_DATE:
+			text = toString(statement.getConsiderDate());
+			break;
+
 		default:
 			text = statement.toString();
 			break;
 		}
+		return text;
+	}
+
+	private String toString(User aUser) {
+		if (aUser == null) {
+			return "-";
+		}
+		String text = String.format("%s %s %s", aUser.getLastName(), aUser.getFirstName(), aUser.getPatronymic());
+		return text;
+	}
+
+	private String toString(Date aDate) {
+		if (aDate == null) {
+			return "-";
+		}
+
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+		String text = dateFormatter.format(aDate);
 		return text;
 	}
 

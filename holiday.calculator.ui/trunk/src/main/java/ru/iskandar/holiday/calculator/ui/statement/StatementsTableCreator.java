@@ -11,7 +11,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TableColumn;
 
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
-import ru.iskandar.holiday.calculator.ui.Messages;
 import ru.iskandar.holiday.calculator.ui.statement.IStatementsProvider.IStatementsChangedListener;
 
 /**
@@ -23,13 +22,17 @@ public class StatementsTableCreator {
 
 	public static enum StatementsTableColumn {
 
-		TYPE(Messages.statementsTableTypeColumnText, 0),
+		TYPE(StatementsTableProperties.statementsTableTypeColumnText, 0),
 
-		AUTHOR(Messages.statementsTableAuthorColumnText, 1),
+		AUTHOR(StatementsTableProperties.statementsTableAuthorColumnText, 1),
 
-		CREATE_DATE(Messages.statementsTableCreateDateColumnText, 2),
+		CREATE_DATE(StatementsTableProperties.statementsTableCreateDateColumnText, 2),
 
-		STATUS(Messages.statementsTableStatusColumnText, 3);
+		STATUS(StatementsTableProperties.statementsTableStatusColumnText, 3),
+
+		CONSIDER(StatementsTableProperties.statementsTableConsiderColumnText, 4),
+
+		CONSIDER_DATE(StatementsTableProperties.statementsTableConsiderDateText, 5);
 
 		private String _text;
 
@@ -78,6 +81,7 @@ public class StatementsTableCreator {
 		for (StatementsTableColumn col : StatementsTableColumn.values()) {
 			TableColumn column = new TableColumn(_viewer.getTable(), SWT.CENTER);
 			column.setText(col.getText());
+			column.setMoveable(true);
 		}
 		_viewer.getTable().setHeaderVisible(true);
 		_viewer.getTable().setLinesVisible(true);

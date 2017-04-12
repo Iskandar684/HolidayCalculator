@@ -98,10 +98,15 @@ public class StatementsTableCreator {
 		_viewer.setInput(_modelProvider);
 
 		_viewer.getTable().addPaintListener(new PaintHandler());
-		_viewer.getTable().setLinesVisible(false);
+		updateLinesVisible();
 
 		refreshAndPack();
 		return _viewer;
+	}
+
+	private void updateLinesVisible() {
+		boolean visible = LoadStatus.LOADED.equals(_modelProvider.getLoadStatus());
+		_viewer.getTable().setLinesVisible(visible);
 	}
 
 	private class PaintHandler implements PaintListener {
@@ -154,6 +159,7 @@ public class StatementsTableCreator {
 					 */
 					@Override
 					public void run() {
+						updateLinesVisible();
 						refreshAndPack();
 					}
 

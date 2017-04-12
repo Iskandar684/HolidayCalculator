@@ -29,6 +29,10 @@ public class StatementsTableProperties extends NLS {
 
 	public static String statementsTableContentColumnText;
 
+	public static String statementsTableLoadingText;
+
+	public static String statementsTableLoadErrorText;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, StatementsTableProperties.class);

@@ -70,6 +70,10 @@
             class="ru.iskandar.holiday.calculator.ui.menu.handlers.TakeHolidayAction"
             commandId="holiday.calculator.ui.command.take.holiday">
       </handler>
+      <handler
+            class="ru.iskandar.holiday.calculator.ui.ReloadHandler"
+            commandId="org.eclipse.ui.file.refresh">
+      </handler>
    </extension>
 
 </plugin>

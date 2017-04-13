@@ -16,12 +16,12 @@ public abstract class HolidayCalculatorEvent implements Serializable {
 	 * Идентификатор клиента инициатора события. {@code null}, если инициатором
 	 * события является не пользователь
 	 */
-	private ClientId _initiator;
+	private EventInitiator _initiator;
 
 	/**
 	 * @return the initiator
 	 */
-	public ClientId getInitiator() {
+	public EventInitiator getInitiator() {
 		return _initiator;
 	}
 
@@ -29,7 +29,7 @@ public abstract class HolidayCalculatorEvent implements Serializable {
 	 * @param aInitiator
 	 *            the initiator to set
 	 */
-	public void setInitiator(ClientId aInitiator) {
+	public void setInitiator(EventInitiator aInitiator) {
 		_initiator = aInitiator;
 	}
 

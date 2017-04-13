@@ -83,7 +83,8 @@ public class TakeHolidayEditor extends EditorPart {
 		@Override
 		protected void holidayStatementSended(StatementSendedEvent aEvent) {
 			ClientId currentClientId = _modelProvider.getModel().getClientId();
-			if (currentClientId.equals(aEvent.getInitiator())) {
+			ClientId eventClientId = aEvent.getInitiator() != null ? aEvent.getInitiator().getClientId() : null;
+			if (currentClientId.equals(eventClientId)) {
 				Display.getDefault().asyncExec(new Runnable() {
 
 					/**

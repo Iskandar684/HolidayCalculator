@@ -1,12 +1,15 @@
 package ru.iskandar.holiday.calculator.ui.incoming;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.nebula.widgets.datechooser.DateChooser;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -19,7 +22,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -27,7 +29,10 @@ import org.eclipse.ui.statushandlers.StatusManager;
 
 import ru.iskandar.holiday.calculator.service.ejb.StatementAlreadyConsideredException;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
+import ru.iskandar.holiday.calculator.service.model.HolidayStatement;
+import ru.iskandar.holiday.calculator.service.model.LeaveStatement;
 import ru.iskandar.holiday.calculator.service.model.PermissionDeniedException;
+import ru.iskandar.holiday.calculator.service.model.RecallStatement;
 import ru.iskandar.holiday.calculator.service.model.ServiceLookupException;
 import ru.iskandar.holiday.calculator.service.model.Statement;
 import ru.iskandar.holiday.calculator.ui.Activator;
@@ -35,6 +40,7 @@ import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
 import ru.iskandar.holiday.calculator.ui.Messages;
+import ru.iskandar.holiday.calculator.ui.Utils;
 
 /**
  * Форма рассмотрения заявления
@@ -51,6 +57,8 @@ public class StatementReviewForm {
 
 	private Button _approveBt;
 	private Button _rejectBt;
+
+	DateChooser _dateChooser;
 
 	/**
 	 * Конструктор
@@ -159,8 +167,8 @@ public class StatementReviewForm {
 		_toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
 
-		DateTime dateTime = new DateTime(main, SWT.CALENDAR);
-		dateTime.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, columns, 1));
+		_dateChooser = Utils.createDateChooser(main, SWT.MULTI);
+		_dateChooser.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, columns, 1));
 		_toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
 
@@ -292,12 +300,31 @@ public class StatementReviewForm {
 		boolean canApprove = false;
 		boolean canReject = false;
 		LoadStatus status = _modelProvider.getLoadStatus();
+		_dateChooser.clearSelection();
 		if (LoadStatus.LOADED.equals(status)) {
 			Statement statement = getStatement();
 			if (statement != null) {
 				HolidayCalculatorModel model = _modelProvider.getModel();
 				canApprove = model.canApprove(statement);
 				canReject = model.canReject(statement);
+				Collection<Date> toSelect = new ArrayList<>();
+				switch (statement.getStatementType()) {
+				case HOLIDAY_STATEMENT:
+					toSelect = ((HolidayStatement) statement).getDays();
+					break;
+
+				case LEAVE_STATEMENT:
+					toSelect = ((LeaveStatement) statement).getLeaveDates();
+					break;
+
+				case RECALL_STATEMENT:
+					toSelect = ((RecallStatement) statement).getRecallDates();
+					break;
+				}
+
+				for (Date date : toSelect) {
+					_dateChooser.setSelectedDate(date);
+				}
 			}
 		}
 		_approveBt.setEnabled(canApprove);

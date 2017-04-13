@@ -116,8 +116,12 @@ public class HolidayCalculatorModel implements Serializable {
 	void sendHolidayStatement(HolidayStatement aStatement) throws StatementAlreadySendedException {
 		HolidayStatement statement = _servicesProvider.getHolidayCalculatorService().sendStatement(aStatement);
 		StatementSendedEvent event = new StatementSendedEvent(statement);
-		event.setInitiator(_clientId);
+		event.setInitiator(createCurrentEventInitiator());
 		fireEvent(event);
+	}
+
+	private EventInitiator createCurrentEventInitiator() {
+		return EventInitiator.create(_clientId, _currenUser);
 	}
 
 	/**
@@ -134,7 +138,7 @@ public class HolidayCalculatorModel implements Serializable {
 	void sendLeaveStatement(LeaveStatement aStatement) throws StatementAlreadySendedException {
 		LeaveStatement statement = _servicesProvider.getHolidayCalculatorService().sendStatement(aStatement);
 		StatementSendedEvent event = new StatementSendedEvent(statement);
-		event.setInitiator(_clientId);
+		event.setInitiator(createCurrentEventInitiator());
 		fireEvent(event);
 	}
 
@@ -169,7 +173,7 @@ public class HolidayCalculatorModel implements Serializable {
 	void sendRecallStatement(RecallStatement aStatement) throws StatementAlreadySendedException {
 		RecallStatement statement = _servicesProvider.getHolidayCalculatorService().sendStatement(aStatement);
 		StatementSendedEvent event = new StatementSendedEvent(statement);
-		event.setInitiator(_clientId);
+		event.setInitiator(createCurrentEventInitiator());
 		fireEvent(event);
 	}
 
@@ -285,7 +289,7 @@ public class HolidayCalculatorModel implements Serializable {
 			throw new PermissionDeniedException("Нет прав на рассмотрение заявлений", e);
 		}
 		StatementConsideredEvent event = new StatementConsideredEvent(statement);
-		event.setInitiator(_clientId);
+		event.setInitiator(createCurrentEventInitiator());
 		fireEvent(event);
 	}
 
@@ -349,7 +353,7 @@ public class HolidayCalculatorModel implements Serializable {
 			throw new PermissionDeniedException("Нет прав на рассмотрение заявлений", e);
 		}
 		StatementConsideredEvent event = new StatementConsideredEvent(statement);
-		event.setInitiator(_clientId);
+		event.setInitiator(createCurrentEventInitiator());
 		fireEvent(event);
 	}
 

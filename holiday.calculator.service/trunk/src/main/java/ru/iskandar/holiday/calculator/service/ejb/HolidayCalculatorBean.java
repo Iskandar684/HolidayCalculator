@@ -18,10 +18,13 @@ import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.jms.JMSException;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.jboss.logging.Logger;
 
 import ru.iskandar.holiday.calculator.service.ejb.jms.MessageSenderBean;
+import ru.iskandar.holiday.calculator.service.entities.StatementJPA;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelFactory;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelLoadException;
@@ -68,6 +71,9 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 
 	// TODO имитация БД
 	private static Map<User, Date> _usersEmploymentDateMap = new HashMap<>();
+
+	@PersistenceContext
+	private EntityManager _em;
 
 	@PostConstruct
 	private void init() {
@@ -180,12 +186,19 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 			}
 		}
 		_statements.put(aStatement.getUuid(), aStatement);
+		save(aStatement);
 		try {
 			_messageSender.send(new StatementSendedEvent(aStatement));
 		} catch (JMSException e) {
 			LOG.error(String.format("Ошибка оповещения об отправки заявления %s на отгул", aStatement), e);
 		}
 		return aStatement;
+	}
+
+	private void save(Statement aStatement) {
+		StatementJPA entity = new StatementJPA();
+		entity.setText(aStatement.toString());
+		_em.persist(entity);
 	}
 
 	/**
@@ -225,6 +238,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 
 		}
 		_statements.put(aStatement.getUuid(), aStatement);
+		save(aStatement);
 		try {
 			_messageSender.send(new StatementSendedEvent(aStatement));
 		} catch (JMSException e) {
@@ -448,6 +462,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 			}
 		}
 		_statements.put(aStatement.getUuid(), aStatement);
+		save(aStatement);
 		try {
 			_messageSender.send(new StatementSendedEvent(aStatement));
 		} catch (JMSException e) {

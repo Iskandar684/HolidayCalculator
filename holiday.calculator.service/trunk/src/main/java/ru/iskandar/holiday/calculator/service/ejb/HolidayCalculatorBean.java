@@ -72,6 +72,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	// TODO имитация БД
 	private static Map<User, Date> _usersEmploymentDateMap = new HashMap<>();
 
+	/** Менеджер сущностей */
 	@PersistenceContext
 	private EntityManager _em;
 

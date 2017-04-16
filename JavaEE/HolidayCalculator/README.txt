@@ -33,6 +33,70 @@ wildfly-10.1.0.Final\standalone\configuration\standalone.xml
 
 8. Запустить wildfly-10.1.0.Final/bin/standalone.bat
 
+Инструкция по настройки БД.
+
+1. Создание базы данных.
+Чтобы установить PostgreSQL в Linux, выполните следующие команды:
+sudo apt-add-repository ppa:pitti/postgresql
+sudo apt-get update
+sudo apt-get install postgresql
+
+Попробуем поработать с СУБД через оболочку:
+sudo -u postgres psql
+
+Создадим тестовую базу данных и тестового пользователя:
+postgres=# CREATE DATABASE holiday_calculator_db;
+CREATE DATABASE
+
+postgres=# CREATE USER holiday_calculator_user WITH password 'qwerty';
+CREATE ROLE
+
+postgres=# GRANT ALL privileges ON DATABASE test_database TO holiday_calculator_user;
+GRANT
+Для выхода из оболочки введите команду \q.
+
+2. Добавление драйвера
+В корневой папке WildFly находим папку modules, внутри нее создаем иерархию папок org/postgres/main. Кидаем туда драйвер postgre. Я использовал postgresql-9.3-1102.jdbc4.jar
+
+Создаем тут же файл module.xml. В нем пишем:
+<module xmlns="urn:jboss:module:1.0" name="org.postgres"> 
+  <resources> 
+    <resource-root path="postgresql-9.3-1102.jdbc4.jar"/> 
+  </resources> 
+   <dependencies> 
+     <module name="javax.api"/> 
+     <module name="javax.transaction.api"/> 
+   </dependencies> 
+</module> 
+
+3. Добавление datasource
+В папке с WildFly редактируем файл \standalone\configuration\standalone.xml
+<datasource jndi-name="java:jboss/datasources/PostgreDataSource" pool-name="PostgreDataSource " enabled="true" jta="true" use-java-context="true" use-ccm="true"> 
+                     <connection-url> 
+                                jdbc:postgresql://localhost:5432/holiday_calculator_db 
+                     </connection-url> 
+                     <driver> 
+                                postgresql 
+                     </driver> 
+                     <security> 
+                                <user-name> 
+                                          holiday_calculator_user 
+                                </user-name> 
+                                <password> 
+                                          qwerty
+                                </password> 
+                     </security> 
+                  </datasource> 
+                  
+Также добавляем новый драйвер в соответствующий тэг.
+
+ <driver name="postgresql" module="org.postgres"> 
+        <xa-datasource-class> 
+                org.postgresql.xa.PGXADataSource 
+        </xa-datasource-class> 
+</driver>                   
+
+
 
 Добавление пользователей.
 1. Выполнить wildfly-10.1.0.Final/bin/add-user.*

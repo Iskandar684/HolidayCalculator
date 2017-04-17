@@ -11,9 +11,9 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.ui.statushandlers.StatusManager;
 
-import ru.iskandar.holiday.calculator.service.ejb.StatementAlreadySendedException;
 import ru.iskandar.holiday.calculator.service.model.ServiceLookupException;
 import ru.iskandar.holiday.calculator.service.model.Statement;
+import ru.iskandar.holiday.calculator.service.model.StatementAlreadySendedException;
 import ru.iskandar.holiday.calculator.service.model.TakeHolidayStatementBuilder;
 import ru.iskandar.holiday.calculator.ui.Activator;
 import ru.iskandar.holiday.calculator.ui.Messages;

@@ -5,11 +5,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.security.DeclareRoles;
@@ -18,22 +16,23 @@ import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.jms.JMSException;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import org.jboss.logging.Logger;
 
 import ru.iskandar.holiday.calculator.service.ejb.jms.MessageSenderBean;
-import ru.iskandar.holiday.calculator.service.entities.StatementJPA;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelFactory;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelLoadException;
 import ru.iskandar.holiday.calculator.service.model.HolidayStatement;
+import ru.iskandar.holiday.calculator.service.model.InvalidStatementException;
 import ru.iskandar.holiday.calculator.service.model.LeaveStatement;
 import ru.iskandar.holiday.calculator.service.model.Permissions;
 import ru.iskandar.holiday.calculator.service.model.RecallStatement;
 import ru.iskandar.holiday.calculator.service.model.Statement;
+import ru.iskandar.holiday.calculator.service.model.StatementAlreadyConsideredException;
+import ru.iskandar.holiday.calculator.service.model.StatementAlreadySendedException;
 import ru.iskandar.holiday.calculator.service.model.StatementConsideredEvent;
+import ru.iskandar.holiday.calculator.service.model.StatementNotFoundException;
 import ru.iskandar.holiday.calculator.service.model.StatementSendedEvent;
 import ru.iskandar.holiday.calculator.service.model.StatementStatus;
 import ru.iskandar.holiday.calculator.service.model.StatementValidator;
@@ -66,15 +65,12 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	/** Валидатор заявления */
 	private final StatementValidator _statementValidator = new StatementValidator();
 
-	// TODO имитация БД
-	private static Map<UUID, Statement> _statements = new HashMap<>();
+	/** Репозиторий заявлений */
+	@EJB
+	private IStatementRepository _statementRepo;
 
 	// TODO имитация БД
 	private static Map<User, Date> _usersEmploymentDateMap = new HashMap<>();
-
-	/** Менеджер сущностей */
-	@PersistenceContext
-	private EntityManager _em;
 
 	@PostConstruct
 	private void init() {
@@ -97,14 +93,9 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	 */
 	@RolesAllowed(Permissions.CONSIDER)
 	@Override
-	public Set<Statement> loadStatements(EnumSet<StatementStatus> aStatuses) {
+	public Collection<Statement> loadStatements(EnumSet<StatementStatus> aStatuses) {
 		Objects.requireNonNull(aStatuses);
-		Set<Statement> statementsByStatus = new HashSet<>();
-		for (Statement statement : _statements.values()) {
-			if (aStatuses.contains(statement.getStatus())) {
-				statementsByStatus.add(statement);
-			}
-		}
+		Collection<Statement> statementsByStatus = _statementRepo.getStatementsByStatus(aStatuses);
 		return statementsByStatus;
 	}
 
@@ -117,7 +108,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		Objects.requireNonNull(aStatement);
 		checkStatement(aStatement);
 
-		Statement statement = _statements.get(aStatement.getUuid());
+		Statement statement = _statementRepo.getStatement(aStatement.getUuid(), aStatement.getStatementType());
 		if (statement == null) {
 			throw new StatementNotFoundException(String.format("Заявление '%s' не найдено", aStatement));
 		}
@@ -145,7 +136,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		Objects.requireNonNull(aStatement);
 		checkStatement(aStatement);
 
-		Statement statement = _statements.get(aStatement.getUuid());
+		Statement statement = _statementRepo.getStatement(aStatement.getUuid(), aStatement.getStatementType());
 		if (statement == null) {
 			throw new StatementNotFoundException(String.format("Заявление [%s] не найдено", aStatement));
 		}
@@ -171,7 +162,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		Objects.requireNonNull(aStatement);
 		checkStatement(aStatement);
 
-		Statement sendedStatement = _statements.get(aStatement.getUuid());
+		Statement sendedStatement = _statementRepo.getStatement(aStatement.getUuid(), aStatement.getStatementType());
 		if (sendedStatement != null) {
 			throw new StatementAlreadySendedException(aStatement, sendedStatement);
 		}
@@ -186,20 +177,14 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 				throw new StatementAlreadySendedException(aStatement, st);
 			}
 		}
-		_statements.put(aStatement.getUuid(), aStatement);
-		save(aStatement);
+		aStatement.setStatus(StatementStatus.NOT_CONSIDERED);
+		_statementRepo.save(aStatement);
 		try {
 			_messageSender.send(new StatementSendedEvent(aStatement));
 		} catch (JMSException e) {
 			LOG.error(String.format("Ошибка оповещения об отправки заявления %s на отгул", aStatement), e);
 		}
 		return aStatement;
-	}
-
-	private void save(Statement aStatement) {
-		StatementJPA entity = new StatementJPA();
-		entity.setText(aStatement.toString());
-		_em.persist(entity);
 	}
 
 	/**
@@ -210,7 +195,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		Objects.requireNonNull(aStatement);
 		checkStatement(aStatement);
 
-		Statement sendedStatement = _statements.get(aStatement.getUuid());
+		Statement sendedStatement = _statementRepo.getStatement(aStatement.getUuid(), aStatement.getStatementType());
 		if (sendedStatement != null) {
 			throw new StatementAlreadySendedException(aStatement, sendedStatement);
 		}
@@ -238,8 +223,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 			}
 
 		}
-		_statements.put(aStatement.getUuid(), aStatement);
-		save(aStatement);
+		_statementRepo.save(aStatement);
 		try {
 			_messageSender.send(new StatementSendedEvent(aStatement));
 		} catch (JMSException e) {
@@ -248,40 +232,22 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		return aStatement;
 	}
 
-	private Set<HolidayStatement> getCurrentUserHolidayStatements() {
+	private Collection<HolidayStatement> getCurrentUserHolidayStatements() {
 		User currentUser = _userService.getCurrentUser();
-		Set<HolidayStatement> currentUserStatements = new HashSet<>();
-		for (Statement st : _statements.values()) {
-			if (st.getAuthor().equals(currentUser) && (st instanceof HolidayStatement)) {
-				currentUserStatements.add((HolidayStatement) st);
-			}
-		}
-		return currentUserStatements;
+		return _statementRepo.getHolidayStatementsByAuthor(currentUser);
 	}
 
-	private Set<RecallStatement> getCurrentUserRecallStatements() {
+	private Collection<RecallStatement> getCurrentUserRecallStatements() {
 		User currentUser = _userService.getCurrentUser();
-		Set<RecallStatement> currentUserStatements = new HashSet<>();
-		for (Statement st : _statements.values()) {
-			if (st.getAuthor().equals(currentUser) && (st instanceof RecallStatement)) {
-				currentUserStatements.add((RecallStatement) st);
-			}
-		}
-		return currentUserStatements;
+		return _statementRepo.getRecallStatementsByAuthor(currentUser);
 	}
 
-	private Set<Statement> getStatementsByUser(User aUser) {
+	private Collection<Statement> getStatementsByUser(User aUser) {
 		Objects.requireNonNull(aUser);
-		Set<Statement> statementsByUser = new HashSet<>();
-		for (Statement st : _statements.values()) {
-			if (st.getAuthor().equals(aUser)) {
-				statementsByUser.add(st);
-			}
-		}
-		return statementsByUser;
+		return _statementRepo.getStatementsByAuthor(aUser);
 	}
 
-	private Set<Statement> getCurrentUserStatements() {
+	private Collection<Statement> getCurrentUserStatements() {
 		return getStatementsByUser(_userService.getCurrentUser());
 	}
 
@@ -349,12 +315,8 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	@RolesAllowed(Permissions.CONSIDER)
 	@Override
 	public Collection<Statement> getIncomingStatements() {
-		Collection<Statement> incoming = new HashSet<>();
-		for (Statement st : _statements.values()) {
-			if (StatementStatus.NOT_CONSIDERED.equals(st.getStatus())) {
-				incoming.add(st);
-			}
-		}
+		Collection<Statement> incoming = _statementRepo
+				.getStatementsByStatus(EnumSet.of(StatementStatus.NOT_CONSIDERED));
 		return incoming;
 	}
 
@@ -447,7 +409,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		Objects.requireNonNull(aStatement);
 		checkStatement(aStatement);
 
-		Statement sendedStatement = _statements.get(aStatement.getUuid());
+		Statement sendedStatement = _statementRepo.getStatement(aStatement.getUuid(), aStatement.getStatementType());
 		if (sendedStatement != null) {
 			throw new StatementAlreadySendedException(aStatement, sendedStatement);
 		}
@@ -462,8 +424,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 				throw new StatementAlreadySendedException(aStatement, st);
 			}
 		}
-		_statements.put(aStatement.getUuid(), aStatement);
-		save(aStatement);
+		_statementRepo.save(aStatement);
 		try {
 			_messageSender.send(new StatementSendedEvent(aStatement));
 		} catch (JMSException e) {

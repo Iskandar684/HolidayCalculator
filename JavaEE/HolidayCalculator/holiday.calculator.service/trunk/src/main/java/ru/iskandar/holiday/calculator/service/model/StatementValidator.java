@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
-import ru.iskandar.holiday.calculator.service.ejb.InvalidStatementException;
-
 /**
  * Валидатор правильности заполнения заявления
  */

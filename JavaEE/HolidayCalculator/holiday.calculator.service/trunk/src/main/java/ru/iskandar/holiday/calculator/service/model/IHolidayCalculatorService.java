@@ -3,14 +3,8 @@ package ru.iskandar.holiday.calculator.service.model;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
-import java.util.Set;
 
 import javax.ejb.EJBAccessException;
-
-import ru.iskandar.holiday.calculator.service.ejb.InvalidStatementException;
-import ru.iskandar.holiday.calculator.service.ejb.StatementAlreadyConsideredException;
-import ru.iskandar.holiday.calculator.service.ejb.StatementAlreadySendedException;
-import ru.iskandar.holiday.calculator.service.ejb.StatementNotFoundException;
 
 /**
  * Сервис учета отгулов
@@ -37,7 +31,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws NullPointerException
 	 *             если aStatuses {@code null}
 	 */
-	public Set<Statement> loadStatements(EnumSet<StatementStatus> aStatuses);
+	public Collection<Statement> loadStatements(EnumSet<StatementStatus> aStatuses);
 
 	/**
 	 * Одобряет заявление

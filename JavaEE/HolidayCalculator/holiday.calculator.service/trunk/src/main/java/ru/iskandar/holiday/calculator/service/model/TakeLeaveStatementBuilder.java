@@ -9,8 +9,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-import ru.iskandar.holiday.calculator.service.ejb.StatementAlreadySendedException;
-
 /**
  * Формирователь заявления на отпуск
  */

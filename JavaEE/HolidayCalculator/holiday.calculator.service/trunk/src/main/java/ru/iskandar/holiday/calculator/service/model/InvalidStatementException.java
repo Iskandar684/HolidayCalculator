@@ -1,4 +1,4 @@
-package ru.iskandar.holiday.calculator.service.ejb;
+package ru.iskandar.holiday.calculator.service.model;
 
 /**
  * Исключение для случае, когда заявление невалидное (Например, отсутствует

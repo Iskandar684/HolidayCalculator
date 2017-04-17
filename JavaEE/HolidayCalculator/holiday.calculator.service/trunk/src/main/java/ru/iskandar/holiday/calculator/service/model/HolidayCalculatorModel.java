@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 
@@ -13,11 +12,6 @@ import javax.ejb.EJBAccessException;
 import javax.jms.JMSException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-
-import ru.iskandar.holiday.calculator.service.ejb.InvalidStatementException;
-import ru.iskandar.holiday.calculator.service.ejb.StatementAlreadyConsideredException;
-import ru.iskandar.holiday.calculator.service.ejb.StatementAlreadySendedException;
-import ru.iskandar.holiday.calculator.service.ejb.StatementNotFoundException;
 
 /**
  * Модель учета отгулов
@@ -250,7 +244,7 @@ public class HolidayCalculatorModel implements Serializable {
 	 *             заявлений
 	 */
 	public int getUnConsideredStatementsCount() {
-		Set<Statement> statements;
+		Collection<Statement> statements;
 		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
 		try {
 			statements = service.loadStatements(EnumSet.of(StatementStatus.NOT_CONSIDERED));

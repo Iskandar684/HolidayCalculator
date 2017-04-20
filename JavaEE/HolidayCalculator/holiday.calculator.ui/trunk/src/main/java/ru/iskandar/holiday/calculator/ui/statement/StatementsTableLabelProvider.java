@@ -17,7 +17,7 @@ import ru.iskandar.holiday.calculator.service.model.RecallStatement;
 import ru.iskandar.holiday.calculator.service.model.Statement;
 import ru.iskandar.holiday.calculator.service.model.StatementStatus;
 import ru.iskandar.holiday.calculator.service.model.StatementType;
-import ru.iskandar.holiday.calculator.service.model.User;
+import ru.iskandar.holiday.calculator.service.model.user.User;
 import ru.iskandar.holiday.calculator.ui.Messages;
 import ru.iskandar.holiday.calculator.ui.statement.StatementsTableCreator.StatementsTableColumn;
 

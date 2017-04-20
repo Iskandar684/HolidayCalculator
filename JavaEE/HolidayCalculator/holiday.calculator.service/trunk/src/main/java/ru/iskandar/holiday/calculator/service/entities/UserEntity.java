@@ -1,5 +1,6 @@
 package ru.iskandar.holiday.calculator.service.entities;
 
+import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -14,7 +15,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "ru_iskandar_holiday_calculator_user")
-public class UserJPA {
+public class UserEntity {
 
 	/** Глобальный идентификатор */
 	@Id
@@ -41,6 +42,11 @@ public class UserJPA {
 	@Column(name = "login", unique = true)
 	@NotNull(message = "Не указан логин")
 	private String _login;
+
+	/** Дата приема на работу */
+	@Column(name = "employmentdate")
+	@NotNull(message = "Не указан логин")
+	private Date _employmentDate;
 
 	/**
 	 * @return the uuid
@@ -115,6 +121,21 @@ public class UserJPA {
 	 */
 	public void setLogin(String aLogin) {
 		_login = aLogin;
+	}
+
+	/**
+	 * @return the employmentDate
+	 */
+	public Date getEmploymentDate() {
+		return _employmentDate;
+	}
+
+	/**
+	 * @param aEmploymentDate
+	 *            the employmentDate to set
+	 */
+	public void setEmploymentDate(Date aEmploymentDate) {
+		_employmentDate = aEmploymentDate;
 	}
 
 }

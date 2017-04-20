@@ -1,17 +1,18 @@
-package ru.iskandar.holiday.calculator.service.model;
+package ru.iskandar.holiday.calculator.service.model.user;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
-import ru.iskandar.holiday.calculator.service.entities.UserJPA;
+import ru.iskandar.holiday.calculator.service.entities.UserEntity;
 
 /**
  * Фабрика создания описания пользователя на основе сущности пользователя
  */
-public class JPABasedUserFactory extends UserFactory {
+public class EntityBasedUserFactory extends UserFactory {
 
 	/** Сущность пользователя */
-	private final UserJPA _userEntity;
+	private final UserEntity _userEntity;
 
 	/**
 	 * Конструктор
@@ -19,7 +20,7 @@ public class JPABasedUserFactory extends UserFactory {
 	 * @param aUserJPA
 	 *            сущность пользователя
 	 */
-	public JPABasedUserFactory(UserJPA aUserJPA) {
+	public EntityBasedUserFactory(UserEntity aUserJPA) {
 		Objects.requireNonNull(aUserJPA);
 		_userEntity = aUserJPA;
 	}
@@ -54,6 +55,22 @@ public class JPABasedUserFactory extends UserFactory {
 	@Override
 	protected String getPatronymic() {
 		return _userEntity.getPatronymic();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected Date getEmploymentDate() {
+		return _userEntity.getEmploymentDate();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected String getLogin() {
+		return _userEntity.getLogin();
 	}
 
 }

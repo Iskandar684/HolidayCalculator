@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
+import ru.iskandar.holiday.calculator.service.model.user.User;
+
 /**
  * Заявление
  */
@@ -16,7 +18,7 @@ public abstract class Statement implements Serializable {
 	private static final long serialVersionUID = 3589182703953347929L;
 
 	/** Идентификатор заявления */
-	private final UUID _uuid;
+	private final StatementId _statementId;
 
 	/** Автор заявления */
 	private final User _author;
@@ -40,17 +42,29 @@ public abstract class Statement implements Serializable {
 	 *            идентификатор заявления
 	 */
 	public Statement(UUID aUUID, User aAuthor) {
-		Objects.requireNonNull(aUUID, "Не указан идентификатор заявления");
+		this(StatementId.from(aUUID), aAuthor);
+	}
+
+	/**
+	 * Конструктор
+	 *
+	 * @param aStatementId
+	 *            идентификатор заявления
+	 */
+	public Statement(StatementId aStatementId, User aAuthor) {
+		Objects.requireNonNull(aStatementId, "Не указан идентификатор заявления");
 		Objects.requireNonNull(aAuthor, "Не указан автор заявления");
-		_uuid = aUUID;
+		_statementId = aStatementId;
 		_author = aAuthor;
 	}
 
 	/**
 	 * @return the uuid
+	 * @deprecated {@link #getId()}
 	 */
+	@Deprecated
 	public UUID getUuid() {
-		return _uuid;
+		return _statementId.getUuid();
 	}
 
 	/**
@@ -128,7 +142,7 @@ public abstract class Statement implements Serializable {
 	public final int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + ((_uuid == null) ? 0 : _uuid.hashCode());
+		result = (prime * result) + ((_statementId == null) ? 0 : _statementId.hashCode());
 		return result;
 	}
 
@@ -147,11 +161,11 @@ public abstract class Statement implements Serializable {
 			return false;
 		}
 		Statement other = (Statement) obj;
-		if (_uuid == null) {
-			if (other._uuid != null) {
+		if (_statementId == null) {
+			if (other._statementId != null) {
 				return false;
 			}
-		} else if (!_uuid.equals(other._uuid)) {
+		} else if (!_statementId.equals(other._statementId)) {
 			return false;
 		}
 		return true;
@@ -160,14 +174,23 @@ public abstract class Statement implements Serializable {
 	public abstract StatementType getStatementType();
 
 	/**
+	 * Возвращает идентификатор заявления
+	 *
+	 * @return идентификатор заявления
+	 */
+	public StatementId getId() {
+		return _statementId;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(getClass());
-		builder.append(" uuid=");
-		builder.append(_uuid);
+		builder.append(" id=");
+		builder.append(_statementId);
 		return builder.toString();
 	}
 

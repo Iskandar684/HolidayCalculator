@@ -13,6 +13,9 @@ import javax.jms.JMSException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import ru.iskandar.holiday.calculator.service.model.permissions.PermissionDeniedException;
+import ru.iskandar.holiday.calculator.service.model.user.User;
+
 /**
  * Модель учета отгулов
  */

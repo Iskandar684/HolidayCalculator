@@ -1,4 +1,4 @@
-package ru.iskandar.holiday.calculator.service.model;
+package ru.iskandar.holiday.calculator.service.model.permissions;
 
 /**
  * Исключение, связанное отсутствием прав на некоторое действие

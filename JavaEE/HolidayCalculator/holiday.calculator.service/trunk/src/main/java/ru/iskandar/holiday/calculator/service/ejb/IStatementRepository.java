@@ -2,15 +2,15 @@ package ru.iskandar.holiday.calculator.service.ejb;
 
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.UUID;
 
 import ru.iskandar.holiday.calculator.service.model.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.LeaveStatement;
 import ru.iskandar.holiday.calculator.service.model.RecallStatement;
 import ru.iskandar.holiday.calculator.service.model.Statement;
+import ru.iskandar.holiday.calculator.service.model.StatementId;
 import ru.iskandar.holiday.calculator.service.model.StatementStatus;
 import ru.iskandar.holiday.calculator.service.model.StatementType;
-import ru.iskandar.holiday.calculator.service.model.User;
+import ru.iskandar.holiday.calculator.service.model.user.User;
 
 /**
  * Репозиторий заявлений
@@ -65,43 +65,43 @@ public interface IStatementRepository {
 	/**
 	 * Возвращает заявления на отгул по идентификатору заявления
 	 *
-	 * @param aStatementUUID
+	 * @param aId
 	 *            UUID заявления
 	 * @return заявление или {@code null}, если заявление с указанным UUID не
 	 *         найдено
 	 */
-	public HolidayStatement getHolidayStatement(UUID aStatementUUID);
+	public HolidayStatement getHolidayStatement(StatementId aId);
 
 	/**
 	 * Возвращает заявления на отпуск по идентификатору заявления
 	 *
-	 * @param aStatementUUID
+	 * @param aId
 	 *            UUID заявления
 	 * @return заявление или {@code null}, если заявление с указанным UUID не
 	 *         найдено
 	 */
-	public LeaveStatement getLeaveStatement(UUID aStatementUUID);
+	public LeaveStatement getLeaveStatement(StatementId aId);
 
 	/**
 	 * Возвращает заявления на отзыв по идентификатору заявления
 	 *
-	 * @param aStatementUUID
+	 * @param aId
 	 *            UUID заявления
 	 * @return заявление или {@code null}, если заявление с указанным UUID не
 	 *         найдено
 	 */
-	public RecallStatement getRecallStatement(UUID aStatementUUID);
+	public RecallStatement getRecallStatement(StatementId aId);
 
 	/**
 	 * Возвращает заявление по UUID
 	 *
-	 * @param aUUID
+	 * @param aID
 	 *            UUID
 	 * @param aType
 	 *            тип заявления
 	 * @return заявление или {@code null}, если заявление не найдено
 	 */
-	public Statement getStatement(UUID aUUID, StatementType aType);
+	public Statement getStatement(StatementId aID, StatementType aType);
 
 	/**
 	 * Сохраняет указанное заявление

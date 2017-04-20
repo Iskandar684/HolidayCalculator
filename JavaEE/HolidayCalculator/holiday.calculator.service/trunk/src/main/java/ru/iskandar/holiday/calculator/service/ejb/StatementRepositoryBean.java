@@ -1,26 +1,37 @@
 package ru.iskandar.holiday.calculator.service.ejb;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
+import ru.iskandar.holiday.calculator.service.entities.DOBasedHolidayStatementEntityFactory;
+import ru.iskandar.holiday.calculator.service.entities.HolidayStatementEntity;
+import ru.iskandar.holiday.calculator.service.entities.HolidayStatementEntity_;
+import ru.iskandar.holiday.calculator.service.entities.UserEntity;
+import ru.iskandar.holiday.calculator.service.model.EntityBasedHolidayStatementFactory;
 import ru.iskandar.holiday.calculator.service.model.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.LeaveStatement;
 import ru.iskandar.holiday.calculator.service.model.RecallStatement;
 import ru.iskandar.holiday.calculator.service.model.Statement;
+import ru.iskandar.holiday.calculator.service.model.StatementId;
 import ru.iskandar.holiday.calculator.service.model.StatementStatus;
 import ru.iskandar.holiday.calculator.service.model.StatementType;
-import ru.iskandar.holiday.calculator.service.model.User;
+import ru.iskandar.holiday.calculator.service.model.user.User;
 
 /**
  * Бин репозитория заявлений
@@ -34,7 +45,7 @@ public class StatementRepositoryBean implements IStatementRepository {
 	private EntityManager _em;
 
 	// TODO имитация БД
-	private static Map<UUID, Statement> _statements = new HashMap<>();
+	private static Map<StatementId, Statement> _statements = new HashMap<>();
 
 	/**
 	 * {@inheritDoc}
@@ -56,13 +67,24 @@ public class StatementRepositoryBean implements IStatementRepository {
 	 */
 	@Override
 	public Collection<HolidayStatement> getHolidayStatementsByAuthor(User aAuthor) {
-		Set<HolidayStatement> currentUserStatements = new HashSet<>();
-		for (Statement st : _statements.values()) {
-			if (st.getAuthor().equals(aAuthor) && (st instanceof HolidayStatement)) {
-				currentUserStatements.add((HolidayStatement) st);
-			}
+		Objects.requireNonNull(aAuthor);
+		UserEntity userEntity = _em.find(UserEntity.class, aAuthor.getId().getUUID());
+		if (userEntity == null) {
+			return Collections.emptyList();
 		}
-		return currentUserStatements;
+
+		CriteriaBuilder cb = _em.getCriteriaBuilder();
+		CriteriaQuery<HolidayStatementEntity> query = cb.createQuery(HolidayStatementEntity.class);
+		Root<HolidayStatementEntity> root = query.from(HolidayStatementEntity.class);
+		query.where(cb.equal(root.get(HolidayStatementEntity_._author), userEntity));
+		Collection<HolidayStatementEntity> result = _em.createQuery(query).getResultList();
+
+		List<HolidayStatement> statementsByAuthor = new ArrayList<>();
+		for (HolidayStatementEntity entity : result) {
+			HolidayStatement statement = new EntityBasedHolidayStatementFactory(entity).create();
+			statementsByAuthor.add(statement);
+		}
+		return statementsByAuthor;
 	}
 
 	/**
@@ -111,15 +133,21 @@ public class StatementRepositoryBean implements IStatementRepository {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public HolidayStatement getHolidayStatement(UUID aStatementUUID) {
-		return (HolidayStatement) _statements.get(aStatementUUID);
+	public HolidayStatement getHolidayStatement(StatementId aStatementUUID) {
+		Objects.requireNonNull(aStatementUUID);
+
+		HolidayStatementEntity entity = _em.find(HolidayStatementEntity.class, aStatementUUID.getUuid());
+		if (entity == null) {
+			return null;
+		}
+		return new EntityBasedHolidayStatementFactory(entity).create();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public LeaveStatement getLeaveStatement(UUID aStatementUUID) {
+	public LeaveStatement getLeaveStatement(StatementId aStatementUUID) {
 		return (LeaveStatement) _statements.get(aStatementUUID);
 	}
 
@@ -127,7 +155,7 @@ public class StatementRepositoryBean implements IStatementRepository {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public RecallStatement getRecallStatement(UUID aStatementUUID) {
+	public RecallStatement getRecallStatement(StatementId aStatementUUID) {
 
 		return (RecallStatement) _statements.get(aStatementUUID);
 	}
@@ -136,8 +164,23 @@ public class StatementRepositoryBean implements IStatementRepository {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Statement getStatement(UUID aUUID, StatementType aType) {
-		return _statements.get(aUUID);
+	public Statement getStatement(StatementId aUUID, StatementType aType) {
+		Objects.requireNonNull(aUUID);
+		Objects.requireNonNull(aType);
+
+		switch (aType) {
+		case HOLIDAY_STATEMENT:
+			return getHolidayStatement(aUUID);
+
+		case LEAVE_STATEMENT:
+			return getLeaveStatement(aUUID);
+
+		case RECALL_STATEMENT:
+			return getRecallStatement(aUUID);
+
+		default:
+			throw new IllegalArgumentException(String.format("Тип заявления не поддерживается", aType));
+		}
 	}
 
 	/**
@@ -145,7 +188,23 @@ public class StatementRepositoryBean implements IStatementRepository {
 	 */
 	@Override
 	public void save(Statement aStatement) {
-		_statements.put(aStatement.getUuid(), aStatement);
+		Objects.requireNonNull(aStatement);
+		switch (aStatement.getStatementType()) {
+		case HOLIDAY_STATEMENT:
+			HolidayStatementEntity entity = new DOBasedHolidayStatementEntityFactory((HolidayStatement) aStatement)
+					.create();
+			if (_em.find(HolidayStatementEntity.class, aStatement.getId().getUuid()) == null) {
+				_em.persist(entity);
+			} else {
+				_em.merge(entity);
+			}
+			break;
+
+		default:
+			break;
+		}
+
+		_statements.put(aStatement.getId(), aStatement);
 	}
 
 }

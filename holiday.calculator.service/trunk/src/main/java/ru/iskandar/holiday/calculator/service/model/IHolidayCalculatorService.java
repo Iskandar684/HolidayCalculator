@@ -6,6 +6,9 @@ import java.util.EnumSet;
 
 import javax.ejb.EJBAccessException;
 
+import ru.iskandar.holiday.calculator.service.model.permissions.IHolidayCalculatorModelPermissions;
+import ru.iskandar.holiday.calculator.service.model.user.User;
+
 /**
  * Сервис учета отгулов
  */

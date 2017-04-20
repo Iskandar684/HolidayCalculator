@@ -7,6 +7,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import ru.iskandar.holiday.calculator.service.model.user.User;
+
 /**
  * Заявления на отзыв. Это заявление, где указаны дни, в которые сотрудник
  * работал во время отпуска. На основе этих дней зачислиются отгула.

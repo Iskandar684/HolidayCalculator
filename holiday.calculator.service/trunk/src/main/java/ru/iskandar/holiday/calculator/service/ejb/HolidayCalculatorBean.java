@@ -4,12 +4,9 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -26,7 +23,6 @@ import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelLoadEx
 import ru.iskandar.holiday.calculator.service.model.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.InvalidStatementException;
 import ru.iskandar.holiday.calculator.service.model.LeaveStatement;
-import ru.iskandar.holiday.calculator.service.model.Permissions;
 import ru.iskandar.holiday.calculator.service.model.RecallStatement;
 import ru.iskandar.holiday.calculator.service.model.Statement;
 import ru.iskandar.holiday.calculator.service.model.StatementAlreadyConsideredException;
@@ -36,7 +32,8 @@ import ru.iskandar.holiday.calculator.service.model.StatementNotFoundException;
 import ru.iskandar.holiday.calculator.service.model.StatementSendedEvent;
 import ru.iskandar.holiday.calculator.service.model.StatementStatus;
 import ru.iskandar.holiday.calculator.service.model.StatementValidator;
-import ru.iskandar.holiday.calculator.service.model.User;
+import ru.iskandar.holiday.calculator.service.model.permissions.Permissions;
+import ru.iskandar.holiday.calculator.service.model.user.User;
 import ru.iskandar.holiday.calculator.service.utils.DateUtils;
 
 /**
@@ -69,16 +66,6 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	@EJB
 	private IStatementRepository _statementRepo;
 
-	// TODO имитация БД
-	private static Map<User, Date> _usersEmploymentDateMap = new HashMap<>();
-
-	@PostConstruct
-	private void init() {
-		for (User user : _userService.getAllUsers()) {
-			_usersEmploymentDateMap.put(user, new Date());
-		}
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -108,7 +95,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		Objects.requireNonNull(aStatement);
 		checkStatement(aStatement);
 
-		Statement statement = _statementRepo.getStatement(aStatement.getUuid(), aStatement.getStatementType());
+		Statement statement = _statementRepo.getStatement(aStatement.getId(), aStatement.getStatementType());
 		if (statement == null) {
 			throw new StatementNotFoundException(String.format("Заявление '%s' не найдено", aStatement));
 		}
@@ -136,7 +123,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		Objects.requireNonNull(aStatement);
 		checkStatement(aStatement);
 
-		Statement statement = _statementRepo.getStatement(aStatement.getUuid(), aStatement.getStatementType());
+		Statement statement = _statementRepo.getStatement(aStatement.getId(), aStatement.getStatementType());
 		if (statement == null) {
 			throw new StatementNotFoundException(String.format("Заявление [%s] не найдено", aStatement));
 		}
@@ -162,7 +149,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		Objects.requireNonNull(aStatement);
 		checkStatement(aStatement);
 
-		Statement sendedStatement = _statementRepo.getStatement(aStatement.getUuid(), aStatement.getStatementType());
+		Statement sendedStatement = _statementRepo.getStatement(aStatement.getId(), aStatement.getStatementType());
 		if (sendedStatement != null) {
 			throw new StatementAlreadySendedException(aStatement, sendedStatement);
 		}
@@ -195,7 +182,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		Objects.requireNonNull(aStatement);
 		checkStatement(aStatement);
 
-		Statement sendedStatement = _statementRepo.getStatement(aStatement.getUuid(), aStatement.getStatementType());
+		Statement sendedStatement = _statementRepo.getStatement(aStatement.getId(), aStatement.getStatementType());
 		if (sendedStatement != null) {
 			throw new StatementAlreadySendedException(aStatement, sendedStatement);
 		}
@@ -394,7 +381,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	 */
 	@Override
 	public Date getNextLeaveStartDate(User aUser) {
-		Date employmentDate = _usersEmploymentDateMap.get(aUser);
+		Date employmentDate = aUser.getEmploymentDate();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(employmentDate);
 		cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + 1);
@@ -409,7 +396,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		Objects.requireNonNull(aStatement);
 		checkStatement(aStatement);
 
-		Statement sendedStatement = _statementRepo.getStatement(aStatement.getUuid(), aStatement.getStatementType());
+		Statement sendedStatement = _statementRepo.getStatement(aStatement.getId(), aStatement.getStatementType());
 		if (sendedStatement != null) {
 			throw new StatementAlreadySendedException(aStatement, sendedStatement);
 		}

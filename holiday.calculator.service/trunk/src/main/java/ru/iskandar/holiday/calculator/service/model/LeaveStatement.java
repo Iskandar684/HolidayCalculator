@@ -7,6 +7,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import ru.iskandar.holiday.calculator.service.model.user.User;
+
 /**
  * Заявление на отпуск
  */

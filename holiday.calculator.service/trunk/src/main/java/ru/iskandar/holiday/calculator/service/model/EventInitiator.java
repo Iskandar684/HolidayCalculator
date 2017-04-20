@@ -2,6 +2,8 @@ package ru.iskandar.holiday.calculator.service.model;
 
 import java.util.Objects;
 
+import ru.iskandar.holiday.calculator.service.model.user.User;
+
 /**
  * Инициатор события
  */

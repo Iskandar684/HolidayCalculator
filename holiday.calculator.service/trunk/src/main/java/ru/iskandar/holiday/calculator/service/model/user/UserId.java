@@ -1,4 +1,4 @@
-package ru.iskandar.holiday.calculator.service.model;
+package ru.iskandar.holiday.calculator.service.model.user;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -39,6 +39,13 @@ public class UserId implements Serializable {
 	public static UserId from(UUID aUserUUID) {
 		Objects.requireNonNull(aUserUUID, "Не указан UUID пользователя");
 		return new UserId(aUserUUID);
+	}
+
+	/**
+	 * @return the userUUID
+	 */
+	public UUID getUUID() {
+		return _userUUID;
 	}
 
 	/**

@@ -2,7 +2,7 @@ package ru.iskandar.holiday.calculator.service.ejb;
 
 import java.util.Collection;
 
-import ru.iskandar.holiday.calculator.service.model.User;
+import ru.iskandar.holiday.calculator.service.model.user.User;
 
 /**
  * Сервис работы с пользователями

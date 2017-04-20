@@ -7,6 +7,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import ru.iskandar.holiday.calculator.service.model.user.User;
+
 /**
  * Заявление на отгул
  */
@@ -27,6 +29,18 @@ public class HolidayStatement extends Statement {
 	 *            идентификатор
 	 */
 	public HolidayStatement(UUID aUUID, Set<Date> aDays, User aAuthor) {
+		super(aUUID, aAuthor);
+		Objects.requireNonNull(aDays);
+		_days = new HashSet<>(aDays);
+	}
+
+	/**
+	 * Конструктор
+	 *
+	 * @param aUUID
+	 *            идентификатор
+	 */
+	public HolidayStatement(StatementId aUUID, Set<Date> aDays, User aAuthor) {
 		super(aUUID, aAuthor);
 		Objects.requireNonNull(aDays);
 		_days = new HashSet<>(aDays);

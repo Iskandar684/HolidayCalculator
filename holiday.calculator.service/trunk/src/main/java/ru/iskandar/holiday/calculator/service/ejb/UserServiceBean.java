@@ -19,10 +19,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import ru.iskandar.holiday.calculator.service.entities.UserJPA;
-import ru.iskandar.holiday.calculator.service.entities.UserJPA_;
-import ru.iskandar.holiday.calculator.service.model.JPABasedUserFactory;
-import ru.iskandar.holiday.calculator.service.model.User;
+import ru.iskandar.holiday.calculator.service.entities.UserEntity;
+import ru.iskandar.holiday.calculator.service.entities.UserEntity_;
+import ru.iskandar.holiday.calculator.service.model.user.EntityBasedUserFactory;
+import ru.iskandar.holiday.calculator.service.model.user.User;
 
 /**
  * Сервис работы с пользователями
@@ -57,21 +57,21 @@ public class UserServiceBean implements IUserServiceLocal {
 		String login = principal.getName();
 
 		CriteriaBuilder cb = _em.getCriteriaBuilder();
-		CriteriaQuery<UserJPA> cq = cb.createQuery(UserJPA.class);
-		Root<UserJPA> from = cq.from(UserJPA.class);
+		CriteriaQuery<UserEntity> cq = cb.createQuery(UserEntity.class);
+		Root<UserEntity> from = cq.from(UserEntity.class);
 
-		Predicate predicate = cb.equal(from.get(UserJPA_._login), login);
+		Predicate predicate = cb.equal(from.get(UserEntity_._login), login);
 
 		cq.where(predicate);
 		cq.select(from);
-		TypedQuery<UserJPA> q = _em.createQuery(cq);
-		UserJPA entity;
+		TypedQuery<UserEntity> q = _em.createQuery(cq);
+		UserEntity entity;
 		try {
 			entity = q.getSingleResult();
 		} catch (NoResultException e) {
 			throw new IllegalStateException(String.format("Пользователь с логином %s не найден", login));
 		}
-		User user = new JPABasedUserFactory(entity).create();
+		User user = new EntityBasedUserFactory(entity).create();
 
 		return user;
 	}
@@ -83,15 +83,15 @@ public class UserServiceBean implements IUserServiceLocal {
 	public Collection<User> getAllUsers() {
 
 		CriteriaBuilder cb = _em.getCriteriaBuilder();
-		CriteriaQuery<UserJPA> cq = cb.createQuery(UserJPA.class);
-		Root<UserJPA> from = cq.from(UserJPA.class);
+		CriteriaQuery<UserEntity> cq = cb.createQuery(UserEntity.class);
+		Root<UserEntity> from = cq.from(UserEntity.class);
 		cq.select(from);
-		TypedQuery<UserJPA> q = _em.createQuery(cq);
-		List<UserJPA> result = q.getResultList();
+		TypedQuery<UserEntity> q = _em.createQuery(cq);
+		List<UserEntity> result = q.getResultList();
 
 		List<User> allUsers = new ArrayList<>();
-		for (UserJPA entity : result) {
-			User user = new JPABasedUserFactory(entity).create();
+		for (UserEntity entity : result) {
+			User user = new EntityBasedUserFactory(entity).create();
 			allUsers.add(user);
 		}
 

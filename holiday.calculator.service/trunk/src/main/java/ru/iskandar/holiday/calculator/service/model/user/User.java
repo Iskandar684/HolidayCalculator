@@ -1,6 +1,7 @@
-package ru.iskandar.holiday.calculator.service.model;
+package ru.iskandar.holiday.calculator.service.model.user;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -24,18 +25,29 @@ public class User implements Serializable {
 	/** Идентификатор */
 	private final UUID _uuid;
 
+	/** Дата приема на работу */
+	private final Date _employmentDate;
+
+	/** Логин */
+	private final String _login;
+
 	/**
 	 * Конструктор
 	 */
-	protected User(UUID aUUID, String aLastName, String aFirstName, String aPatronymic) {
+	protected User(UUID aUUID, String aLastName, String aFirstName, String aPatronymic, Date aEmploymentDate,
+			String aLogin) {
 		Objects.requireNonNull(aUUID);
 		Objects.requireNonNull(aLastName);
 		Objects.requireNonNull(aFirstName);
 		Objects.requireNonNull(aPatronymic);
+		Objects.requireNonNull(aEmploymentDate);
+		Objects.requireNonNull(aLogin);
 		_uuid = aUUID;
 		_firstName = aFirstName;
 		_lastName = aLastName;
 		_patronymic = aPatronymic;
+		_employmentDate = aEmploymentDate;
+		_login = aLogin;
 	}
 
 	/**
@@ -57,6 +69,27 @@ public class User implements Serializable {
 	 */
 	public String getPatronymic() {
 		return _patronymic;
+	}
+
+	/**
+	 * @return the employmentDate
+	 */
+	public Date getEmploymentDate() {
+		return _employmentDate;
+	}
+
+	/**
+	 * @return the uuid
+	 */
+	public UserId getId() {
+		return UserId.from(_uuid);
+	}
+
+	/**
+	 * @return the login
+	 */
+	public String getLogin() {
+		return _login;
 	}
 
 	/**

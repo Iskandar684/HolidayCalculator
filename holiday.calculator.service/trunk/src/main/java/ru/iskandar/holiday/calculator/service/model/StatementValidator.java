@@ -26,8 +26,8 @@ public class StatementValidator {
 		if (type == null) {
 			return "Не указан тип заявления";
 		}
-		if (aStatement.getUuid() == null) {
-			return "Не указан UUID заявления";
+		if (aStatement.getId() == null) {
+			return "Не указан ID заявления";
 		}
 		if (aStatement.getCreateDate() == null) {
 			return "Не указана дата создания заявления";

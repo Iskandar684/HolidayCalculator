@@ -57,7 +57,7 @@ public class CurrentUserStatementsProvider implements IStatementsProvider {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<Statement> getStatements() {
+	public Collection<Statement<?>> getStatements() {
 		HolidayCalculatorModel model = _holidayModelProvider.getModel();
 
 		return model.getCurrentUserStatements();

@@ -57,7 +57,7 @@ public class SendLeaveStatementButtonPM {
 			try {
 				_statementBuilder.sendLeaveStatement();
 			} catch (StatementAlreadySendedException e) {
-				Statement earlySendedStatement = e.getEarlySendenStatement();
+				Statement<?> earlySendedStatement = e.getEarlySendenStatement();
 				SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 				String mess = NLS.bind(Messages.leaveStatementAlreadySendedDialogTextForDays,
 						dateFormatter.format(earlySendedStatement.getCreateDate()));

@@ -27,7 +27,7 @@ public class StatementTableContentProvider implements IStructuredContentProvider
 			return EMPTY_ARRAY;
 		}
 
-		Collection<Statement> statements = modelProvider.getStatements();
+		Collection<Statement<?>> statements = modelProvider.getStatements();
 		return statements.toArray();
 	}
 

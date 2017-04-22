@@ -58,7 +58,7 @@ public class SendRecallStatementButtonPM {
 			try {
 				_statementBuilder.sendRecallStatement();
 			} catch (StatementAlreadySendedException e) {
-				Statement earlySendedStatement = e.getEarlySendenStatement();
+				Statement<?> earlySendedStatement = e.getEarlySendenStatement();
 				SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 				String mess = NLS.bind(Messages.recallStatementAlreadySendedDialogTextForDays,
 						dateFormatter.format(earlySendedStatement.getCreateDate()));

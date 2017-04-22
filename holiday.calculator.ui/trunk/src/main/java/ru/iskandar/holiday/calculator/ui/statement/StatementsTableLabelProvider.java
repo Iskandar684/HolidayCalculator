@@ -69,7 +69,7 @@ public class StatementsTableLabelProvider implements ITableLabelProvider {
 	@Override
 	public String getColumnText(Object aElement, int aColumnIndex) {
 		StatementsTableColumn col = StatementsTableColumn.findColumnByIndex(aColumnIndex);
-		Statement statement = (Statement) aElement;
+		Statement<?> statement = (Statement<?>) aElement;
 		String text = "";
 		switch (col) {
 		case TYPE:
@@ -140,7 +140,7 @@ public class StatementsTableLabelProvider implements ITableLabelProvider {
 		return text;
 	}
 
-	private String getContent(Statement aStatement) {
+	private String getContent(Statement<?> aStatement) {
 		switch (aStatement.getStatementType()) {
 		case HOLIDAY_STATEMENT:
 			return getContent((HolidayStatement) aStatement);
@@ -167,8 +167,9 @@ public class StatementsTableLabelProvider implements ITableLabelProvider {
 		while (it.hasNext()) {
 			Date date = it.next();
 			builder.append(dateFormatter.format(date));
-			if (it.hasNext())
+			if (it.hasNext()) {
 				builder.append("; ");
+			}
 		}
 
 		return builder.toString();
@@ -185,8 +186,9 @@ public class StatementsTableLabelProvider implements ITableLabelProvider {
 		while (it.hasNext()) {
 			Date date = it.next();
 			builder.append(dateFormatter.format(date));
-			if (it.hasNext())
+			if (it.hasNext()) {
 				builder.append("; ");
+			}
 		}
 
 		return builder.toString();
@@ -203,8 +205,9 @@ public class StatementsTableLabelProvider implements ITableLabelProvider {
 		while (it.hasNext()) {
 			Date date = it.next();
 			builder.append(dateFormatter.format(date));
-			if (it.hasNext())
+			if (it.hasNext()) {
 				builder.append("; ");
+			}
 		}
 
 		return builder.toString();

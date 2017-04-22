@@ -58,7 +58,7 @@ public class IncomingStatementsProvider implements IStatementsProvider {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<Statement> getStatements() {
+	public Collection<Statement<?>> getStatements() {
 		HolidayCalculatorModel model = _holidayModelProvider.getModel();
 		if (!model.canConsider()) {
 			return Collections.emptyList();

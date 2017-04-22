@@ -136,11 +136,11 @@ public class IncomingStatementsEditor extends EditorPart {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public Statement getStatement() {
+		public Statement<?> getStatement() {
 			ISelection sel = _viewer.getSelection();
 			if (sel instanceof IStructuredSelection) {
 				Object firstElement = ((IStructuredSelection) sel).getFirstElement();
-				return (Statement) firstElement;
+				return (Statement<?>) firstElement;
 			}
 			return null;
 		}

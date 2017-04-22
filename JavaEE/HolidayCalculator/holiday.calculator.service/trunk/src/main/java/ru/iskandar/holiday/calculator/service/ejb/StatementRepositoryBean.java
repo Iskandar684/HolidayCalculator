@@ -64,6 +64,7 @@ public class StatementRepositoryBean implements IStatementRepository {
 				statementsByUser.add(st);
 			}
 		}
+		statementsByUser.addAll(getHolidayStatementsByAuthor(aAuthor));
 		return statementsByUser;
 	}
 

@@ -44,14 +44,14 @@ sudo apt-get install postgresql
 Попробуем поработать с СУБД через оболочку:
 sudo -u postgres psql
 
-Создадим тестовую базу данных и тестового пользователя:
+Создадим базу данных и пользователя БД:
 postgres=# CREATE DATABASE holiday_calculator_db;
 CREATE DATABASE
 
 postgres=# CREATE USER holiday_calculator_user WITH password 'qwerty';
 CREATE ROLE
 
-postgres=# GRANT ALL privileges ON DATABASE test_database TO holiday_calculator_user;
+postgres=# GRANT ALL privileges ON DATABASE holiday_calculator_db TO holiday_calculator_user;
 GRANT
 Для выхода из оболочки введите команду \q.
 
@@ -94,8 +94,9 @@ GRANT
         <xa-datasource-class> 
                 org.postgresql.xa.PGXADataSource 
         </xa-datasource-class> 
-</driver>                   
-
+</driver>
+                   
+(см http://eax.me/postgresql-install/) 
 
 
 Добавление пользователей.

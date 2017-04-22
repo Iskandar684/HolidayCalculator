@@ -36,11 +36,13 @@ public abstract class HolidayStatementFactory {
 			Objects.requireNonNull(considerDate);
 		}
 
-		HolidayStatement statement = new HolidayStatement(id, days, author);
-		statement.setConsider(consider);
-		statement.setConsiderDate(considerDate);
-		statement.setStatus(status);
-		statement.setCreateDate(createDate);
+		HolidayStatementEntry entry = new HolidayStatementEntry(days, author);
+		entry.setConsider(consider);
+		entry.setConsiderDate(considerDate);
+		entry.setStatus(status);
+		entry.setCreateDate(createDate);
+
+		HolidayStatement statement = new HolidayStatement(id, entry);
 		return statement;
 	}
 

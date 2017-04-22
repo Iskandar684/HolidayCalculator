@@ -1,13 +1,7 @@
 package ru.iskandar.holiday.calculator.service.model;
 
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
-
-import ru.iskandar.holiday.calculator.service.model.user.User;
 
 /**
  * Заявление на отгул
@@ -19,38 +13,21 @@ public class HolidayStatement extends Statement {
 	 */
 	private static final long serialVersionUID = -4442838042007056450L;
 
-	/** Дата отгула */
-	private final Set<Date> _days;
-
 	/**
 	 * Конструктор
 	 *
-	 * @param aUUID
+	 * @param aId
 	 *            идентификатор
 	 */
-	public HolidayStatement(UUID aUUID, Set<Date> aDays, User aAuthor) {
-		super(aUUID, aAuthor);
-		Objects.requireNonNull(aDays);
-		_days = new HashSet<>(aDays);
-	}
-
-	/**
-	 * Конструктор
-	 *
-	 * @param aUUID
-	 *            идентификатор
-	 */
-	public HolidayStatement(StatementId aUUID, Set<Date> aDays, User aAuthor) {
-		super(aUUID, aAuthor);
-		Objects.requireNonNull(aDays);
-		_days = new HashSet<>(aDays);
+	public HolidayStatement(StatementId aId, StatementEntry aEntry) {
+		super(aId, aEntry);
 	}
 
 	/**
 	 * @return the days
 	 */
 	public Set<Date> getDays() {
-		return Collections.unmodifiableSet(_days);
+		return ((HolidayStatementEntry) getEntry()).getDays();
 	}
 
 	/**
@@ -58,6 +35,7 @@ public class HolidayStatement extends Statement {
 	 */
 	@Override
 	public StatementType getStatementType() {
+		// TODO не переопределять
 		return StatementType.HOLIDAY_STATEMENT;
 	}
 

@@ -75,7 +75,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	public Statement reject(Statement aStatement) throws StatementAlreadyConsideredException;
 
 	/**
-	 * Подает заявление на отгул рассмотрение
+	 * Создает и подает заявление на отгул на рассмотрение
 	 *
 	 * @param aStatement
 	 *            заявление на отгул
@@ -88,7 +88,8 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws InvalidStatementException
 	 *             если заявление заполнено некорректно
 	 */
-	public HolidayStatement sendStatement(HolidayStatement aStatement) throws StatementAlreadySendedException;
+	public HolidayStatement createHolidayStatement(HolidayStatementEntry aStatement)
+			throws StatementAlreadySendedException;
 
 	/**
 	 * Подает заявление на отпуск на рассмотрение

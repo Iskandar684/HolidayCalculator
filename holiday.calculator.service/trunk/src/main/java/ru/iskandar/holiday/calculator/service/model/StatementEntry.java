@@ -3,22 +3,18 @@ package ru.iskandar.holiday.calculator.service.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
-import java.util.UUID;
 
 import ru.iskandar.holiday.calculator.service.model.user.User;
 
 /**
- * Заявление
+ * Содержимое заявления
  */
-public abstract class Statement implements Serializable {
+public abstract class StatementEntry implements Serializable {
 
 	/**
 	 * Идентификатор для сериализации
 	 */
-	private static final long serialVersionUID = 3589182703953347929L;
-
-	/** Идентификатор заявления */
-	private final StatementId _statementId;
+	private static final long serialVersionUID = -5045249287091738362L;
 
 	/** Автор заявления */
 	private final User _author;
@@ -38,23 +34,11 @@ public abstract class Statement implements Serializable {
 	/**
 	 * Конструктор
 	 *
-	 * @param aUUID
-	 *            идентификатор заявления
-	 */
-	public Statement(UUID aUUID, User aAuthor) {
-		this(StatementId.from(aUUID), aAuthor);
-	}
-
-	/**
-	 * Конструктор
-	 *
 	 * @param aStatementId
 	 *            идентификатор заявления
 	 */
-	public Statement(StatementId aStatementId, User aAuthor) {
-		Objects.requireNonNull(aStatementId, "Не указан идентификатор заявления");
+	public StatementEntry(User aAuthor) {
 		Objects.requireNonNull(aAuthor, "Не указан автор заявления");
-		_statementId = aStatementId;
 		_author = aAuthor;
 	}
 
@@ -126,63 +110,6 @@ public abstract class Statement implements Serializable {
 		_considerDate = aConsiderDate;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = (prime * result) + ((_statementId == null) ? 0 : _statementId.hashCode());
-		return result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		Statement other = (Statement) obj;
-		if (_statementId == null) {
-			if (other._statementId != null) {
-				return false;
-			}
-		} else if (!_statementId.equals(other._statementId)) {
-			return false;
-		}
-		return true;
-	}
-
 	public abstract StatementType getStatementType();
-
-	/**
-	 * Возвращает идентификатор заявления
-	 *
-	 * @return идентификатор заявления
-	 */
-	public StatementId getId() {
-		return _statementId;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(getClass());
-		builder.append(" id=");
-		builder.append(_statementId);
-		return builder.toString();
-	}
 
 }

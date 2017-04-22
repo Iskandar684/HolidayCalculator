@@ -21,6 +21,7 @@ import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelFactory;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelLoadException;
 import ru.iskandar.holiday.calculator.service.model.HolidayStatement;
+import ru.iskandar.holiday.calculator.service.model.HolidayStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.InvalidStatementException;
 import ru.iskandar.holiday.calculator.service.model.LeaveStatement;
 import ru.iskandar.holiday.calculator.service.model.RecallStatement;
@@ -28,6 +29,7 @@ import ru.iskandar.holiday.calculator.service.model.Statement;
 import ru.iskandar.holiday.calculator.service.model.StatementAlreadyConsideredException;
 import ru.iskandar.holiday.calculator.service.model.StatementAlreadySendedException;
 import ru.iskandar.holiday.calculator.service.model.StatementConsideredEvent;
+import ru.iskandar.holiday.calculator.service.model.StatementEntry;
 import ru.iskandar.holiday.calculator.service.model.StatementNotFoundException;
 import ru.iskandar.holiday.calculator.service.model.StatementSendedEvent;
 import ru.iskandar.holiday.calculator.service.model.StatementStatus;
@@ -145,14 +147,11 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public HolidayStatement sendStatement(HolidayStatement aStatement) throws StatementAlreadySendedException {
+	public HolidayStatement createHolidayStatement(HolidayStatementEntry aStatement)
+			throws StatementAlreadySendedException {
 		Objects.requireNonNull(aStatement);
 		checkStatement(aStatement);
 
-		Statement sendedStatement = _statementRepo.getStatement(aStatement.getId(), aStatement.getStatementType());
-		if (sendedStatement != null) {
-			throw new StatementAlreadySendedException(aStatement, sendedStatement);
-		}
 		if (StatementStatus.APPROVE.equals(aStatement.getStatus())
 				|| StatementStatus.REJECTED.equals(aStatement.getStatus())) {
 			throw new InvalidStatementException(
@@ -164,14 +163,14 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 				throw new StatementAlreadySendedException(aStatement, st);
 			}
 		}
-		aStatement.setStatus(StatementStatus.NOT_CONSIDERED);
-		_statementRepo.save(aStatement);
+
+		HolidayStatement statement = _statementRepo.createHolidayStatement(aStatement);
 		try {
-			_messageSender.send(new StatementSendedEvent(aStatement));
+			_messageSender.send(new StatementSendedEvent(statement));
 		} catch (JMSException e) {
 			LOG.error(String.format("Ошибка оповещения об отправки заявления %s на отгул", aStatement), e);
 		}
-		return aStatement;
+		return statement;
 	}
 
 	/**
@@ -316,6 +315,19 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	 *             если заявление заполнено некорректно
 	 */
 	private void checkStatement(Statement aStatement) {
+		Objects.requireNonNull(aStatement);
+		_statementValidator.checkStatement(aStatement);
+	}
+
+	/**
+	 * Проверяет коррекность заполнения заявления
+	 *
+	 * @param aStatement
+	 *            заявление
+	 * @throws InvalidStatementException
+	 *             если заявление заполнено некорректно
+	 */
+	private void checkStatement(StatementEntry aStatement) {
 		Objects.requireNonNull(aStatement);
 		_statementValidator.checkStatement(aStatement);
 	}

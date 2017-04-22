@@ -35,12 +35,17 @@ public abstract class Statement implements Serializable {
 	/** Время рассмотрения */
 	private Date _considerDate;
 
+	/** Содержимое заявления */
+	private StatementEntry _entry;
+
 	/**
 	 * Конструктор
 	 *
 	 * @param aUUID
 	 *            идентификатор заявления
+	 * @deprecated
 	 */
+	@Deprecated
 	public Statement(UUID aUUID, User aAuthor) {
 		this(StatementId.from(aUUID), aAuthor);
 	}
@@ -50,12 +55,29 @@ public abstract class Statement implements Serializable {
 	 *
 	 * @param aStatementId
 	 *            идентификатор заявления
+	 * @deprecated
 	 */
+	@Deprecated
 	public Statement(StatementId aStatementId, User aAuthor) {
 		Objects.requireNonNull(aStatementId, "Не указан идентификатор заявления");
 		Objects.requireNonNull(aAuthor, "Не указан автор заявления");
 		_statementId = aStatementId;
 		_author = aAuthor;
+	}
+
+	/**
+	 * Конструктор
+	 *
+	 * @param aStatementId
+	 *            идентификатор заявления
+	 */
+	public Statement(StatementId aStatementId, StatementEntry aStatementEntry) {
+		Objects.requireNonNull(aStatementId, "Не указан идентификатор заявления");
+		Objects.requireNonNull(aStatementEntry, "Не указано содержимое заявления");
+		_entry = aStatementEntry;
+		_statementId = aStatementId;
+		_author = aStatementEntry.getAuthor();
+		_status = aStatementEntry.getStatus();
 	}
 
 	/**
@@ -171,6 +193,13 @@ public abstract class Statement implements Serializable {
 	 */
 	public StatementId getId() {
 		return _statementId;
+	}
+
+	/**
+	 * @return the entry
+	 */
+	protected StatementEntry getEntry() {
+		return _entry;
 	}
 
 	/**

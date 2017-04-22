@@ -4,10 +4,12 @@ import java.util.Collection;
 import java.util.EnumSet;
 
 import ru.iskandar.holiday.calculator.service.model.HolidayStatement;
+import ru.iskandar.holiday.calculator.service.model.HolidayStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.LeaveStatement;
 import ru.iskandar.holiday.calculator.service.model.RecallStatement;
 import ru.iskandar.holiday.calculator.service.model.Statement;
 import ru.iskandar.holiday.calculator.service.model.StatementId;
+import ru.iskandar.holiday.calculator.service.model.StatementNotFoundException;
 import ru.iskandar.holiday.calculator.service.model.StatementStatus;
 import ru.iskandar.holiday.calculator.service.model.StatementType;
 import ru.iskandar.holiday.calculator.service.model.user.User;
@@ -104,11 +106,25 @@ public interface IStatementRepository {
 	public Statement getStatement(StatementId aID, StatementType aType);
 
 	/**
-	 * Сохраняет указанное заявление
+	 * Обновляет указанное заявление. Заявление должно уже создано заранее.
+	 *
 	 *
 	 * @param aStatement
 	 *            заявление
+	 * @throws StatementNotFoundException
+	 *             если указанное заявление не найдено
+	 * @see #create(Statement)
 	 */
-	public void save(Statement aStatement);
+	public void save(Statement aStatement) throws StatementNotFoundException;
+
+	/**
+	 * Создает заявление на отгул
+	 *
+	 * @param aStatementEntry
+	 *            содержание создаваемого заявления
+	 * @throws NullPointerException
+	 *             если aStatementEntry {@code null}
+	 */
+	public HolidayStatement createHolidayStatement(HolidayStatementEntry aStatementEntry);
 
 }

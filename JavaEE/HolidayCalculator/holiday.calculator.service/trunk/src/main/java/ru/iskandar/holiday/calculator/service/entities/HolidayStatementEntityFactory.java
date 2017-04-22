@@ -27,7 +27,6 @@ public abstract class HolidayStatementEntityFactory {
 		Date considerDate = getConsiderDate();
 
 		Objects.requireNonNull(days);
-		Objects.requireNonNull(id);
 		Objects.requireNonNull(status);
 		Objects.requireNonNull(author);
 		Objects.requireNonNull(createDate);
@@ -38,7 +37,8 @@ public abstract class HolidayStatementEntityFactory {
 		}
 
 		HolidayStatementEntity statement = new HolidayStatementEntity();
-		statement.setUuid(id.getUuid());
+		// У несохраненных в БД сущностей первичный ключ должен быть null
+		statement.setUuid(id != null ? id.getUuid() : null);
 		statement.setDays(days);
 		statement.setAuthor(author);
 		statement.setConsider(consider);

@@ -20,11 +20,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import ru.iskandar.holiday.calculator.service.entities.DOBasedHolidayStatementEntityFactory;
+import ru.iskandar.holiday.calculator.service.entities.EntryBasedHolidayStatementEntityFactory;
 import ru.iskandar.holiday.calculator.service.entities.HolidayStatementEntity;
 import ru.iskandar.holiday.calculator.service.entities.HolidayStatementEntity_;
 import ru.iskandar.holiday.calculator.service.entities.UserEntity;
 import ru.iskandar.holiday.calculator.service.model.EntityBasedHolidayStatementFactory;
 import ru.iskandar.holiday.calculator.service.model.HolidayStatement;
+import ru.iskandar.holiday.calculator.service.model.HolidayStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.LeaveStatement;
 import ru.iskandar.holiday.calculator.service.model.RecallStatement;
 import ru.iskandar.holiday.calculator.service.model.Statement;
@@ -193,19 +195,26 @@ public class StatementRepositoryBean implements IStatementRepository {
 		case HOLIDAY_STATEMENT:
 			HolidayStatementEntity entity = new DOBasedHolidayStatementEntityFactory((HolidayStatement) aStatement)
 					.create();
-			if (_em.find(HolidayStatementEntity.class, aStatement.getId().getUuid()) == null) {
-				entity.setUuid(null);
-				_em.persist(entity);
-			} else {
-				_em.merge(entity);
-			}
+			_em.merge(entity);
 			break;
 
 		default:
 			break;
 		}
-
 		_statements.put(aStatement.getId(), aStatement);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public HolidayStatement createHolidayStatement(HolidayStatementEntry aStatementEntry) {
+		Objects.requireNonNull(aStatementEntry);
+		HolidayStatementEntity entity = new EntryBasedHolidayStatementEntityFactory(aStatementEntry).create();
+		_em.persist(entity);
+		HolidayStatement statement = new EntityBasedHolidayStatementFactory(entity).create();
+		_statements.put(statement.getId(), statement);
+		return statement;
 	}
 
 }

@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Формирователь заявления на отгул
@@ -54,11 +53,7 @@ public class TakeHolidayStatementBuilder implements Serializable {
 	 *             если не удалось получить сервис учета отгулов
 	 */
 	public void sendHolidayStatement() throws StatementAlreadySendedException {
-		// if (!canSendHolidayStatement()) {
-		// throw new HolidayCalculatorModelException("Подача заявления на отгул
-		// запрещено");
-		// }
-		HolidayStatement statement = new HolidayStatement(UUID.randomUUID(), _days, _model.getCurrentUser());
+		HolidayStatementEntry statement = new HolidayStatementEntry(_days, _model.getCurrentUser());
 		_model.sendHolidayStatement(statement);
 	}
 

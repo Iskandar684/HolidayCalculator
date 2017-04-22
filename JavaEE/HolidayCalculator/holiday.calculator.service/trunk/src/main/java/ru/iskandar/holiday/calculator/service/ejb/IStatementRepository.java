@@ -6,7 +6,9 @@ import java.util.EnumSet;
 import ru.iskandar.holiday.calculator.service.model.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.HolidayStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.LeaveStatement;
+import ru.iskandar.holiday.calculator.service.model.LeaveStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.RecallStatement;
+import ru.iskandar.holiday.calculator.service.model.RecallStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.Statement;
 import ru.iskandar.holiday.calculator.service.model.StatementId;
 import ru.iskandar.holiday.calculator.service.model.StatementNotFoundException;
@@ -26,7 +28,7 @@ public interface IStatementRepository {
 	 *            пользователь
 	 * @return заявления
 	 */
-	public Collection<Statement> getStatementsByAuthor(User aAuthor);
+	public Collection<Statement<?>> getStatementsByAuthor(User aAuthor);
 
 	/**
 	 * Возвращает заявления, автором которых является указанный пользователь
@@ -62,7 +64,7 @@ public interface IStatementRepository {
 	 *            статусы; не может быть {@code null} или пустым
 	 * @return заявления с указанными статусами
 	 */
-	public Collection<Statement> getStatementsByStatus(EnumSet<StatementStatus> aStatuses);
+	public Collection<Statement<?>> getStatementsByStatus(EnumSet<StatementStatus> aStatuses);
 
 	/**
 	 * Возвращает заявления на отгул по идентификатору заявления
@@ -103,7 +105,7 @@ public interface IStatementRepository {
 	 *            тип заявления
 	 * @return заявление или {@code null}, если заявление не найдено
 	 */
-	public Statement getStatement(StatementId aID, StatementType aType);
+	public Statement<?> getStatement(StatementId aID, StatementType aType);
 
 	/**
 	 * Обновляет указанное заявление. Заявление должно уже создано заранее.
@@ -115,7 +117,7 @@ public interface IStatementRepository {
 	 *             если указанное заявление не найдено
 	 * @see #create(Statement)
 	 */
-	public void save(Statement aStatement) throws StatementNotFoundException;
+	public void save(Statement<?> aStatement) throws StatementNotFoundException;
 
 	/**
 	 * Создает заявление на отгул
@@ -126,5 +128,25 @@ public interface IStatementRepository {
 	 *             если aStatementEntry {@code null}
 	 */
 	public HolidayStatement createHolidayStatement(HolidayStatementEntry aStatementEntry);
+
+	/**
+	 * Создает заявление на отпуск
+	 *
+	 * @param aStatementEntry
+	 *            содержание создаваемого заявления
+	 * @throws NullPointerException
+	 *             если aStatementEntry {@code null}
+	 */
+	public LeaveStatement createLeaveStatement(LeaveStatementEntry aStatementEntry);
+
+	/**
+	 * Создает заявление на отзыв
+	 *
+	 * @param aStatementEntry
+	 *            содержание создаваемого заявления
+	 * @throws NullPointerException
+	 *             если aStatementEntry {@code null}
+	 */
+	public RecallStatement createRecallStatement(RecallStatementEntry aStatementEntry);
 
 }

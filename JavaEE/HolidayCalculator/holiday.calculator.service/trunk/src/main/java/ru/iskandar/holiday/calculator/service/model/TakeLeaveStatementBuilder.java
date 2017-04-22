@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Формирователь заявления на отпуск
@@ -43,7 +42,7 @@ public class TakeLeaveStatementBuilder implements Serializable {
 	 *             если не удалось получить сервис учета отгулов
 	 */
 	public void sendLeaveStatement() throws StatementAlreadySendedException {
-		LeaveStatement statement = new LeaveStatement(UUID.randomUUID(), _model.getCurrentUser(), _days);
+		LeaveStatementEntry statement = new LeaveStatementEntry(_model.getCurrentUser(), _days);
 		_model.sendLeaveStatement(statement);
 	}
 

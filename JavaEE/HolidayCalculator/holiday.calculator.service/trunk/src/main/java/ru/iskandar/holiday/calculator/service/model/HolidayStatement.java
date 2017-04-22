@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * Заявление на отгул
  */
-public class HolidayStatement extends Statement {
+public class HolidayStatement extends Statement<HolidayStatementEntry> {
 
 	/**
 	 * Идентификатор для сериализации
@@ -19,7 +19,7 @@ public class HolidayStatement extends Statement {
 	 * @param aId
 	 *            идентификатор
 	 */
-	public HolidayStatement(StatementId aId, StatementEntry aEntry) {
+	public HolidayStatement(StatementId aId, HolidayStatementEntry aEntry) {
 		super(aId, aEntry);
 	}
 
@@ -27,16 +27,7 @@ public class HolidayStatement extends Statement {
 	 * @return the days
 	 */
 	public Set<Date> getDays() {
-		return ((HolidayStatementEntry) getEntry()).getDays();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public StatementType getStatementType() {
-		// TODO не переопределять
-		return StatementType.HOLIDAY_STATEMENT;
+		return getEntry().getDays();
 	}
 
 }

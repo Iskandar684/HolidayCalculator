@@ -17,7 +17,7 @@ public class StatementValidator {
 	 * @return {@code true}, если заявление заполнено корректно; или причина,
 	 *         если некорректно
 	 */
-	public String validateStatement(Statement aStatement) {
+	public String validateStatement(Statement<?> aStatement) {
 		Objects.requireNonNull(aStatement);
 		if (aStatement.getAuthor() == null) {
 			return "Не указан автор заявления";
@@ -162,7 +162,7 @@ public class StatementValidator {
 	 * @throws InvalidStatementException
 	 *             если заявление заполнено некорректно
 	 */
-	public void checkStatement(Statement aStatement) {
+	public void checkStatement(Statement<?> aStatement) {
 		Objects.requireNonNull(aStatement);
 		String cause = validateStatement(aStatement);
 		if (cause != null) {

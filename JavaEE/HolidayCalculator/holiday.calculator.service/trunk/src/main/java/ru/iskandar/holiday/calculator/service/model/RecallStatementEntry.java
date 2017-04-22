@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 import ru.iskandar.holiday.calculator.service.model.user.User;
 
@@ -33,7 +32,7 @@ public class RecallStatementEntry extends StatementEntry {
 	 * @param aRecallDates
 	 *            дни, в которые сотрудник работал во время отпуска
 	 */
-	public RecallStatementEntry(UUID aUUID, Set<Date> aRecallDates, User aAuthor) {
+	public RecallStatementEntry(Set<Date> aRecallDates, User aAuthor) {
 		super(aAuthor);
 		Objects.requireNonNull(aRecallDates);
 		_recallDates.addAll(aRecallDates);

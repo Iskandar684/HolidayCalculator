@@ -1,12 +1,16 @@
 package ru.iskandar.holiday.calculator.service.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -21,50 +25,40 @@ import ru.iskandar.holiday.calculator.service.model.StatementStatus;
  */
 @Entity
 @Table(name = "ru_iskandar_holiday_calculator_holiday_statement")
-public class HolidayStatementEntity {
+public class HolidayStatementEntity implements Serializable {
+
+	/**
+	 * Идентификатор для сериализации
+	 */
+	private static final long serialVersionUID = -8620736723647051296L;
 
 	/** Идентификатор */
-	@Id
-	@GeneratedValue
-	@Column(name = "uuid")
 	private UUID _uuid;
 
 	/** Автор заявления */
-	@ManyToOne
-	@JoinColumn(name = "author")
-	@NotNull(message = "Не указан автор заявления")
 	private UserEntity _author;
 
 	/** Пользователь, который рассмотрел заявление */
-	@ManyToOne
-	@JoinColumn(name = "consider")
 	private UserEntity _consider;
 
 	/** Статус заявления */
-	@Column(name = "status")
-	@NotNull(message = "Не указан статус заявления")
 	private StatementStatus _status;
 
 	/** Время подачи заявления */
-	@Column(name = "create_date")
-	@NotNull(message = "Не указано время подачи заявления")
 	private Date _createDate;
 
 	/** Время рассмотрения */
-	@Column(name = "consider_date")
 	private Date _considerDate;
 
 	/** Дни отгула */
-	// @JoinTable(name =
-	// "ru_iskandar_holiday_calculator_holiday_statement_holiday_dates",
-	// joinColumns = @JoinColumn(name = "statement_id"), inverseJoinColumns =
-	// @JoinColumn(name = "dates_id"))
-	@ElementCollection(targetClass = Date.class)
 	private Set<Date> _days;
 
 	/**
 	 * @return the uuid
 	 */
+	@Id
+	@GeneratedValue
+	@Column(name = "uuid")
 	public UUID getUuid() {
 		return _uuid;
 	}
@@ -80,6 +74,9 @@ public class HolidayStatementEntity {
 	/**
 	 * @return the author
 	 */
+	@ManyToOne()
+	@JoinColumn(name = "author")
+	@NotNull(message = "Не указан автор заявления")
 	public UserEntity getAuthor() {
 		return _author;
 	}
@@ -95,6 +92,8 @@ public class HolidayStatementEntity {
 	/**
 	 * @return the consider
 	 */
+	@ManyToOne()
+	@JoinColumn(name = "consider")
 	public UserEntity getConsider() {
 		return _consider;
 	}
@@ -110,6 +109,9 @@ public class HolidayStatementEntity {
 	/**
 	 * @return the status
 	 */
+	@Column(name = "status")
+	@NotNull(message = "Не указан статус заявления")
+	@Enumerated(EnumType.STRING)
 	public StatementStatus getStatus() {
 		return _status;
 	}
@@ -125,6 +127,8 @@ public class HolidayStatementEntity {
 	/**
 	 * @return the createDate
 	 */
+	@Column(name = "create_date")
+	@NotNull(message = "Не указано время подачи заявления")
 	public Date getCreateDate() {
 		return _createDate;
 	}
@@ -140,6 +144,7 @@ public class HolidayStatementEntity {
 	/**
 	 * @return the considerDate
 	 */
+	@Column(name = "consider_date")
 	public Date getConsiderDate() {
 		return _considerDate;
 	}
@@ -155,6 +160,8 @@ public class HolidayStatementEntity {
 	/**
 	 * @return the days
 	 */
+	@ElementCollection(targetClass = Date.class)
+	@CollectionTable(name = "ru_iskandar_holiday_calculator_holiday_statement_days")
 	public Set<Date> getDays() {
 		return _days;
 	}

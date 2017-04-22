@@ -1,5 +1,6 @@
 package ru.iskandar.holiday.calculator.service.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
@@ -15,42 +16,37 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "ru_iskandar_holiday_calculator_user")
-public class UserEntity {
+public class UserEntity implements Serializable {
+
+	/**
+	 * Идентфикатор для сериализации
+	 */
+	private static final long serialVersionUID = -7202845772535656629L;
 
 	/** Глобальный идентификатор */
-	@Id
-	@GeneratedValue
-	@Column(name = "uuid")
 	private UUID _uuid;
 
 	/** Имя */
-	@Column(name = "firstname")
-	@NotNull(message = "Не указано имя")
 	private String _firstName;
 
 	/** Фамилия */
-	@Column(name = "lastname")
-	@NotNull(message = "Не указана фамилия")
 	private String _lastName;
 
 	/** Отчество */
-	@Column(name = "patronymic")
-	@NotNull(message = "Не указано отчество")
 	private String _patronymic;
 
 	/** Логин пользователя */
-	@Column(name = "login", unique = true)
-	@NotNull(message = "Не указан логин")
 	private String _login;
 
 	/** Дата приема на работу */
-	@Column(name = "employmentdate")
-	@NotNull(message = "Не указан логин")
 	private Date _employmentDate;
 
 	/**
 	 * @return the uuid
 	 */
+	@Id
+	@GeneratedValue
+	@Column(name = "uuid")
 	public UUID getUuid() {
 		return _uuid;
 	}
@@ -66,6 +62,8 @@ public class UserEntity {
 	/**
 	 * @return the firstName
 	 */
+	@Column(name = "firstname")
+	@NotNull(message = "Не указано имя")
 	public String getFirstName() {
 		return _firstName;
 	}
@@ -81,6 +79,8 @@ public class UserEntity {
 	/**
 	 * @return the lastName
 	 */
+	@Column(name = "lastname")
+	@NotNull(message = "Не указана фамилия")
 	public String getLastName() {
 		return _lastName;
 	}
@@ -96,6 +96,8 @@ public class UserEntity {
 	/**
 	 * @return the patronymic
 	 */
+	@Column(name = "patronymic")
+	@NotNull(message = "Не указано отчество")
 	public String getPatronymic() {
 		return _patronymic;
 	}
@@ -111,6 +113,8 @@ public class UserEntity {
 	/**
 	 * @return the login
 	 */
+	@Column(name = "login", unique = true)
+	@NotNull(message = "Не указан логин")
 	public String getLogin() {
 		return _login;
 	}
@@ -126,6 +130,8 @@ public class UserEntity {
 	/**
 	 * @return the employmentDate
 	 */
+	@Column(name = "employmentdate")
+	@NotNull(message = "Не указан логин")
 	public Date getEmploymentDate() {
 		return _employmentDate;
 	}

@@ -29,6 +29,12 @@ public abstract class UserEntityFactory {
 		Objects.requireNonNull(employmentDate);
 
 		UserEntity entity = new UserEntity();
+		entity.setEmploymentDate(employmentDate);
+		entity.setFirstName(firstName);
+		entity.setLastName(lastName);
+		entity.setLogin(login);
+		entity.setPatronymic(patronymic);
+		entity.setUuid(id.getUUID());
 		return entity;
 	}
 

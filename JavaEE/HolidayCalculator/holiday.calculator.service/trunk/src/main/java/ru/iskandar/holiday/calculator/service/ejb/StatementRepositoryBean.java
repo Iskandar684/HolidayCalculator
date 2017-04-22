@@ -132,6 +132,7 @@ public class StatementRepositoryBean implements IStatementRepository {
 				res.add(st);
 			}
 		}
+		res.addAll(getHolidayStatementsByStatus(aStatuses));
 		return res;
 	}
 
@@ -239,6 +240,28 @@ public class StatementRepositoryBean implements IStatementRepository {
 		RecallStatement statement = new RecallStatement(StatementId.from(UUID.randomUUID()), aStatementEntry);
 		_statements.put(statement.getId(), statement);
 		return statement;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<HolidayStatement> getHolidayStatementsByStatus(EnumSet<StatementStatus> aStatuses) {
+		Objects.requireNonNull(aStatuses);
+
+		CriteriaBuilder cb = _em.getCriteriaBuilder();
+		CriteriaQuery<HolidayStatementEntity> query = cb.createQuery(HolidayStatementEntity.class);
+		Root<HolidayStatementEntity> root = query.from(HolidayStatementEntity.class);
+
+		query.where(root.get(HolidayStatementEntity_.status).in(aStatuses));
+		Collection<HolidayStatementEntity> result = _em.createQuery(query).getResultList();
+
+		List<HolidayStatement> statementsByStatuses = new ArrayList<>();
+		for (HolidayStatementEntity entity : result) {
+			HolidayStatement statement = new EntityBasedHolidayStatementFactory(entity).create();
+			statementsByStatuses.add(statement);
+		}
+		return statementsByStatuses;
 	}
 
 }

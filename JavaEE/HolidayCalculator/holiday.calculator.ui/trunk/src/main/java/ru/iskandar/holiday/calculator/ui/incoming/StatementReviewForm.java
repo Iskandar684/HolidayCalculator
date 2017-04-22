@@ -180,7 +180,7 @@ public class StatementReviewForm {
 			 */
 			@Override
 			public void widgetSelected(SelectionEvent aE) {
-				Statement statement = getStatement();
+				Statement<?> statement = getStatement();
 				if (statement == null) {
 					MessageDialog.openWarning(main.getShell(), Messages.statementForConsiderNotSelectedDialogTitle,
 							Messages.statementForConsiderNotSelectedDialogText);
@@ -189,7 +189,7 @@ public class StatementReviewForm {
 				try {
 					_modelProvider.getModel().approve(statement);
 				} catch (StatementAlreadyConsideredException e) {
-					Statement st = e.getStatement();
+					Statement<?> st = e.getStatement();
 					SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 					Date considerDate = st.getConsiderDate();
 					String text = NLS.bind(Messages.statementAlreadyConsideredByOtherDialogText,
@@ -221,7 +221,7 @@ public class StatementReviewForm {
 			 */
 			@Override
 			public void widgetSelected(SelectionEvent aE) {
-				Statement statement = getStatement();
+				Statement<?> statement = getStatement();
 				if (statement == null) {
 					MessageDialog.openWarning(main.getShell(), Messages.statementForConsiderNotSelectedDialogTitle,
 							Messages.statementForConsiderNotSelectedDialogText);
@@ -230,7 +230,7 @@ public class StatementReviewForm {
 				try {
 					_modelProvider.getModel().reject(statement);
 				} catch (StatementAlreadyConsideredException e) {
-					Statement st = e.getStatement();
+					Statement<?> st = e.getStatement();
 					SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 					Date considerDate = st.getConsiderDate();
 					String text = NLS.bind(Messages.statementAlreadyConsideredByOtherDialogText,
@@ -256,7 +256,7 @@ public class StatementReviewForm {
 		return main;
 	}
 
-	private Statement getStatement() {
+	private Statement<?> getStatement() {
 		return _statementProvider.getStatement();
 	}
 
@@ -270,7 +270,7 @@ public class StatementReviewForm {
 		 *
 		 * @return заявление или {@code null}
 		 */
-		public Statement getStatement();
+		public Statement<?> getStatement();
 
 		public void addStatementChangedListener(IStatementChangedListener aListener);
 
@@ -302,7 +302,7 @@ public class StatementReviewForm {
 		LoadStatus status = _modelProvider.getLoadStatus();
 		_dateChooser.clearSelection();
 		if (LoadStatus.LOADED.equals(status)) {
-			Statement statement = getStatement();
+			Statement<?> statement = getStatement();
 			if (statement != null) {
 				HolidayCalculatorModel model = _modelProvider.getModel();
 				canApprove = model.canApprove(statement);

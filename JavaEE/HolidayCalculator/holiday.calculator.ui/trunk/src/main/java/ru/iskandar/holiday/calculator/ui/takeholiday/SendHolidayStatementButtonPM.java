@@ -57,13 +57,13 @@ public class SendHolidayStatementButtonPM {
 			try {
 				_statementBuilder.sendHolidayStatement();
 			} catch (StatementAlreadySendedException e) {
-				Statement earlySendedStatement = e.getEarlySendenStatement();
+				Statement<?> earlySendedStatement = e.getEarlySendenStatement();
 				SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 				String mess;
-				if (_statementBuilder.getDays().size() == 1)
+				if (_statementBuilder.getDays().size() == 1) {
 					mess = NLS.bind(Messages.holidayStatementAlreadySendedDialogTextForDay,
 							dateFormatter.format(earlySendedStatement.getCreateDate()));
-				else {
+				} else {
 					mess = NLS.bind(Messages.holidayStatementAlreadySendedDialogTextForDays,
 							dateFormatter.format(earlySendedStatement.getCreateDate()));
 				}

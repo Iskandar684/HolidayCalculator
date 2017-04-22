@@ -18,7 +18,7 @@ public interface IStatementsProvider extends ILoadingProvider {
 	 *             если произошла ошибка при загрузке заявлений
 	 * @see {@link #getLoadStatus()}
 	 */
-	public Collection<Statement> getStatements();
+	public Collection<Statement<?>> getStatements();
 
 	public static interface IStatementsChangedListener {
 

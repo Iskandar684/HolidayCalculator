@@ -110,6 +110,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		statement.setStatus(StatementStatus.APPROVE);
 		statement.setConsider(_userService.getCurrentUser());
 		statement.setConsiderDate(new Date());
+		_statementRepo.save(statement);
 		try {
 			_messageSender.send(new StatementConsideredEvent(statement));
 		} catch (JMSException e) {
@@ -137,6 +138,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		statement.setStatus(StatementStatus.REJECTED);
 		statement.setConsider(_userService.getCurrentUser());
 		statement.setConsiderDate(new Date());
+		_statementRepo.save(statement);
 		try {
 			_messageSender.send(new StatementConsideredEvent(statement));
 		} catch (JMSException e) {

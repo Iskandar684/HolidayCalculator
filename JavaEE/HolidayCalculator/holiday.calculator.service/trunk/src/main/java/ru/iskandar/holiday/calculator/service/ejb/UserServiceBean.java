@@ -60,7 +60,7 @@ public class UserServiceBean implements IUserServiceLocal {
 		CriteriaQuery<UserEntity> cq = cb.createQuery(UserEntity.class);
 		Root<UserEntity> from = cq.from(UserEntity.class);
 
-		Predicate predicate = cb.equal(from.get(UserEntity_._login), login);
+		Predicate predicate = cb.equal(from.get(UserEntity_.login), login);
 
 		cq.where(predicate);
 		cq.select(from);

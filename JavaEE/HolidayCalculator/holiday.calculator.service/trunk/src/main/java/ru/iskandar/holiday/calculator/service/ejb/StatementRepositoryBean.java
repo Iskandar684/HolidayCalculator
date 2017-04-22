@@ -76,7 +76,7 @@ public class StatementRepositoryBean implements IStatementRepository {
 		CriteriaBuilder cb = _em.getCriteriaBuilder();
 		CriteriaQuery<HolidayStatementEntity> query = cb.createQuery(HolidayStatementEntity.class);
 		Root<HolidayStatementEntity> root = query.from(HolidayStatementEntity.class);
-		query.where(cb.equal(root.get(HolidayStatementEntity_._author), userEntity));
+		query.where(cb.equal(root.get(HolidayStatementEntity_.author), userEntity));
 		Collection<HolidayStatementEntity> result = _em.createQuery(query).getResultList();
 
 		List<HolidayStatement> statementsByAuthor = new ArrayList<>();
@@ -194,6 +194,7 @@ public class StatementRepositoryBean implements IStatementRepository {
 			HolidayStatementEntity entity = new DOBasedHolidayStatementEntityFactory((HolidayStatement) aStatement)
 					.create();
 			if (_em.find(HolidayStatementEntity.class, aStatement.getId().getUuid()) == null) {
+				entity.setUuid(null);
 				_em.persist(entity);
 			} else {
 				_em.merge(entity);

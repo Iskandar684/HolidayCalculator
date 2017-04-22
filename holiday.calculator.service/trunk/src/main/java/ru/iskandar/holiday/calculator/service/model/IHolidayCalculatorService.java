@@ -34,7 +34,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws NullPointerException
 	 *             если aStatuses {@code null}
 	 */
-	public Collection<Statement> loadStatements(EnumSet<StatementStatus> aStatuses);
+	public Collection<Statement<?>> loadStatements(EnumSet<StatementStatus> aStatuses);
 
 	/**
 	 * Одобряет заявление
@@ -53,7 +53,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws EJBAccessException
 	 *             если нет прав на рассмотрение заявлений
 	 */
-	public Statement approve(Statement aStatement) throws StatementAlreadyConsideredException;
+	public Statement<?> approve(Statement<?> aStatement) throws StatementAlreadyConsideredException;
 
 	/**
 	 * Отклоняет заявление
@@ -72,7 +72,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws EJBAccessException
 	 *             если нет прав на рассмотрение заявлений
 	 */
-	public Statement reject(Statement aStatement) throws StatementAlreadyConsideredException;
+	public Statement<?> reject(Statement<?> aStatement) throws StatementAlreadyConsideredException;
 
 	/**
 	 * Создает и подает заявление на отгул на рассмотрение
@@ -105,13 +105,13 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws InvalidStatementException
 	 *             если заявление заполнено некорректно
 	 */
-	public LeaveStatement sendStatement(LeaveStatement aStatement) throws StatementAlreadySendedException;
+	public LeaveStatement createLeaveStatement(LeaveStatementEntry aStatement) throws StatementAlreadySendedException;
 
 	/**
-	 * Подает заявление на отзыв на рассмотрение
+	 * Создает и подает заявление на отзыв на рассмотрение
 	 *
 	 * @param aStatement
-	 *            заявление на отзыв
+	 *            содержание заявления на отзыв
 	 * @return заявление на отзыв
 	 * @throws StatementAlreadySendedException
 	 *             если заявление уже было подано (например, при попытке подать
@@ -121,7 +121,8 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws InvalidStatementException
 	 *             если заявление заполнено некорректно
 	 */
-	public RecallStatement sendStatement(RecallStatement aStatement) throws StatementAlreadySendedException;
+	public RecallStatement createRecallStatement(RecallStatementEntry aStatement)
+			throws StatementAlreadySendedException;
 
 	/**
 	 * Возвращает количество отгулов у указанного пользователя
@@ -162,7 +163,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 *             если aUser {@code null}
 	 * @return входящие заявления
 	 */
-	public Collection<Statement> getIncomingStatements();
+	public Collection<Statement<?>> getIncomingStatements();
 
 	/**
 	 * Возвращает количество не использованных дней отпуска в этом периоде
@@ -202,6 +203,6 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws NullPointerException
 	 *             если aUser {@code null}
 	 */
-	public Collection<Statement> getAllStatements(User aUser);
+	public Collection<Statement<?>> getAllStatements(User aUser);
 
 }

@@ -16,12 +16,12 @@ public class StatementAlreadySendedException extends HolidayCalculatorException 
 	private final StatementEntry _sendingStatement;
 
 	/** Ранее отправленное заявление */
-	private final Statement _earlySendenStatement;
+	private final Statement<?> _earlySendenStatement;
 
 	/**
 	 * @param aMessage
 	 */
-	public StatementAlreadySendedException(StatementEntry aSendingStatement, Statement aEarlySendenStatement) {
+	public StatementAlreadySendedException(StatementEntry aSendingStatement, Statement<?> aEarlySendenStatement) {
 		super(String.format("Заявление %s уже было отправлено ранее", aSendingStatement));
 		_sendingStatement = aSendingStatement;
 		_earlySendenStatement = aEarlySendenStatement;
@@ -32,7 +32,7 @@ public class StatementAlreadySendedException extends HolidayCalculatorException 
 	 * @deprecated
 	 */
 	@Deprecated
-	public StatementAlreadySendedException(Statement aSendingStatement, Statement aEarlySendenStatement) {
+	public StatementAlreadySendedException(Statement<?> aSendingStatement, Statement<?> aEarlySendenStatement) {
 		super(String.format("Заявление %s уже было отправлено ранее", aSendingStatement));
 		_sendingStatement = null;
 		_earlySendenStatement = aEarlySendenStatement;
@@ -48,7 +48,7 @@ public class StatementAlreadySendedException extends HolidayCalculatorException 
 	/**
 	 * @return the earlySendenStatement
 	 */
-	public Statement getEarlySendenStatement() {
+	public Statement<?> getEarlySendenStatement() {
 		return _earlySendenStatement;
 	}
 

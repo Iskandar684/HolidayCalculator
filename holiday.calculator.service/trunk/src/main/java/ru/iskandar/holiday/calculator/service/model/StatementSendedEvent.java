@@ -13,12 +13,12 @@ public class StatementSendedEvent extends HolidayCalculatorEvent {
 	private static final long serialVersionUID = -3835067673271539642L;
 
 	/** Заявление, связанное с событием */
-	private final Statement _affectedStatement;
+	private final Statement<?> _affectedStatement;
 
 	/**
 	 * Конструктор
 	 */
-	public StatementSendedEvent(Statement aHolidayStatement) {
+	public StatementSendedEvent(Statement<?> aHolidayStatement) {
 		Objects.requireNonNull(aHolidayStatement);
 		_affectedStatement = aHolidayStatement;
 	}
@@ -26,7 +26,7 @@ public class StatementSendedEvent extends HolidayCalculatorEvent {
 	/**
 	 * @return the affectedStatement
 	 */
-	public Statement getAffectedStatement() {
+	public Statement<?> getAffectedStatement() {
 		return _affectedStatement;
 	}
 

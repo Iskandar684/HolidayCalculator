@@ -3,14 +3,13 @@ package ru.iskandar.holiday.calculator.service.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
-import java.util.UUID;
 
 import ru.iskandar.holiday.calculator.service.model.user.User;
 
 /**
  * Заявление
  */
-public abstract class Statement implements Serializable {
+public abstract class Statement<E extends StatementEntry> implements Serializable {
 
 	/**
 	 * Идентификатор для сериализации
@@ -20,50 +19,8 @@ public abstract class Statement implements Serializable {
 	/** Идентификатор заявления */
 	private final StatementId _statementId;
 
-	/** Автор заявления */
-	private final User _author;
-
-	/** Пользователь, который рассмотрел заявление */
-	private User _consider;
-
-	/** Статус заявления */
-	private StatementStatus _status = StatementStatus.NOT_CONSIDERED;
-
-	/** Время подачи заявления */
-	private Date _createDate = new Date();
-
-	/** Время рассмотрения */
-	private Date _considerDate;
-
 	/** Содержимое заявления */
-	private StatementEntry _entry;
-
-	/**
-	 * Конструктор
-	 *
-	 * @param aUUID
-	 *            идентификатор заявления
-	 * @deprecated
-	 */
-	@Deprecated
-	public Statement(UUID aUUID, User aAuthor) {
-		this(StatementId.from(aUUID), aAuthor);
-	}
-
-	/**
-	 * Конструктор
-	 *
-	 * @param aStatementId
-	 *            идентификатор заявления
-	 * @deprecated
-	 */
-	@Deprecated
-	public Statement(StatementId aStatementId, User aAuthor) {
-		Objects.requireNonNull(aStatementId, "Не указан идентификатор заявления");
-		Objects.requireNonNull(aAuthor, "Не указан автор заявления");
-		_statementId = aStatementId;
-		_author = aAuthor;
-	}
+	private final E _entry;
 
 	/**
 	 * Конструктор
@@ -71,20 +28,18 @@ public abstract class Statement implements Serializable {
 	 * @param aStatementId
 	 *            идентификатор заявления
 	 */
-	public Statement(StatementId aStatementId, StatementEntry aStatementEntry) {
+	public Statement(StatementId aStatementId, E aStatementEntry) {
 		Objects.requireNonNull(aStatementId, "Не указан идентификатор заявления");
 		Objects.requireNonNull(aStatementEntry, "Не указано содержимое заявления");
 		_entry = aStatementEntry;
 		_statementId = aStatementId;
-		_author = aStatementEntry.getAuthor();
-		_status = aStatementEntry.getStatus();
 	}
 
 	/**
 	 * @return the status
 	 */
 	public StatementStatus getStatus() {
-		return _status;
+		return _entry.getStatus();
 	}
 
 	/**
@@ -93,21 +48,21 @@ public abstract class Statement implements Serializable {
 	 */
 	public void setStatus(StatementStatus aStatus) {
 		Objects.requireNonNull(aStatus);
-		_status = aStatus;
+		_entry.setStatus(aStatus);
 	}
 
 	/**
 	 * @return the author
 	 */
 	public User getAuthor() {
-		return _author;
+		return _entry.getAuthor();
 	}
 
 	/**
 	 * @return the createDate
 	 */
 	public Date getCreateDate() {
-		return _createDate;
+		return _entry.getCreateDate();
 	}
 
 	/**
@@ -115,14 +70,14 @@ public abstract class Statement implements Serializable {
 	 *            the createDate to set
 	 */
 	public void setCreateDate(Date aCreateDate) {
-		_createDate = aCreateDate;
+		_entry.setCreateDate(aCreateDate);
 	}
 
 	/**
 	 * @return the consider
 	 */
 	public User getConsider() {
-		return _consider;
+		return _entry.getConsider();
 	}
 
 	/**
@@ -130,14 +85,14 @@ public abstract class Statement implements Serializable {
 	 *            the consider to set
 	 */
 	public void setConsider(User aConsider) {
-		_consider = aConsider;
+		_entry.setConsider(aConsider);
 	}
 
 	/**
 	 * @return the considerDate
 	 */
 	public Date getConsiderDate() {
-		return _considerDate;
+		return _entry.getConsiderDate();
 	}
 
 	/**
@@ -145,7 +100,7 @@ public abstract class Statement implements Serializable {
 	 *            the considerDate to set
 	 */
 	public void setConsiderDate(Date aConsiderDate) {
-		_considerDate = aConsiderDate;
+		_entry.setConsiderDate(aConsiderDate);
 	}
 
 	/**
@@ -173,7 +128,7 @@ public abstract class Statement implements Serializable {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		Statement other = (Statement) obj;
+		Statement<?> other = (Statement<?>) obj;
 		if (_statementId == null) {
 			if (other._statementId != null) {
 				return false;
@@ -184,7 +139,9 @@ public abstract class Statement implements Serializable {
 		return true;
 	}
 
-	public abstract StatementType getStatementType();
+	public final StatementType getStatementType() {
+		return _entry.getStatementType();
+	}
 
 	/**
 	 * Возвращает идентификатор заявления
@@ -198,7 +155,7 @@ public abstract class Statement implements Serializable {
 	/**
 	 * @return the entry
 	 */
-	protected StatementEntry getEntry() {
+	protected E getEntry() {
 		return _entry;
 	}
 

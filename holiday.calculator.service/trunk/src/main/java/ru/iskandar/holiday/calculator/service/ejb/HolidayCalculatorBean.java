@@ -24,7 +24,9 @@ import ru.iskandar.holiday.calculator.service.model.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.HolidayStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.InvalidStatementException;
 import ru.iskandar.holiday.calculator.service.model.LeaveStatement;
+import ru.iskandar.holiday.calculator.service.model.LeaveStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.RecallStatement;
+import ru.iskandar.holiday.calculator.service.model.RecallStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.Statement;
 import ru.iskandar.holiday.calculator.service.model.StatementAlreadyConsideredException;
 import ru.iskandar.holiday.calculator.service.model.StatementAlreadySendedException;
@@ -82,9 +84,9 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	 */
 	@RolesAllowed(Permissions.CONSIDER)
 	@Override
-	public Collection<Statement> loadStatements(EnumSet<StatementStatus> aStatuses) {
+	public Collection<Statement<?>> loadStatements(EnumSet<StatementStatus> aStatuses) {
 		Objects.requireNonNull(aStatuses);
-		Collection<Statement> statementsByStatus = _statementRepo.getStatementsByStatus(aStatuses);
+		Collection<Statement<?>> statementsByStatus = _statementRepo.getStatementsByStatus(aStatuses);
 		return statementsByStatus;
 	}
 
@@ -93,11 +95,11 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	 */
 	@RolesAllowed(Permissions.CONSIDER)
 	@Override
-	public Statement approve(Statement aStatement) throws StatementAlreadyConsideredException {
+	public Statement<?> approve(Statement<?> aStatement) throws StatementAlreadyConsideredException {
 		Objects.requireNonNull(aStatement);
 		checkStatement(aStatement);
 
-		Statement statement = _statementRepo.getStatement(aStatement.getId(), aStatement.getStatementType());
+		Statement<?> statement = _statementRepo.getStatement(aStatement.getId(), aStatement.getStatementType());
 		if (statement == null) {
 			throw new StatementNotFoundException(String.format("Заявление '%s' не найдено", aStatement));
 		}
@@ -121,11 +123,11 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	 */
 	@RolesAllowed(Permissions.CONSIDER)
 	@Override
-	public Statement reject(Statement aStatement) throws StatementAlreadyConsideredException {
+	public Statement<?> reject(Statement<?> aStatement) throws StatementAlreadyConsideredException {
 		Objects.requireNonNull(aStatement);
 		checkStatement(aStatement);
 
-		Statement statement = _statementRepo.getStatement(aStatement.getId(), aStatement.getStatementType());
+		Statement<?> statement = _statementRepo.getStatement(aStatement.getId(), aStatement.getStatementType());
 		if (statement == null) {
 			throw new StatementNotFoundException(String.format("Заявление [%s] не найдено", aStatement));
 		}
@@ -150,7 +152,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	public HolidayStatement createHolidayStatement(HolidayStatementEntry aStatement)
 			throws StatementAlreadySendedException {
 		Objects.requireNonNull(aStatement);
-		checkStatement(aStatement);
+		checkStatementEntry(aStatement);
 
 		if (StatementStatus.APPROVE.equals(aStatement.getStatus())
 				|| StatementStatus.REJECTED.equals(aStatement.getStatus())) {
@@ -177,30 +179,25 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public LeaveStatement sendStatement(LeaveStatement aStatement) throws StatementAlreadySendedException {
-		Objects.requireNonNull(aStatement);
-		checkStatement(aStatement);
+	public LeaveStatement createLeaveStatement(LeaveStatementEntry aEntry) throws StatementAlreadySendedException {
+		Objects.requireNonNull(aEntry);
+		checkStatementEntry(aEntry);
 
-		Statement sendedStatement = _statementRepo.getStatement(aStatement.getId(), aStatement.getStatementType());
-		if (sendedStatement != null) {
-			throw new StatementAlreadySendedException(aStatement, sendedStatement);
-		}
-		if (StatementStatus.APPROVE.equals(aStatement.getStatus())
-				|| StatementStatus.REJECTED.equals(aStatement.getStatus())) {
+		if (StatementStatus.APPROVE.equals(aEntry.getStatus()) || StatementStatus.REJECTED.equals(aEntry.getStatus())) {
 			throw new InvalidStatementException(
-					String.format("Подаваемое заявление на отпуск не может иметь статус %s", aStatement.getStatus()));
+					String.format("Подаваемое заявление на отпуск не может иметь статус %s", aEntry.getStatus()));
 		}
-		Set<Date> currentStatementDays = aStatement.getLeaveDates();
-		for (Statement st : getCurrentUserStatements()) {
+		Set<Date> currentStatementDays = aEntry.getLeaveDates();
+		for (Statement<?> st : getCurrentUserStatements()) {
 			switch (st.getStatementType()) {
 			case HOLIDAY_STATEMENT:
 				if (DateUtils.hasIntersectionDays(((HolidayStatement) st).getDays(), currentStatementDays)) {
-					throw new StatementAlreadySendedException(aStatement, st);
+					throw new StatementAlreadySendedException(aEntry, st);
 				}
 				break;
 			case LEAVE_STATEMENT:
 				if (DateUtils.hasIntersectionDays(((LeaveStatement) st).getLeaveDates(), currentStatementDays)) {
-					throw new StatementAlreadySendedException(aStatement, st);
+					throw new StatementAlreadySendedException(aEntry, st);
 				}
 				break;
 			default:
@@ -209,13 +206,13 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 			}
 
 		}
-		_statementRepo.save(aStatement);
+		LeaveStatement st = _statementRepo.createLeaveStatement(aEntry);
 		try {
-			_messageSender.send(new StatementSendedEvent(aStatement));
+			_messageSender.send(new StatementSendedEvent(st));
 		} catch (JMSException e) {
-			LOG.error(String.format("Ошибка оповещения об отправки заявления %s на отпуск", aStatement), e);
+			LOG.error(String.format("Ошибка оповещения об отправки заявления %s на отпуск", st), e);
 		}
-		return aStatement;
+		return st;
 	}
 
 	private Collection<HolidayStatement> getCurrentUserHolidayStatements() {
@@ -228,12 +225,12 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		return _statementRepo.getRecallStatementsByAuthor(currentUser);
 	}
 
-	private Collection<Statement> getStatementsByUser(User aUser) {
+	private Collection<Statement<?>> getStatementsByUser(User aUser) {
 		Objects.requireNonNull(aUser);
 		return _statementRepo.getStatementsByAuthor(aUser);
 	}
 
-	private Collection<Statement> getCurrentUserStatements() {
+	private Collection<Statement<?>> getCurrentUserStatements() {
 		return getStatementsByUser(_userService.getCurrentUser());
 	}
 
@@ -244,7 +241,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	public int getHolidaysQuantity(User aUser) {
 		int recallCount = 0;
 		int holidayCount = 0;
-		for (Statement st : getStatementsByUser(aUser)) {
+		for (Statement<?> st : getStatementsByUser(aUser)) {
 			if (st instanceof HolidayStatement) {
 				HolidayStatement holidaySt = (HolidayStatement) st;
 				if (StatementStatus.APPROVE.equals(holidaySt.getStatus())) {
@@ -267,7 +264,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	@Override
 	public int getOutgoingHolidaysQuantity(User aUser) {
 		int outgoingHolidayCount = 0;
-		for (Statement st : getStatementsByUser(aUser)) {
+		for (Statement<?> st : getStatementsByUser(aUser)) {
 			if (st instanceof HolidayStatement) {
 				HolidayStatement holidaySt = (HolidayStatement) st;
 				if (StatementStatus.NOT_CONSIDERED.equals(holidaySt.getStatus())) {
@@ -284,7 +281,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	@Override
 	public int getIncomingHolidaysQuantity(User aUser) {
 		int incomingHolidays = 0;
-		for (Statement st : getStatementsByUser(aUser)) {
+		for (Statement<?> st : getStatementsByUser(aUser)) {
 			if (st instanceof RecallStatement) {
 				RecallStatement recallStatement = (RecallStatement) st;
 				if (StatementStatus.NOT_CONSIDERED.equals(recallStatement.getStatus())) {
@@ -300,8 +297,8 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	 */
 	@RolesAllowed(Permissions.CONSIDER)
 	@Override
-	public Collection<Statement> getIncomingStatements() {
-		Collection<Statement> incoming = _statementRepo
+	public Collection<Statement<?>> getIncomingStatements() {
+		Collection<Statement<?>> incoming = _statementRepo
 				.getStatementsByStatus(EnumSet.of(StatementStatus.NOT_CONSIDERED));
 		return incoming;
 	}
@@ -314,7 +311,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	 * @throws InvalidStatementException
 	 *             если заявление заполнено некорректно
 	 */
-	private void checkStatement(Statement aStatement) {
+	private void checkStatement(Statement<?> aStatement) {
 		Objects.requireNonNull(aStatement);
 		_statementValidator.checkStatement(aStatement);
 	}
@@ -327,7 +324,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	 * @throws InvalidStatementException
 	 *             если заявление заполнено некорректно
 	 */
-	private void checkStatement(StatementEntry aStatement) {
+	private void checkStatementEntry(StatementEntry aStatement) {
 		Objects.requireNonNull(aStatement);
 		_statementValidator.checkStatement(aStatement);
 	}
@@ -347,7 +344,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	@Override
 	public int getLeaveCount(User aUser) {
 		int leaveCount = 0;
-		for (Statement st : getStatementsByUser(aUser)) {
+		for (Statement<?> st : getStatementsByUser(aUser)) {
 			switch (st.getStatementType()) {
 			case LEAVE_STATEMENT:
 				LeaveStatement holidaySt = (LeaveStatement) st;
@@ -371,7 +368,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	@Override
 	public int getOutgoingLeaveCount(User aUser) {
 		int outgoing = 0;
-		for (Statement st : getStatementsByUser(aUser)) {
+		for (Statement<?> st : getStatementsByUser(aUser)) {
 			switch (st.getStatementType()) {
 			case LEAVE_STATEMENT:
 				LeaveStatement holidaySt = (LeaveStatement) st;
@@ -404,39 +401,34 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public RecallStatement sendStatement(RecallStatement aStatement) throws StatementAlreadySendedException {
-		Objects.requireNonNull(aStatement);
-		checkStatement(aStatement);
+	public RecallStatement createRecallStatement(RecallStatementEntry aEntry) throws StatementAlreadySendedException {
+		Objects.requireNonNull(aEntry);
+		checkStatementEntry(aEntry);
 
-		Statement sendedStatement = _statementRepo.getStatement(aStatement.getId(), aStatement.getStatementType());
-		if (sendedStatement != null) {
-			throw new StatementAlreadySendedException(aStatement, sendedStatement);
-		}
-		if (StatementStatus.APPROVE.equals(aStatement.getStatus())
-				|| StatementStatus.REJECTED.equals(aStatement.getStatus())) {
+		if (StatementStatus.APPROVE.equals(aEntry.getStatus()) || StatementStatus.REJECTED.equals(aEntry.getStatus())) {
 			throw new InvalidStatementException(
-					String.format("Подаваемое заявление на отзыв не может иметь статус %s", aStatement.getStatus()));
+					String.format("Подаваемое заявление на отзыв не может иметь статус %s", aEntry.getStatus()));
 		}
-		Set<Date> currentStatementDays = aStatement.getRecallDates();
+		Set<Date> currentStatementDays = aEntry.getRecallDates();
 		for (RecallStatement st : getCurrentUserRecallStatements()) {
 			if (DateUtils.hasIntersectionDays(st.getRecallDates(), currentStatementDays)) {
-				throw new StatementAlreadySendedException(aStatement, st);
+				throw new StatementAlreadySendedException(aEntry, st);
 			}
 		}
-		_statementRepo.save(aStatement);
+		RecallStatement statement = _statementRepo.createRecallStatement(aEntry);
 		try {
-			_messageSender.send(new StatementSendedEvent(aStatement));
+			_messageSender.send(new StatementSendedEvent(statement));
 		} catch (JMSException e) {
-			LOG.error(String.format("Ошибка оповещения об отправки заявления %s на отзыв", aStatement), e);
+			LOG.error(String.format("Ошибка оповещения об отправки заявления %s на отзыв", statement), e);
 		}
-		return aStatement;
+		return statement;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<Statement> getAllStatements(User aUser) {
+	public Collection<Statement<?>> getAllStatements(User aUser) {
 		Objects.requireNonNull(aUser);
 		return getStatementsByUser(aUser);
 	}

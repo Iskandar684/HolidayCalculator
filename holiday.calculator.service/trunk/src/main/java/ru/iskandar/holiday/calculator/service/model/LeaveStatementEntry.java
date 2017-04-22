@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 import ru.iskandar.holiday.calculator.service.model.user.User;
 
@@ -30,7 +29,7 @@ public class LeaveStatementEntry extends StatementEntry {
 	 * @param aAuthor
 	 *            автор заявления
 	 */
-	protected LeaveStatementEntry(UUID aUUID, User aAuthor, Set<Date> aLeaveDates) {
+	protected LeaveStatementEntry(User aAuthor, Set<Date> aLeaveDates) {
 		super(aAuthor);
 		Objects.requireNonNull(aLeaveDates);
 		_leaveDates.addAll(aLeaveDates);

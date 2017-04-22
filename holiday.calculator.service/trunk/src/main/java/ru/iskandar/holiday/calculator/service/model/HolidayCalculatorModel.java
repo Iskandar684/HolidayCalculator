@@ -86,7 +86,7 @@ public class HolidayCalculatorModel implements Serializable {
 	LeaveStatement getLastLeaveStatement() {
 		IHolidayCalculatorService holidayCalculatorService = _servicesProvider.getHolidayCalculatorService();
 		LeaveStatement leaveStatement = null;
-		for (Statement statement : holidayCalculatorService.getAllStatements(_currenUser)) {
+		for (Statement<?> statement : holidayCalculatorService.getAllStatements(_currenUser)) {
 			if (StatementType.LEAVE_STATEMENT.equals(statement.getStatementType())) {
 				if (leaveStatement == null) {
 					leaveStatement = (LeaveStatement) statement;
@@ -132,8 +132,8 @@ public class HolidayCalculatorModel implements Serializable {
 	 * @throws ServiceLookupException
 	 *             если не удалось получить сервис учета отгулов
 	 */
-	void sendLeaveStatement(LeaveStatement aStatement) throws StatementAlreadySendedException {
-		LeaveStatement statement = _servicesProvider.getHolidayCalculatorService().sendStatement(aStatement);
+	void sendLeaveStatement(LeaveStatementEntry aStatement) throws StatementAlreadySendedException {
+		LeaveStatement statement = _servicesProvider.getHolidayCalculatorService().createLeaveStatement(aStatement);
 		StatementSendedEvent event = new StatementSendedEvent(statement);
 		event.setInitiator(createCurrentEventInitiator());
 		fireEvent(event);
@@ -167,8 +167,8 @@ public class HolidayCalculatorModel implements Serializable {
 	 * @throws ServiceLookupException
 	 *             если не удалось получить сервис учета отгулов
 	 */
-	void sendRecallStatement(RecallStatement aStatement) throws StatementAlreadySendedException {
-		RecallStatement statement = _servicesProvider.getHolidayCalculatorService().sendStatement(aStatement);
+	void sendRecallStatement(RecallStatementEntry aStatement) throws StatementAlreadySendedException {
+		RecallStatement statement = _servicesProvider.getHolidayCalculatorService().createRecallStatement(aStatement);
 		StatementSendedEvent event = new StatementSendedEvent(statement);
 		event.setInitiator(createCurrentEventInitiator());
 		fireEvent(event);
@@ -247,7 +247,7 @@ public class HolidayCalculatorModel implements Serializable {
 	 *             заявлений
 	 */
 	public int getUnConsideredStatementsCount() {
-		Collection<Statement> statements;
+		Collection<Statement<?>> statements;
 		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
 		try {
 			statements = service.loadStatements(EnumSet.of(StatementStatus.NOT_CONSIDERED));
@@ -276,10 +276,10 @@ public class HolidayCalculatorModel implements Serializable {
 	 * @throws PermissionDeniedException
 	 *             если нет прав на рассмотрение заявлений
 	 */
-	public void approve(Statement aStatement) throws StatementAlreadyConsideredException {
+	public void approve(Statement<?> aStatement) throws StatementAlreadyConsideredException {
 		Objects.requireNonNull(aStatement);
 		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
-		Statement statement;
+		Statement<?> statement;
 		try {
 			statement = service.approve(aStatement);
 		} catch (EJBAccessException e) {
@@ -296,7 +296,7 @@ public class HolidayCalculatorModel implements Serializable {
 	 * @throws ServiceLookupException
 	 *             если не удалось получить сервис учета отгулов
 	 */
-	public boolean canApprove(Statement aStatement) {
+	public boolean canApprove(Statement<?> aStatement) {
 		Objects.requireNonNull(aStatement);
 		if (!canConsider()) {
 			return false;
@@ -312,7 +312,7 @@ public class HolidayCalculatorModel implements Serializable {
 	 *
 	 * @return
 	 */
-	public boolean canReject(Statement aStatement) {
+	public boolean canReject(Statement<?> aStatement) {
 		Objects.requireNonNull(aStatement);
 		if (!canConsider()) {
 			return false;
@@ -340,10 +340,10 @@ public class HolidayCalculatorModel implements Serializable {
 	 * @throws PermissionDeniedException
 	 *             если нет прав на рассмотрение заявлений
 	 */
-	public void reject(Statement aStatement) throws StatementAlreadyConsideredException {
+	public void reject(Statement<?> aStatement) throws StatementAlreadyConsideredException {
 		Objects.requireNonNull(aStatement);
 		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
-		Statement statement;
+		Statement<?> statement;
 		try {
 			statement = service.reject(aStatement);
 		} catch (EJBAccessException e) {
@@ -429,7 +429,7 @@ public class HolidayCalculatorModel implements Serializable {
 	 * @throws PermissionDeniedException
 	 *             если нет прав на рассмотрение заявлений
 	 */
-	public Collection<Statement> getIncomingStatements() {
+	public Collection<Statement<?>> getIncomingStatements() {
 		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
 		try {
 			return service.getIncomingStatements();
@@ -504,7 +504,7 @@ public class HolidayCalculatorModel implements Serializable {
 	 * @throws ServiceLookupException
 	 *             если не удалось получить сервис учета отгулов
 	 */
-	public Collection<Statement> getCurrentUserStatements() {
+	public Collection<Statement<?>> getCurrentUserStatements() {
 		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
 		return service.getAllStatements(_currenUser);
 	}

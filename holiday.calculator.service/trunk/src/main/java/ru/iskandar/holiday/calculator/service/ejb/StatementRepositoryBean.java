@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -28,7 +29,9 @@ import ru.iskandar.holiday.calculator.service.model.EntityBasedHolidayStatementF
 import ru.iskandar.holiday.calculator.service.model.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.HolidayStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.LeaveStatement;
+import ru.iskandar.holiday.calculator.service.model.LeaveStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.RecallStatement;
+import ru.iskandar.holiday.calculator.service.model.RecallStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.Statement;
 import ru.iskandar.holiday.calculator.service.model.StatementId;
 import ru.iskandar.holiday.calculator.service.model.StatementStatus;
@@ -47,16 +50,16 @@ public class StatementRepositoryBean implements IStatementRepository {
 	private EntityManager _em;
 
 	// TODO имитация БД
-	private static Map<StatementId, Statement> _statements = new HashMap<>();
+	private static Map<StatementId, Statement<?>> _statements = new HashMap<>();
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<Statement> getStatementsByAuthor(User aAuthor) {
+	public Collection<Statement<?>> getStatementsByAuthor(User aAuthor) {
 		Objects.requireNonNull(aAuthor);
-		Set<Statement> statementsByUser = new HashSet<>();
-		for (Statement st : _statements.values()) {
+		Set<Statement<?>> statementsByUser = new HashSet<>();
+		for (Statement<?> st : _statements.values()) {
 			if (st.getAuthor().equals(aAuthor)) {
 				statementsByUser.add(st);
 			}
@@ -95,7 +98,7 @@ public class StatementRepositoryBean implements IStatementRepository {
 	@Override
 	public Collection<RecallStatement> getRecallStatementsByAuthor(User aAuthor) {
 		Set<RecallStatement> currentUserStatements = new HashSet<>();
-		for (Statement st : _statements.values()) {
+		for (Statement<?> st : _statements.values()) {
 			if (st.getAuthor().equals(aAuthor) && (st instanceof RecallStatement)) {
 				currentUserStatements.add((RecallStatement) st);
 			}
@@ -109,7 +112,7 @@ public class StatementRepositoryBean implements IStatementRepository {
 	@Override
 	public Collection<LeaveStatement> getLeaveStatementsByAuthor(User aAuthor) {
 		Set<LeaveStatement> currentUserStatements = new HashSet<>();
-		for (Statement st : _statements.values()) {
+		for (Statement<?> st : _statements.values()) {
 			if (st.getAuthor().equals(aAuthor) && (st instanceof LeaveStatement)) {
 				currentUserStatements.add((LeaveStatement) st);
 			}
@@ -121,9 +124,9 @@ public class StatementRepositoryBean implements IStatementRepository {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<Statement> getStatementsByStatus(EnumSet<StatementStatus> aStatuses) {
-		Set<Statement> res = new HashSet<>();
-		for (Statement st : _statements.values()) {
+	public Collection<Statement<?>> getStatementsByStatus(EnumSet<StatementStatus> aStatuses) {
+		Set<Statement<?>> res = new HashSet<>();
+		for (Statement<?> st : _statements.values()) {
 			if (aStatuses.contains(st.getStatus())) {
 				res.add(st);
 			}
@@ -166,7 +169,7 @@ public class StatementRepositoryBean implements IStatementRepository {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Statement getStatement(StatementId aUUID, StatementType aType) {
+	public Statement<?> getStatement(StatementId aUUID, StatementType aType) {
 		Objects.requireNonNull(aUUID);
 		Objects.requireNonNull(aType);
 
@@ -189,7 +192,7 @@ public class StatementRepositoryBean implements IStatementRepository {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void save(Statement aStatement) {
+	public void save(Statement<?> aStatement) {
 		Objects.requireNonNull(aStatement);
 		switch (aStatement.getStatementType()) {
 		case HOLIDAY_STATEMENT:
@@ -213,6 +216,26 @@ public class StatementRepositoryBean implements IStatementRepository {
 		HolidayStatementEntity entity = new EntryBasedHolidayStatementEntityFactory(aStatementEntry).create();
 		_em.persist(entity);
 		HolidayStatement statement = new EntityBasedHolidayStatementFactory(entity).create();
+		_statements.put(statement.getId(), statement);
+		return statement;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public LeaveStatement createLeaveStatement(LeaveStatementEntry aStatementEntry) {
+		LeaveStatement statement = new LeaveStatement(StatementId.from(UUID.randomUUID()), aStatementEntry);
+		_statements.put(statement.getId(), statement);
+		return statement;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public RecallStatement createRecallStatement(RecallStatementEntry aStatementEntry) {
+		RecallStatement statement = new RecallStatement(StatementId.from(UUID.randomUUID()), aStatementEntry);
 		_statements.put(statement.getId(), statement);
 		return statement;
 	}

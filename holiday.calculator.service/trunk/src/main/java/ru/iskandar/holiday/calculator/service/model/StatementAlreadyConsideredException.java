@@ -13,12 +13,12 @@ public class StatementAlreadyConsideredException extends HolidayCalculatorExcept
 	private static final long serialVersionUID = 6538235553747411882L;
 
 	/** заявление */
-	private final Statement _statement;
+	private final Statement<?> _statement;
 
 	/**
 	 * @param aMessage
 	 */
-	public StatementAlreadyConsideredException(Statement aStatement) {
+	public StatementAlreadyConsideredException(Statement<?> aStatement) {
 		super(String.format("Заявление %s уже было отправлено ранее", aStatement));
 		_statement = aStatement;
 	}
@@ -26,7 +26,7 @@ public class StatementAlreadyConsideredException extends HolidayCalculatorExcept
 	/**
 	 * @return the statement
 	 */
-	public Statement getStatement() {
+	public Statement<?> getStatement() {
 		return _statement;
 	}
 

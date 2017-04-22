@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Формирователь заявления на отзыв
@@ -52,7 +51,7 @@ public class MakeRecallStatementBuilder implements Serializable {
 	 *             если не удалось получить сервис учета отгулов
 	 */
 	public void sendRecallStatement() throws StatementAlreadySendedException {
-		RecallStatement statement = new RecallStatement(UUID.randomUUID(), _days, _model.getCurrentUser());
+		RecallStatementEntry statement = new RecallStatementEntry(_days, _model.getCurrentUser());
 		_model.sendRecallStatement(statement);
 	}
 

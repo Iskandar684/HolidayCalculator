@@ -3,17 +3,17 @@ package ru.iskandar.holiday.calculator.service.ejb;
 import java.util.Collection;
 import java.util.EnumSet;
 
-import ru.iskandar.holiday.calculator.service.model.HolidayStatement;
-import ru.iskandar.holiday.calculator.service.model.HolidayStatementEntry;
-import ru.iskandar.holiday.calculator.service.model.LeaveStatement;
-import ru.iskandar.holiday.calculator.service.model.LeaveStatementEntry;
-import ru.iskandar.holiday.calculator.service.model.RecallStatement;
-import ru.iskandar.holiday.calculator.service.model.RecallStatementEntry;
-import ru.iskandar.holiday.calculator.service.model.Statement;
-import ru.iskandar.holiday.calculator.service.model.StatementId;
 import ru.iskandar.holiday.calculator.service.model.StatementNotFoundException;
-import ru.iskandar.holiday.calculator.service.model.StatementStatus;
-import ru.iskandar.holiday.calculator.service.model.StatementType;
+import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatement;
+import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
+import ru.iskandar.holiday.calculator.service.model.statement.LeaveStatement;
+import ru.iskandar.holiday.calculator.service.model.statement.LeaveStatementEntry;
+import ru.iskandar.holiday.calculator.service.model.statement.RecallStatement;
+import ru.iskandar.holiday.calculator.service.model.statement.RecallStatementEntry;
+import ru.iskandar.holiday.calculator.service.model.statement.Statement;
+import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
+import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
+import ru.iskandar.holiday.calculator.service.model.statement.StatementType;
 import ru.iskandar.holiday.calculator.service.model.user.User;
 
 /**

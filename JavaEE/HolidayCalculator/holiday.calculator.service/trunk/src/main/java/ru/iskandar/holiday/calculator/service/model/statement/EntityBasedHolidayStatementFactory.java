@@ -1,10 +1,10 @@
-package ru.iskandar.holiday.calculator.service.model;
+package ru.iskandar.holiday.calculator.service.model.statement;
 
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
-import ru.iskandar.holiday.calculator.service.entities.LeaveStatementEntity;
+import ru.iskandar.holiday.calculator.service.entities.HolidayStatementEntity;
 import ru.iskandar.holiday.calculator.service.entities.UserEntity;
 import ru.iskandar.holiday.calculator.service.model.user.EntityBasedUserFactory;
 import ru.iskandar.holiday.calculator.service.model.user.User;
@@ -12,16 +12,16 @@ import ru.iskandar.holiday.calculator.service.model.user.User;
 /**
  *
  */
-public class EntityBasedLeaveStatementFactory extends LeaveStatementFactory {
+public class EntityBasedHolidayStatementFactory extends HolidayStatementFactory {
 
-	private final LeaveStatementEntity _entity;
+	private final HolidayStatementEntity _entity;
 
 	/**
 	 * Конструктор
 	 */
-	public EntityBasedLeaveStatementFactory(LeaveStatementEntity aEntity) {
-		Objects.requireNonNull(aEntity);
-		_entity = aEntity;
+	public EntityBasedHolidayStatementFactory(HolidayStatementEntity aHolidayStatementJPA) {
+		Objects.requireNonNull(aHolidayStatementJPA);
+		_entity = aHolidayStatementJPA;
 	}
 
 	/**

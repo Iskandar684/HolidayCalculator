@@ -8,7 +8,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorEvent;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorModelListener;
-import ru.iskandar.holiday.calculator.service.model.Statement;
+import ru.iskandar.holiday.calculator.service.model.statement.Statement;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.statement.IStatementsProvider;
 

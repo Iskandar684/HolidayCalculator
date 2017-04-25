@@ -18,7 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import ru.iskandar.holiday.calculator.service.model.StatementStatus;
+import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
 
 /**
  * Сущность заявления на отпуск

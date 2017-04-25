@@ -19,4 +19,5 @@ Export-Package: org.jboss.naming.remote.client,
  ru.iskandar.holiday.calculator.service.ejb,
  ru.iskandar.holiday.calculator.service.model,
  ru.iskandar.holiday.calculator.service.model.permissions,
+ ru.iskandar.holiday.calculator.service.model.statement,
  ru.iskandar.holiday.calculator.service.model.user

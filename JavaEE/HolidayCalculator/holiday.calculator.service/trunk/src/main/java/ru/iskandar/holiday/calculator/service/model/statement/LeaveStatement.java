@@ -1,4 +1,4 @@
-package ru.iskandar.holiday.calculator.service.model;
+package ru.iskandar.holiday.calculator.service.model.statement;
 
 import java.util.Date;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package ru.iskandar.holiday.calculator.service.model;
+package ru.iskandar.holiday.calculator.service.model.statement;
 
 import java.util.Collections;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class LeaveStatementEntry extends StatementEntry {
 	 * @param aAuthor
 	 *            автор заявления
 	 */
-	protected LeaveStatementEntry(User aAuthor, Set<Date> aLeaveDates) {
+	public LeaveStatementEntry(User aAuthor, Set<Date> aLeaveDates) {
 		super(aAuthor);
 		Objects.requireNonNull(aLeaveDates);
 		_leaveDates.addAll(aLeaveDates);

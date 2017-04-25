@@ -2,7 +2,7 @@ package ru.iskandar.holiday.calculator.ui.statement;
 
 import java.util.Collection;
 
-import ru.iskandar.holiday.calculator.service.model.Statement;
+import ru.iskandar.holiday.calculator.service.model.statement.Statement;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider;
 
 /**

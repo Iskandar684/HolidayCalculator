@@ -1,6 +1,7 @@
 package ru.iskandar.holiday.calculator.service.model;
 
 import ru.iskandar.holiday.calculator.service.ejb.HolidayCalculatorException;
+import ru.iskandar.holiday.calculator.service.model.statement.Statement;
 
 /**
  * Исключение для случая, когда заявление уже было рассмотрено

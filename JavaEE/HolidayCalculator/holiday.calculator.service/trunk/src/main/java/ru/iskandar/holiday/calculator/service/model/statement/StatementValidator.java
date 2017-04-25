@@ -1,8 +1,10 @@
-package ru.iskandar.holiday.calculator.service.model;
+package ru.iskandar.holiday.calculator.service.model.statement;
 
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
+
+import ru.iskandar.holiday.calculator.service.model.InvalidStatementException;
 
 /**
  * Валидатор правильности заполнения заявления

@@ -16,7 +16,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.part.EditorPart;
@@ -28,6 +32,8 @@ import ru.iskandar.holiday.calculator.service.model.TakeHolidayStatementBuilder;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.Messages;
 import ru.iskandar.holiday.calculator.ui.Utils;
+import ru.iskandar.holiday.calculator.ui.outgoing.OutgoingStatementsEditor;
+import ru.iskandar.holiday.calculator.ui.outgoing.OutgoingStatementsEditorInput;
 
 /** Редактор подачи заявления на отгул */
 public class TakeHolidayEditor extends EditorPart {
@@ -99,6 +105,26 @@ public class TakeHolidayEditor extends EditorPart {
 			}
 		}
 
+	}
+
+	/**
+	 *
+	 */
+	private class LinkSelectionHandler extends HyperlinkAdapter {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void linkActivated(HyperlinkEvent aE) {
+			try {
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(
+						new OutgoingStatementsEditorInput(_modelProvider), OutgoingStatementsEditor.EDITOR_ID, true,
+						IWorkbenchPage.MATCH_ID);
+			} catch (PartInitException e) {
+				throw new RuntimeException("Ошибка открытия формы подачи заявления на отгул", e);
+			}
+		}
 	}
 
 	/**
@@ -208,6 +234,7 @@ public class TakeHolidayEditor extends EditorPart {
 		String daysAsStr = String.format("(%s)", days);
 		Hyperlink link = _toolkit.createHyperlink(main, daysAsStr, SWT.NONE);
 		link.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+		link.addHyperlinkListener(new LinkSelectionHandler());
 
 		Button byOwnBt = _toolkit.createButton(main, Messages.getHolidayByOwn, SWT.RADIO);
 		byOwnBt.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, columns, 1));

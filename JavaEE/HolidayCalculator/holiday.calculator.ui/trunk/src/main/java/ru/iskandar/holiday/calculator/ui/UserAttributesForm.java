@@ -152,7 +152,7 @@ public class UserAttributesForm extends Composite {
 
 		_outLCLink = _formToolkit.createHyperlink(main, Messages.EMPTY, SWT.NONE);
 		_outLCLink.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-		_outHQLink.addHyperlinkListener(_linkSelectionHandler);
+		_outLCLink.addHyperlinkListener(_linkSelectionHandler);
 
 		return main;
 	}

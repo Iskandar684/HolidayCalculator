@@ -1,32 +1,32 @@
-package ru.iskandar.holiday.calculator.service.entities;
+package ru.iskandar.holiday.calculator.service.model;
 
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
-import ru.iskandar.holiday.calculator.service.model.StatementId;
-import ru.iskandar.holiday.calculator.service.model.StatementStatus;
+import ru.iskandar.holiday.calculator.service.model.user.User;
 
 /**
- * Фабрика создания сущности заявления на отгул
+ * Фабрика заявления на отзыв
  */
-public abstract class HolidayStatementEntityFactory {
+public abstract class RecallStatementFactory {
 
 	/**
-	 * Создает заявление на отгул
+	 * Создает заявление на отзыв
 	 *
-	 * @return заявление на отгул
+	 * @return заявление на отзыв
 	 */
-	public HolidayStatementEntity create() {
+	public RecallStatement create() {
 		Set<Date> days = getDays();
 		StatementId id = getId();
 		StatementStatus status = getStatus();
-		UserEntity author = getAuthor();
+		User author = getAuthor();
 		Date createDate = getCreateDate();
-		UserEntity consider = getConsider();
+		User consider = getConsider();
 		Date considerDate = getConsiderDate();
 
 		Objects.requireNonNull(days);
+		Objects.requireNonNull(id);
 		Objects.requireNonNull(status);
 		Objects.requireNonNull(author);
 		Objects.requireNonNull(createDate);
@@ -36,15 +36,13 @@ public abstract class HolidayStatementEntityFactory {
 			Objects.requireNonNull(considerDate);
 		}
 
-		HolidayStatementEntity statement = new HolidayStatementEntity();
-		// У несохраненных в БД сущностей первичный ключ должен быть null
-		statement.setUuid(id != null ? id.getUUID() : null);
-		statement.setDays(days);
-		statement.setAuthor(author);
-		statement.setConsider(consider);
-		statement.setConsiderDate(considerDate);
-		statement.setStatus(status);
-		statement.setCreateDate(createDate);
+		RecallStatementEntry entry = new RecallStatementEntry(days, author);
+		entry.setConsider(consider);
+		entry.setConsiderDate(considerDate);
+		entry.setStatus(status);
+		entry.setCreateDate(createDate);
+
+		RecallStatement statement = new RecallStatement(id, entry);
 		return statement;
 	}
 
@@ -66,7 +64,7 @@ public abstract class HolidayStatementEntityFactory {
 	/**
 	 * @return the author
 	 */
-	protected abstract UserEntity getAuthor();
+	protected abstract User getAuthor();
 
 	/**
 	 * @return the createDate
@@ -76,7 +74,7 @@ public abstract class HolidayStatementEntityFactory {
 	/**
 	 * @return the consider
 	 */
-	protected abstract UserEntity getConsider();
+	protected abstract User getConsider();
 
 	/**
 	 * @return the considerDate

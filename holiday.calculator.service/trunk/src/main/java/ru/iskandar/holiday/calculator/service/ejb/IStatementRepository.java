@@ -76,6 +76,24 @@ public interface IStatementRepository {
 	public Collection<HolidayStatement> getHolidayStatementsByStatus(EnumSet<StatementStatus> aStatuses);
 
 	/**
+	 * Возвращает заявления на отпуск с указанными статусами
+	 *
+	 * @param aStatuses
+	 *            статусы; не может быть {@code null} или пустым
+	 * @return заявления с указанными статусами
+	 */
+	public Collection<LeaveStatement> getLeaveStatementsByStatus(EnumSet<StatementStatus> aStatuses);
+
+	/**
+	 * Возвращает заявления на отзыв с указанными статусами
+	 *
+	 * @param aStatuses
+	 *            статусы; не может быть {@code null} или пустым
+	 * @return заявления с указанными статусами
+	 */
+	public Collection<RecallStatement> getRecallStatementsByStatus(EnumSet<StatementStatus> aStatuses);
+
+	/**
 	 * Возвращает заявления на отгул по идентификатору заявления
 	 *
 	 * @param aId

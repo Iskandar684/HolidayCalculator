@@ -33,7 +33,7 @@ public class StatementId implements Serializable {
 	/**
 	 * @return the uuid
 	 */
-	public UUID getUuid() {
+	public UUID getUUID() {
 		return _uuid;
 	}
 

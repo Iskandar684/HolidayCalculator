@@ -8,16 +8,16 @@ import ru.iskandar.holiday.calculator.service.model.StatementId;
 import ru.iskandar.holiday.calculator.service.model.StatementStatus;
 
 /**
- * Фабрика создания сущности заявления на отгул
+ * Фабрика создания сущности заявления на отзыв
  */
-public abstract class HolidayStatementEntityFactory {
+public abstract class RecallStatementEntityFactory {
 
 	/**
-	 * Создает заявление на отгул
+	 * Создает заявление на отпуск
 	 *
-	 * @return заявление на отгул
+	 * @return заявление на отпуск
 	 */
-	public HolidayStatementEntity create() {
+	public RecallStatementEntity create() {
 		Set<Date> days = getDays();
 		StatementId id = getId();
 		StatementStatus status = getStatus();
@@ -36,7 +36,7 @@ public abstract class HolidayStatementEntityFactory {
 			Objects.requireNonNull(considerDate);
 		}
 
-		HolidayStatementEntity statement = new HolidayStatementEntity();
+		RecallStatementEntity statement = new RecallStatementEntity();
 		// У несохраненных в БД сущностей первичный ключ должен быть null
 		statement.setUuid(id != null ? id.getUUID() : null);
 		statement.setDays(days);

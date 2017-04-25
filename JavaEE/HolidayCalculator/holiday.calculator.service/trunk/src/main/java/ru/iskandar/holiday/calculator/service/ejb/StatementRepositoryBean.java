@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -21,11 +18,21 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import ru.iskandar.holiday.calculator.service.entities.DOBasedHolidayStatementEntityFactory;
+import ru.iskandar.holiday.calculator.service.entities.DOBasedLeaveStatementEntityFactory;
+import ru.iskandar.holiday.calculator.service.entities.DOBasedRecallStatementEntityFactory;
 import ru.iskandar.holiday.calculator.service.entities.EntryBasedHolidayStatementEntityFactory;
+import ru.iskandar.holiday.calculator.service.entities.EntryBasedLeaveStatementEntityFactory;
+import ru.iskandar.holiday.calculator.service.entities.EntryBasedRecallStatementEntityFactory;
 import ru.iskandar.holiday.calculator.service.entities.HolidayStatementEntity;
 import ru.iskandar.holiday.calculator.service.entities.HolidayStatementEntity_;
+import ru.iskandar.holiday.calculator.service.entities.LeaveStatementEntity;
+import ru.iskandar.holiday.calculator.service.entities.LeaveStatementEntity_;
+import ru.iskandar.holiday.calculator.service.entities.RecallStatementEntity;
+import ru.iskandar.holiday.calculator.service.entities.RecallStatementEntity_;
 import ru.iskandar.holiday.calculator.service.entities.UserEntity;
 import ru.iskandar.holiday.calculator.service.model.EntityBasedHolidayStatementFactory;
+import ru.iskandar.holiday.calculator.service.model.EntityBasedLeaveStatementFactory;
+import ru.iskandar.holiday.calculator.service.model.EntityBasedRecallStatementFactory;
 import ru.iskandar.holiday.calculator.service.model.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.HolidayStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.LeaveStatement;
@@ -49,9 +56,6 @@ public class StatementRepositoryBean implements IStatementRepository {
 	@PersistenceContext
 	private EntityManager _em;
 
-	// TODO имитация БД
-	private static Map<StatementId, Statement<?>> _statements = new HashMap<>();
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -59,12 +63,9 @@ public class StatementRepositoryBean implements IStatementRepository {
 	public Collection<Statement<?>> getStatementsByAuthor(User aAuthor) {
 		Objects.requireNonNull(aAuthor);
 		Set<Statement<?>> statementsByUser = new HashSet<>();
-		for (Statement<?> st : _statements.values()) {
-			if (st.getAuthor().equals(aAuthor)) {
-				statementsByUser.add(st);
-			}
-		}
 		statementsByUser.addAll(getHolidayStatementsByAuthor(aAuthor));
+		statementsByUser.addAll(getRecallStatementsByAuthor(aAuthor));
+		statementsByUser.addAll(getLeaveStatementsByAuthor(aAuthor));
 		return statementsByUser;
 	}
 
@@ -98,13 +99,24 @@ public class StatementRepositoryBean implements IStatementRepository {
 	 */
 	@Override
 	public Collection<RecallStatement> getRecallStatementsByAuthor(User aAuthor) {
-		Set<RecallStatement> currentUserStatements = new HashSet<>();
-		for (Statement<?> st : _statements.values()) {
-			if (st.getAuthor().equals(aAuthor) && (st instanceof RecallStatement)) {
-				currentUserStatements.add((RecallStatement) st);
-			}
+		Objects.requireNonNull(aAuthor);
+		UserEntity userEntity = _em.find(UserEntity.class, aAuthor.getId().getUUID());
+		if (userEntity == null) {
+			return Collections.emptyList();
 		}
-		return currentUserStatements;
+
+		CriteriaBuilder cb = _em.getCriteriaBuilder();
+		CriteriaQuery<RecallStatementEntity> query = cb.createQuery(RecallStatementEntity.class);
+		Root<RecallStatementEntity> root = query.from(RecallStatementEntity.class);
+		query.where(cb.equal(root.get(RecallStatementEntity_.author), userEntity));
+		Collection<RecallStatementEntity> result = _em.createQuery(query).getResultList();
+
+		List<RecallStatement> statementsByAuthor = new ArrayList<>();
+		for (RecallStatementEntity entity : result) {
+			RecallStatement statement = new EntityBasedRecallStatementFactory(entity).create();
+			statementsByAuthor.add(statement);
+		}
+		return statementsByAuthor;
 	}
 
 	/**
@@ -112,13 +124,24 @@ public class StatementRepositoryBean implements IStatementRepository {
 	 */
 	@Override
 	public Collection<LeaveStatement> getLeaveStatementsByAuthor(User aAuthor) {
-		Set<LeaveStatement> currentUserStatements = new HashSet<>();
-		for (Statement<?> st : _statements.values()) {
-			if (st.getAuthor().equals(aAuthor) && (st instanceof LeaveStatement)) {
-				currentUserStatements.add((LeaveStatement) st);
-			}
+		Objects.requireNonNull(aAuthor);
+		UserEntity userEntity = _em.find(UserEntity.class, aAuthor.getId().getUUID());
+		if (userEntity == null) {
+			return Collections.emptyList();
 		}
-		return currentUserStatements;
+
+		CriteriaBuilder cb = _em.getCriteriaBuilder();
+		CriteriaQuery<LeaveStatementEntity> query = cb.createQuery(LeaveStatementEntity.class);
+		Root<LeaveStatementEntity> root = query.from(LeaveStatementEntity.class);
+		query.where(cb.equal(root.get(LeaveStatementEntity_.author), userEntity));
+		Collection<LeaveStatementEntity> result = _em.createQuery(query).getResultList();
+
+		List<LeaveStatement> statementsByAuthor = new ArrayList<>();
+		for (LeaveStatementEntity entity : result) {
+			LeaveStatement statement = new EntityBasedLeaveStatementFactory(entity).create();
+			statementsByAuthor.add(statement);
+		}
+		return statementsByAuthor;
 	}
 
 	/**
@@ -126,13 +149,11 @@ public class StatementRepositoryBean implements IStatementRepository {
 	 */
 	@Override
 	public Collection<Statement<?>> getStatementsByStatus(EnumSet<StatementStatus> aStatuses) {
+		Objects.requireNonNull(aStatuses);
 		Set<Statement<?>> res = new HashSet<>();
-		for (Statement<?> st : _statements.values()) {
-			if (aStatuses.contains(st.getStatus())) {
-				res.add(st);
-			}
-		}
 		res.addAll(getHolidayStatementsByStatus(aStatuses));
+		res.addAll(getLeaveStatementsByStatus(aStatuses));
+		res.addAll(getRecallStatementsByStatus(aStatuses));
 		return res;
 	}
 
@@ -143,7 +164,7 @@ public class StatementRepositoryBean implements IStatementRepository {
 	public HolidayStatement getHolidayStatement(StatementId aStatementUUID) {
 		Objects.requireNonNull(aStatementUUID);
 
-		HolidayStatementEntity entity = _em.find(HolidayStatementEntity.class, aStatementUUID.getUuid());
+		HolidayStatementEntity entity = _em.find(HolidayStatementEntity.class, aStatementUUID.getUUID());
 		if (entity == null) {
 			return null;
 		}
@@ -155,7 +176,13 @@ public class StatementRepositoryBean implements IStatementRepository {
 	 */
 	@Override
 	public LeaveStatement getLeaveStatement(StatementId aStatementUUID) {
-		return (LeaveStatement) _statements.get(aStatementUUID);
+		Objects.requireNonNull(aStatementUUID);
+
+		LeaveStatementEntity entity = _em.find(LeaveStatementEntity.class, aStatementUUID.getUUID());
+		if (entity == null) {
+			return null;
+		}
+		return new EntityBasedLeaveStatementFactory(entity).create();
 	}
 
 	/**
@@ -163,8 +190,13 @@ public class StatementRepositoryBean implements IStatementRepository {
 	 */
 	@Override
 	public RecallStatement getRecallStatement(StatementId aStatementUUID) {
+		Objects.requireNonNull(aStatementUUID);
 
-		return (RecallStatement) _statements.get(aStatementUUID);
+		RecallStatementEntity entity = _em.find(RecallStatementEntity.class, aStatementUUID.getUUID());
+		if (entity == null) {
+			return null;
+		}
+		return new EntityBasedRecallStatementFactory(entity).create();
 	}
 
 	/**
@@ -186,7 +218,7 @@ public class StatementRepositoryBean implements IStatementRepository {
 			return getRecallStatement(aUUID);
 
 		default:
-			throw new IllegalArgumentException(String.format("Тип заявления не поддерживается", aType));
+			throw new IllegalArgumentException(String.format("Тип заявления %s не поддерживается", aType));
 		}
 	}
 
@@ -198,15 +230,26 @@ public class StatementRepositoryBean implements IStatementRepository {
 		Objects.requireNonNull(aStatement);
 		switch (aStatement.getStatementType()) {
 		case HOLIDAY_STATEMENT:
-			HolidayStatementEntity entity = new DOBasedHolidayStatementEntityFactory((HolidayStatement) aStatement)
+			HolidayStatementEntity holidayEntity = new DOBasedHolidayStatementEntityFactory(
+					(HolidayStatement) aStatement).create();
+			_em.merge(holidayEntity);
+			break;
+
+		case LEAVE_STATEMENT:
+			LeaveStatementEntity leaveEntity = new DOBasedLeaveStatementEntityFactory((LeaveStatement) aStatement)
 					.create();
-			_em.merge(entity);
+			_em.merge(leaveEntity);
+			break;
+
+		case RECALL_STATEMENT:
+			RecallStatementEntity recallEntity = new DOBasedRecallStatementEntityFactory((RecallStatement) aStatement)
+					.create();
+			_em.merge(recallEntity);
 			break;
 
 		default:
 			break;
 		}
-		_statements.put(aStatement.getId(), aStatement);
 	}
 
 	/**
@@ -218,7 +261,6 @@ public class StatementRepositoryBean implements IStatementRepository {
 		HolidayStatementEntity entity = new EntryBasedHolidayStatementEntityFactory(aStatementEntry).create();
 		_em.persist(entity);
 		HolidayStatement statement = new EntityBasedHolidayStatementFactory(entity).create();
-		_statements.put(statement.getId(), statement);
 		return statement;
 	}
 
@@ -227,8 +269,10 @@ public class StatementRepositoryBean implements IStatementRepository {
 	 */
 	@Override
 	public LeaveStatement createLeaveStatement(LeaveStatementEntry aStatementEntry) {
-		LeaveStatement statement = new LeaveStatement(StatementId.from(UUID.randomUUID()), aStatementEntry);
-		_statements.put(statement.getId(), statement);
+		Objects.requireNonNull(aStatementEntry);
+		LeaveStatementEntity entity = new EntryBasedLeaveStatementEntityFactory(aStatementEntry).create();
+		_em.persist(entity);
+		LeaveStatement statement = new EntityBasedLeaveStatementFactory(entity).create();
 		return statement;
 	}
 
@@ -237,8 +281,10 @@ public class StatementRepositoryBean implements IStatementRepository {
 	 */
 	@Override
 	public RecallStatement createRecallStatement(RecallStatementEntry aStatementEntry) {
-		RecallStatement statement = new RecallStatement(StatementId.from(UUID.randomUUID()), aStatementEntry);
-		_statements.put(statement.getId(), statement);
+		Objects.requireNonNull(aStatementEntry);
+		RecallStatementEntity entity = new EntryBasedRecallStatementEntityFactory(aStatementEntry).create();
+		_em.persist(entity);
+		RecallStatement statement = new EntityBasedRecallStatementFactory(entity).create();
 		return statement;
 	}
 
@@ -259,6 +305,50 @@ public class StatementRepositoryBean implements IStatementRepository {
 		List<HolidayStatement> statementsByStatuses = new ArrayList<>();
 		for (HolidayStatementEntity entity : result) {
 			HolidayStatement statement = new EntityBasedHolidayStatementFactory(entity).create();
+			statementsByStatuses.add(statement);
+		}
+		return statementsByStatuses;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<LeaveStatement> getLeaveStatementsByStatus(EnumSet<StatementStatus> aStatuses) {
+		Objects.requireNonNull(aStatuses);
+
+		CriteriaBuilder cb = _em.getCriteriaBuilder();
+		CriteriaQuery<LeaveStatementEntity> query = cb.createQuery(LeaveStatementEntity.class);
+		Root<LeaveStatementEntity> root = query.from(LeaveStatementEntity.class);
+
+		query.where(root.get(LeaveStatementEntity_.status).in(aStatuses));
+		Collection<LeaveStatementEntity> result = _em.createQuery(query).getResultList();
+
+		List<LeaveStatement> statementsByStatuses = new ArrayList<>();
+		for (LeaveStatementEntity entity : result) {
+			LeaveStatement statement = new EntityBasedLeaveStatementFactory(entity).create();
+			statementsByStatuses.add(statement);
+		}
+		return statementsByStatuses;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<RecallStatement> getRecallStatementsByStatus(EnumSet<StatementStatus> aStatuses) {
+		Objects.requireNonNull(aStatuses);
+
+		CriteriaBuilder cb = _em.getCriteriaBuilder();
+		CriteriaQuery<RecallStatementEntity> query = cb.createQuery(RecallStatementEntity.class);
+		Root<RecallStatementEntity> root = query.from(RecallStatementEntity.class);
+
+		query.where(root.get(RecallStatementEntity_.status).in(aStatuses));
+		Collection<RecallStatementEntity> result = _em.createQuery(query).getResultList();
+
+		List<RecallStatement> statementsByStatuses = new ArrayList<>();
+		for (RecallStatementEntity entity : result) {
+			RecallStatement statement = new EntityBasedRecallStatementFactory(entity).create();
 			statementsByStatuses.add(statement);
 		}
 		return statementsByStatuses;

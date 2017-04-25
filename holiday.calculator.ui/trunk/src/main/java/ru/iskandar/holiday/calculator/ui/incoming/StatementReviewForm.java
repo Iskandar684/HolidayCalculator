@@ -28,13 +28,13 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
-import ru.iskandar.holiday.calculator.service.model.HolidayStatement;
-import ru.iskandar.holiday.calculator.service.model.LeaveStatement;
-import ru.iskandar.holiday.calculator.service.model.RecallStatement;
 import ru.iskandar.holiday.calculator.service.model.ServiceLookupException;
-import ru.iskandar.holiday.calculator.service.model.Statement;
 import ru.iskandar.holiday.calculator.service.model.StatementAlreadyConsideredException;
 import ru.iskandar.holiday.calculator.service.model.permissions.PermissionDeniedException;
+import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatement;
+import ru.iskandar.holiday.calculator.service.model.statement.LeaveStatement;
+import ru.iskandar.holiday.calculator.service.model.statement.RecallStatement;
+import ru.iskandar.holiday.calculator.service.model.statement.Statement;
 import ru.iskandar.holiday.calculator.ui.Activator;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;

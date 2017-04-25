@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
-import ru.iskandar.holiday.calculator.service.model.StatementId;
-import ru.iskandar.holiday.calculator.service.model.StatementStatus;
+import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
+import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
 
 /**
  * Фабрика создания сущности заявления на отпуск

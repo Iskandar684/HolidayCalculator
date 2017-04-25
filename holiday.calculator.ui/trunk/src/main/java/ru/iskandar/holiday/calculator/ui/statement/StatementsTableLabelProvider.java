@@ -11,12 +11,12 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import ru.iskandar.holiday.calculator.service.model.HolidayStatement;
-import ru.iskandar.holiday.calculator.service.model.LeaveStatement;
-import ru.iskandar.holiday.calculator.service.model.RecallStatement;
-import ru.iskandar.holiday.calculator.service.model.Statement;
-import ru.iskandar.holiday.calculator.service.model.StatementStatus;
-import ru.iskandar.holiday.calculator.service.model.StatementType;
+import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatement;
+import ru.iskandar.holiday.calculator.service.model.statement.LeaveStatement;
+import ru.iskandar.holiday.calculator.service.model.statement.RecallStatement;
+import ru.iskandar.holiday.calculator.service.model.statement.Statement;
+import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
+import ru.iskandar.holiday.calculator.service.model.statement.StatementType;
 import ru.iskandar.holiday.calculator.service.model.user.User;
 import ru.iskandar.holiday.calculator.ui.Messages;
 import ru.iskandar.holiday.calculator.ui.statement.StatementsTableCreator.StatementsTableColumn;

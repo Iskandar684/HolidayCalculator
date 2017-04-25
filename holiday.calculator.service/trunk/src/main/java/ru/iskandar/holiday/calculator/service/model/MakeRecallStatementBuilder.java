@@ -8,6 +8,9 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import ru.iskandar.holiday.calculator.service.model.statement.LeaveStatement;
+import ru.iskandar.holiday.calculator.service.model.statement.RecallStatementEntry;
+
 /**
  * Формирователь заявления на отзыв
  */

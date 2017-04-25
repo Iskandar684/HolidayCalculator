@@ -4,8 +4,8 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 
-import ru.iskandar.holiday.calculator.service.model.HolidayStatementType;
 import ru.iskandar.holiday.calculator.service.model.TakeHolidayStatementBuilder;
+import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementType;
 
 /**
  * Контроллер кнопки "За счет отгулов"

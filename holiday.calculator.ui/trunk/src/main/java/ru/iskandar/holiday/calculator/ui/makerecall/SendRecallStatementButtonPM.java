@@ -13,8 +13,8 @@ import org.eclipse.ui.statushandlers.StatusManager;
 
 import ru.iskandar.holiday.calculator.service.model.MakeRecallStatementBuilder;
 import ru.iskandar.holiday.calculator.service.model.ServiceLookupException;
-import ru.iskandar.holiday.calculator.service.model.Statement;
 import ru.iskandar.holiday.calculator.service.model.StatementAlreadySendedException;
+import ru.iskandar.holiday.calculator.service.model.statement.Statement;
 import ru.iskandar.holiday.calculator.ui.Activator;
 import ru.iskandar.holiday.calculator.ui.Messages;
 

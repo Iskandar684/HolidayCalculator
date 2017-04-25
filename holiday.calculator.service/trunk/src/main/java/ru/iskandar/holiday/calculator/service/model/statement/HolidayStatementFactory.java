@@ -1,4 +1,4 @@
-package ru.iskandar.holiday.calculator.service.model;
+package ru.iskandar.holiday.calculator.service.model.statement;
 
 import java.util.Date;
 import java.util.Objects;
@@ -7,16 +7,16 @@ import java.util.Set;
 import ru.iskandar.holiday.calculator.service.model.user.User;
 
 /**
- * Фабрика заявления на отзыв
+ * Фабрика заявления на отгул
  */
-public abstract class RecallStatementFactory {
+public abstract class HolidayStatementFactory {
 
 	/**
-	 * Создает заявление на отзыв
+	 * Создает заявление на отгул
 	 *
-	 * @return заявление на отзыв
+	 * @return заявление на отгул
 	 */
-	public RecallStatement create() {
+	public HolidayStatement create() {
 		Set<Date> days = getDays();
 		StatementId id = getId();
 		StatementStatus status = getStatus();
@@ -36,13 +36,13 @@ public abstract class RecallStatementFactory {
 			Objects.requireNonNull(considerDate);
 		}
 
-		RecallStatementEntry entry = new RecallStatementEntry(days, author);
+		HolidayStatementEntry entry = new HolidayStatementEntry(days, author);
 		entry.setConsider(consider);
 		entry.setConsiderDate(considerDate);
 		entry.setStatus(status);
 		entry.setCreateDate(createDate);
 
-		RecallStatement statement = new RecallStatement(id, entry);
+		HolidayStatement statement = new HolidayStatement(id, entry);
 		return statement;
 	}
 

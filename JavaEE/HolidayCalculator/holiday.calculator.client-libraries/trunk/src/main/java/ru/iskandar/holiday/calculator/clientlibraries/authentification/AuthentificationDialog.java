@@ -9,6 +9,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -61,6 +62,7 @@ public class AuthentificationDialog extends TitleAreaDialog {
 			@Override
 			public void modifyText(ModifyEvent aE) {
 				_model.setUser(loginText.getText());
+				updateOkButton();
 			}
 		});
 
@@ -81,10 +83,35 @@ public class AuthentificationDialog extends TitleAreaDialog {
 			@Override
 			public void modifyText(ModifyEvent aE) {
 				_model.setPassword(passwordText.getText());
+				updateOkButton();
 			}
 		});
-
+		updateOkButton();
 		return main;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void createButtonsForButtonBar(Composite aParent) {
+		super.createButtonsForButtonBar(aParent);
+		updateOkButton();
+	}
+
+	/**
+	 * Обновляет состояние кнопки OK
+	 */
+	private void updateOkButton() {
+		Button okButton = getButton(OK);
+		if (okButton != null) {
+			okButton.setEnabled(isOk());
+		}
+	}
+
+	private boolean isOk() {
+		return (_model.getPassword() != null) && !_model.getPassword().isEmpty() && (_model.getUser() != null)
+				&& !_model.getUser().isEmpty();
 	}
 
 }

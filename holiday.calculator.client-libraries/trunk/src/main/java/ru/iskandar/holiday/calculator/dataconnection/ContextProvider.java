@@ -7,6 +7,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import ru.iskandar.holiday.calculator.clientlibraries.authentification.ConnectionParams;
+
 /**
  * Поставщик контекста
  */

@@ -1,4 +1,4 @@
-package ru.iskandar.holiday.calculator.dataconnection;
+package ru.iskandar.holiday.calculator.clientlibraries.authentification;
 
 /**
  * Поставщик аргументов программы
@@ -23,6 +23,14 @@ public class ConnectionParams {
 
 	public String getPassword() {
 		return System.getProperty("password");
+	}
+
+	String setUser(String aUser) {
+		return System.setProperty("user", aUser);
+	}
+
+	String setPassword(String aPassord) {
+		return System.setProperty("password", aPassord);
 	}
 
 	public static ConnectionParams getInstance() {

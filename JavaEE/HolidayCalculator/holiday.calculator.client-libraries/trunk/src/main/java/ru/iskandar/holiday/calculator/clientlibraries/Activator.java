@@ -1,7 +1,13 @@
 package ru.iskandar.holiday.calculator.clientlibraries;
 
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+
+import ru.iskandar.holiday.calculator.clientlibraries.authentification.AuthentificationDialog;
+import ru.iskandar.holiday.calculator.clientlibraries.authentification.ConnectionParams;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -13,29 +19,34 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
-	
+
 	/**
 	 * The constructor
 	 */
 	public Activator() {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+	/**
+	 * {@inheritDoc}
 	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
+	@Override
+	public void start(BundleContext aContext) throws Exception {
+		super.start(aContext);
 		plugin = this;
+		ConnectionParams params = ConnectionParams.getInstance();
+		AuthentificationDialog dialog = new AuthentificationDialog(Display.getDefault().getActiveShell(), params);
+		if (IDialogConstants.OK_ID != dialog.open()) {
+			PlatformUI.getWorkbench().close();
+		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+	/**
+	 * {@inheritDoc}
 	 */
-	public void stop(BundleContext context) throws Exception {
+	@Override
+	public void stop(BundleContext aContext) throws Exception {
 		plugin = null;
-		super.stop(context);
+		super.stop(aContext);
 	}
 
 	/**

@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import ru.iskandar.holiday.calculator.clientlibraries.Activator;
+import ru.iskandar.holiday.calculator.clientlibraries.authentification.ConnectionParams;
 import ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorRemote;
 import ru.iskandar.holiday.calculator.service.model.ClientId;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;

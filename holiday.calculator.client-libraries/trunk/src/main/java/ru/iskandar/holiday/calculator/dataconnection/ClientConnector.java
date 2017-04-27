@@ -62,7 +62,8 @@ public class ClientConnector {
 		if (params.isEmpty()) {
 			AuthentificationDialog dialog = new AuthentificationDialog(Display.getDefault().getActiveShell(), params);
 			if (IDialogConstants.OK_ID != dialog.open()) {
-				PlatformUI.getWorkbench().close();
+				cancelAuthenticate();
+				return;
 			}
 		}
 		try {
@@ -74,9 +75,16 @@ public class ClientConnector {
 			if (IDialogConstants.OK_ID == dialog.open()) {
 				authenticate();
 			} else {
-				PlatformUI.getWorkbench().close();
+				cancelAuthenticate();
+				return;
 			}
 		}
+	}
+
+	private void cancelAuthenticate() {
+		PlatformUI.getWorkbench().close();
+		StatusManager.getManager()
+				.handle(new Status(IStatus.WARNING, Activator.PLUGIN_ID, "Пользователь отменил аутентификацию"));
 	}
 
 	/**

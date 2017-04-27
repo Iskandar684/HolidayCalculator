@@ -23,6 +23,7 @@ import ru.iskandar.holiday.calculator.service.entities.UserEntity;
 import ru.iskandar.holiday.calculator.service.entities.UserEntity_;
 import ru.iskandar.holiday.calculator.service.model.user.EntityBasedUserFactory;
 import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.service.model.user.UserByLoginNotFoundException;
 
 /**
  * Сервис работы с пользователями
@@ -69,7 +70,7 @@ public class UserServiceBean implements IUserServiceLocal {
 		try {
 			entity = q.getSingleResult();
 		} catch (NoResultException e) {
-			throw new IllegalStateException(String.format("Пользователь с логином %s не найден", login));
+			throw new UserByLoginNotFoundException(String.format("Пользователь с логином %s не найден", login));
 		}
 		User user = new EntityBasedUserFactory(entity).create();
 

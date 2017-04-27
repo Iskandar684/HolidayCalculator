@@ -129,8 +129,7 @@ public class AuthentificationDialog extends TitleAreaDialog {
 	}
 
 	private boolean isOk() {
-		return (_model.getPassword() != null) && !_model.getPassword().isEmpty() && (_model.getUser() != null)
-				&& !_model.getUser().isEmpty() && (_model.getServerHost() != null) && !_model.getServerHost().isEmpty();
+		return !_model.isEmpty();
 	}
 
 }

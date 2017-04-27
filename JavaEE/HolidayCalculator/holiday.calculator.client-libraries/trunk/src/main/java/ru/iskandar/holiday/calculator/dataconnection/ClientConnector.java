@@ -7,9 +7,13 @@ import javax.naming.NamingException;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.statushandlers.StatusManager;
 
 import ru.iskandar.holiday.calculator.clientlibraries.Activator;
+import ru.iskandar.holiday.calculator.clientlibraries.authentification.AuthentificationDialog;
 import ru.iskandar.holiday.calculator.clientlibraries.authentification.ConnectionParams;
 import ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorRemote;
 import ru.iskandar.holiday.calculator.service.model.ClientId;
@@ -28,6 +32,52 @@ public class ClientConnector {
 
 	/** Идентификатор клиента */
 	private final ClientId _clientId = ClientId.fromUUID(UUID.randomUUID());
+
+	private void checkConnection(ConnectionParams aParams) throws ConnectionException {
+		InitialContext ctx;
+		try {
+			ctx = ContextProvider.getInstance().getInitialContext(aParams);
+		} catch (NamingException e) {
+			throw new ConnectionException("Ошибка создания контекста", e);
+		} catch (InvalidConnectionParamsException e) {
+			throw new ConnectionException("Указаны невалидные агрументы программы", e);
+		}
+		Object obj;
+		try {
+			obj = ctx.lookup(IHolidayCalculatorRemote.JNDI_NAME);
+		} catch (NamingException e) {
+			throw new ConnectionException("Ошибка получения сервиса учета отгулов", e);
+		}
+		IHolidayCalculatorRemote remoteService = (IHolidayCalculatorRemote) obj;
+		try {
+			remoteService.checkAuthentification();
+		} catch (Exception e) {
+			throw new ConnectionException("Аутентификация не пройдена", e);
+		}
+	}
+
+	public void authenticate() {
+		ClientConnector connector = new ClientConnector();
+		ConnectionParams params = ConnectionParams.getInstance();
+		if (params.isEmpty()) {
+			AuthentificationDialog dialog = new AuthentificationDialog(Display.getDefault().getActiveShell(), params);
+			if (IDialogConstants.OK_ID != dialog.open()) {
+				PlatformUI.getWorkbench().close();
+			}
+		}
+		try {
+			connector.checkConnection(params);
+		} catch (Exception e) {
+			StatusManager.getManager()
+					.handle(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Ошибка аутентификации", e));
+			AuthentificationDialog dialog = new AuthentificationDialog(Display.getDefault().getActiveShell(), params);
+			if (IDialogConstants.OK_ID == dialog.open()) {
+				authenticate();
+			} else {
+				PlatformUI.getWorkbench().close();
+			}
+		}
+	}
 
 	/**
 	 * Загружает модель
@@ -53,10 +103,10 @@ public class ClientConnector {
 		} catch (NamingException e) {
 			throw new ConnectionException("Ошибка получения сервиса учета отгулов", e);
 		}
-		IHolidayCalculatorRemote helloWorldRemote = (IHolidayCalculatorRemote) obj;
+		IHolidayCalculatorRemote remote = (IHolidayCalculatorRemote) obj;
 		HolidayCalculatorModel model;
 		try {
-			model = helloWorldRemote.loadHolidayCalculatorModel();
+			model = remote.loadHolidayCalculatorModel();
 		} catch (HolidayCalculatorModelLoadException e) {
 			throw new ConnectionException("Ошибка создания модели учета отгулов", e);
 		}

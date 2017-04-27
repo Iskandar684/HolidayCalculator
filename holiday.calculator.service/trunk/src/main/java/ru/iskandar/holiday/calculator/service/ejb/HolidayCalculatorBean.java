@@ -38,6 +38,7 @@ import ru.iskandar.holiday.calculator.service.model.statement.StatementEntry;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementValidator;
 import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.service.model.user.UserByLoginNotFoundException;
 import ru.iskandar.holiday.calculator.service.utils.DateUtils;
 
 /**
@@ -433,6 +434,18 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	public Collection<Statement<?>> getAllStatements(User aUser) {
 		Objects.requireNonNull(aUser);
 		return getStatementsByUser(aUser);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void checkAuthentification() throws UserByLoginNotFoundException {
+		User user = _userService.getCurrentUser();
+		if (user == null) {
+			throw new UserByLoginNotFoundException("Описание текущего пользователя не найдено");
+		}
+
 	}
 
 }

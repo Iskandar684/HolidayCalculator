@@ -41,4 +41,10 @@ public class ConnectionParams {
 		return INSTANCE;
 	}
 
+	public boolean isEmpty() {
+		return (getPassword() == null) || getPassword().isEmpty() || (getUser() == null) || getUser().isEmpty()
+				|| (getServerHost() == null) || getServerHost().isEmpty();
+
+	}
+
 }

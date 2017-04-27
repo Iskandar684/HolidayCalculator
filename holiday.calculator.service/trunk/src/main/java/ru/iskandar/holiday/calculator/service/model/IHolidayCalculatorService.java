@@ -16,6 +16,7 @@ import ru.iskandar.holiday.calculator.service.model.statement.RecallStatementEnt
 import ru.iskandar.holiday.calculator.service.model.statement.Statement;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
 import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.service.model.user.UserByLoginNotFoundException;
 
 /**
  * Сервис учета отгулов
@@ -212,5 +213,13 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 *             если aUser {@code null}
 	 */
 	public Collection<Statement<?>> getAllStatements(User aUser);
+
+	/**
+	 * Проверяет аутентификацию текущего пользователя
+	 *
+	 * @throws UserByLoginNotFoundException
+	 *             если описание пользователя для вызывающего не найдено
+	 */
+	public void checkAuthentification() throws UserByLoginNotFoundException;
 
 }

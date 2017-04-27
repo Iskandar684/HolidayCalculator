@@ -3,6 +3,8 @@ package ru.iskandar.holiday.calculator.ui;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
+import ru.iskandar.holiday.calculator.dataconnection.ClientConnector;
+
 public class Activator implements BundleActivator {
 
 	/** Идентификатор плагина */
@@ -20,6 +22,7 @@ public class Activator implements BundleActivator {
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
+		new ClientConnector().authenticate();
 	}
 
 	/**

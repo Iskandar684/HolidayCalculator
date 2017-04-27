@@ -47,6 +47,25 @@ public class AuthentificationDialog extends TitleAreaDialog {
 		mainLayout.marginWidth = marginWidth;
 		main.setLayout(mainLayout);
 
+		Label serverLabel = new Label(main, SWT.NONE);
+		serverLabel.setText(AuthentificationDialogMessages.serverLabel);
+		final Text serverText = new Text(main, SWT.NONE);
+		serverText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		String server = _model.getServerHost();
+		server = server != null ? server : "";
+		serverText.setText(server);
+		serverText.addModifyListener(new ModifyListener() {
+
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public void modifyText(ModifyEvent aE) {
+				_model.setServer(serverText.getText());
+				updateOkButton();
+			}
+		});
+
 		Label loginLabel = new Label(main, SWT.NONE);
 		loginLabel.setText(AuthentificationDialogMessages.loginLabel);
 		final Text loginText = new Text(main, SWT.NONE);
@@ -111,7 +130,7 @@ public class AuthentificationDialog extends TitleAreaDialog {
 
 	private boolean isOk() {
 		return (_model.getPassword() != null) && !_model.getPassword().isEmpty() && (_model.getUser() != null)
-				&& !_model.getUser().isEmpty();
+				&& !_model.getUser().isEmpty() && (_model.getServerHost() != null) && !_model.getServerHost().isEmpty();
 	}
 
 }

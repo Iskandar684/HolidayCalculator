@@ -17,6 +17,10 @@ public class ConnectionParams {
 		return System.getProperty("server");
 	}
 
+	String setServer(String aServer) {
+		return System.setProperty("server", aServer);
+	}
+
 	public String getUser() {
 		return System.getProperty("user");
 	}

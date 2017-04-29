@@ -29,7 +29,6 @@ import ru.iskandar.holiday.calculator.service.entities.LeaveStatementEntity;
 import ru.iskandar.holiday.calculator.service.entities.LeaveStatementEntity_;
 import ru.iskandar.holiday.calculator.service.entities.RecallStatementEntity;
 import ru.iskandar.holiday.calculator.service.entities.RecallStatementEntity_;
-import ru.iskandar.holiday.calculator.service.entities.UserEntity;
 import ru.iskandar.holiday.calculator.service.model.statement.EntityBasedHolidayStatementFactory;
 import ru.iskandar.holiday.calculator.service.model.statement.EntityBasedLeaveStatementFactory;
 import ru.iskandar.holiday.calculator.service.model.statement.EntityBasedRecallStatementFactory;
@@ -44,6 +43,7 @@ import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementType;
 import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.service.model.user.UserEntity;
 
 /**
  * Бин репозитория заявлений

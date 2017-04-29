@@ -1,9 +1,7 @@
-package ru.iskandar.holiday.calculator.service.entities;
+package ru.iskandar.holiday.calculator.service.model.user;
 
 import java.util.Date;
 import java.util.Objects;
-
-import ru.iskandar.holiday.calculator.service.model.user.UserId;
 
 /**
  *
@@ -13,7 +11,7 @@ public abstract class UserEntityFactory {
 	public UserEntity create() {
 
 		UserId id = getId();
-		Objects.requireNonNull(id);
+
 		String firstName = getFirstName();
 		Objects.requireNonNull(firstName);
 		String lastName = getLastName();
@@ -34,7 +32,8 @@ public abstract class UserEntityFactory {
 		entity.setLastName(lastName);
 		entity.setLogin(login);
 		entity.setPatronymic(patronymic);
-		entity.setUuid(id.getUUID());
+		// У создаваемого адреса id = null
+		entity.setUuid(id != null ? id.getUUID() : null);
 		return entity;
 	}
 

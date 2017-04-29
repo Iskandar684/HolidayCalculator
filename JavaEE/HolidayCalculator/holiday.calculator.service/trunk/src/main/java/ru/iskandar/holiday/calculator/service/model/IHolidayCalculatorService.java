@@ -3,9 +3,11 @@ package ru.iskandar.holiday.calculator.service.model;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.Set;
 
 import javax.ejb.EJBAccessException;
 
+import ru.iskandar.holiday.calculator.service.ejb.PermissionId;
 import ru.iskandar.holiday.calculator.service.model.permissions.IHolidayCalculatorModelPermissions;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
@@ -15,7 +17,10 @@ import ru.iskandar.holiday.calculator.service.model.statement.RecallStatement;
 import ru.iskandar.holiday.calculator.service.model.statement.RecallStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.statement.Statement;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
+import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
+import ru.iskandar.holiday.calculator.service.model.user.NewUserNotValidException;
 import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.service.model.user.UserByLoginAlreadyExistException;
 import ru.iskandar.holiday.calculator.service.model.user.UserByLoginNotFoundException;
 
 /**
@@ -221,5 +226,34 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 *             если описание пользователя для вызывающего не найдено
 	 */
 	public void checkAuthentification() throws UserByLoginNotFoundException;
+
+	/**
+	 * Создает нового пользователя
+	 *
+	 * @param aNewUserEntry
+	 *            описание создаваемого пользователя
+	 * @param aNewUserPermissions
+	 *            полномочия, которыми должен обладать создаваемый пользователь
+	 * @return созданный пользователь
+	 * @throws EJBAccessException
+	 *             если у текущего пользователя нет прав на создание
+	 *             пользователей
+	 * @throws NullPointerException
+	 *             если aNewUserEntry или aNewUserPermissions {@code null}
+	 * @throws UserByLoginAlreadyExistException
+	 *             если пользователь с указанным логином уже существует
+	 * @throws NewUserNotValidException
+	 *             если описание создавамого пользователя заполнено некорректно
+	 */
+	public User createUser(NewUserEntry aNewUserEntry, Set<PermissionId> aNewUserPermissions)
+			throws UserByLoginAlreadyExistException;
+
+	/**
+	 * Возвращает возможность создания пользователя
+	 *
+	 * @return {@code true}, если текущему пользователю разрешено создавать
+	 *         пользователей; {@code false}, если иначе
+	 */
+	public boolean canCreateUser();
 
 }

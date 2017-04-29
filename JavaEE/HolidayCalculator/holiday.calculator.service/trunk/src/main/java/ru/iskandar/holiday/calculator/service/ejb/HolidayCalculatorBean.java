@@ -26,7 +26,7 @@ import ru.iskandar.holiday.calculator.service.model.StatementAlreadySendedExcept
 import ru.iskandar.holiday.calculator.service.model.StatementConsideredEvent;
 import ru.iskandar.holiday.calculator.service.model.StatementNotFoundException;
 import ru.iskandar.holiday.calculator.service.model.StatementSendedEvent;
-import ru.iskandar.holiday.calculator.service.model.permissions.Permissions;
+import ru.iskandar.holiday.calculator.service.model.permissions.Permission;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.statement.LeaveStatement;
@@ -37,7 +37,10 @@ import ru.iskandar.holiday.calculator.service.model.statement.Statement;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementEntry;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementValidator;
+import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
+import ru.iskandar.holiday.calculator.service.model.user.NewUserNotValidException;
 import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.service.model.user.UserByLoginAlreadyExistException;
 import ru.iskandar.holiday.calculator.service.model.user.UserByLoginNotFoundException;
 import ru.iskandar.holiday.calculator.service.utils.DateUtils;
 
@@ -46,7 +49,7 @@ import ru.iskandar.holiday.calculator.service.utils.DateUtils;
  */
 @Stateless
 @Remote(IHolidayCalculatorRemote.class)
-@DeclareRoles({ Permissions.CONSIDER })
+@DeclareRoles({ Permission.CONSIDER, Permission.USER_CREATOR })
 public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 
 	/** Логгер */
@@ -83,7 +86,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	/**
 	 * {@inheritDoc}
 	 */
-	@RolesAllowed(Permissions.CONSIDER)
+	@RolesAllowed(Permission.CONSIDER)
 	@Override
 	public Collection<Statement<?>> loadStatements(EnumSet<StatementStatus> aStatuses) {
 		Objects.requireNonNull(aStatuses);
@@ -94,7 +97,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	/**
 	 * {@inheritDoc}
 	 */
-	@RolesAllowed(Permissions.CONSIDER)
+	@RolesAllowed(Permission.CONSIDER)
 	@Override
 	public Statement<?> approve(Statement<?> aStatement) throws StatementAlreadyConsideredException {
 		Objects.requireNonNull(aStatement);
@@ -123,7 +126,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	/**
 	 * {@inheritDoc}
 	 */
-	@RolesAllowed(Permissions.CONSIDER)
+	@RolesAllowed(Permission.CONSIDER)
 	@Override
 	public Statement<?> reject(Statement<?> aStatement) throws StatementAlreadyConsideredException {
 		Objects.requireNonNull(aStatement);
@@ -298,7 +301,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	/**
 	 * {@inheritDoc}
 	 */
-	@RolesAllowed(Permissions.CONSIDER)
+	@RolesAllowed(Permission.CONSIDER)
 	@Override
 	public Collection<Statement<?>> getIncomingStatements() {
 		Collection<Statement<?>> incoming = _statementRepo
@@ -337,7 +340,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	 */
 	@Override
 	public boolean canConsider() {
-		boolean canConsider = _permissionsService.hasPermission(PermissionId.from(Permissions.CONSIDER));
+		boolean canConsider = _permissionsService.hasPermission(PermissionId.from(Permission.CONSIDER));
 		return canConsider;
 	}
 
@@ -446,6 +449,70 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 			throw new UserByLoginNotFoundException("Описание текущего пользователя не найдено");
 		}
 
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@RolesAllowed(Permission.USER_CREATOR)
+	@Override
+	public User createUser(NewUserEntry aNewUserEntry, Set<PermissionId> aNewUserPermissions)
+			throws UserByLoginAlreadyExistException {
+		Objects.requireNonNull(aNewUserEntry);
+		Objects.requireNonNull(aNewUserPermissions);
+		checkCreatingUser(aNewUserEntry);
+
+		User alreadyExistUser = _userService.findUserByLogin(aNewUserEntry.getLogin());
+		if (alreadyExistUser != null) {
+			throw new UserByLoginAlreadyExistException(
+					String.format("Пользователь с указанным логином '%s' уже существует", aNewUserEntry.getLogin()));
+		}
+
+		User newUser = _userService.createUser(aNewUserEntry);
+		// FIXME назначить роли
+		return newUser;
+	}
+
+	/**
+	 * Проверяет валидность заполнения описания создаваемого пользователя
+	 *
+	 * @param aNewUserEntry
+	 *            описание создаваемого пользователя
+	 * @throws NewUserNotValidException
+	 *             если описание создаваемого пользователя заполнено неверно
+	 */
+	private void checkCreatingUser(NewUserEntry aNewUserEntry) {
+		Objects.requireNonNull(aNewUserEntry);
+		if ((aNewUserEntry.getLogin() == null) || aNewUserEntry.getLogin().isEmpty()) {
+			throw new NewUserNotValidException(
+					String.format("Не указан логин создаваемого пользователя %s", aNewUserEntry));
+		}
+		if ((aNewUserEntry.getFirstName() == null) || aNewUserEntry.getFirstName().isEmpty()) {
+			throw new NewUserNotValidException(
+					String.format("Не указано имя создаваемого пользователя %s", aNewUserEntry));
+		}
+		if ((aNewUserEntry.getLastName() == null) || aNewUserEntry.getLastName().isEmpty()) {
+			throw new NewUserNotValidException(
+					String.format("Не указана фамилия создаваемого пользователя %s", aNewUserEntry));
+		}
+		if ((aNewUserEntry.getPatronymic() == null) || aNewUserEntry.getPatronymic().isEmpty()) {
+			throw new NewUserNotValidException(
+					String.format("Не указано отчество создаваемого пользователя %s", aNewUserEntry));
+		}
+		if (aNewUserEntry.getEmploymentDate() == null) {
+			throw new NewUserNotValidException(
+					String.format("Не указана дата приема на работу создаваемого пользователя %s", aNewUserEntry));
+		}
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean canCreateUser() {
+		boolean canCreate = _permissionsService.hasPermission(PermissionId.from(Permission.USER_CREATOR));
+		return canCreate;
 	}
 
 }

@@ -1,4 +1,4 @@
-package ru.iskandar.holiday.calculator.service.entities;
+package ru.iskandar.holiday.calculator.service.model.user;
 
 import java.io.Serializable;
 import java.util.Date;

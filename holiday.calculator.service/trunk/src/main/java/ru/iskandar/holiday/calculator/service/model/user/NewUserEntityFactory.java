@@ -1,22 +1,19 @@
-package ru.iskandar.holiday.calculator.service.entities;
+package ru.iskandar.holiday.calculator.service.model.user;
 
 import java.util.Date;
 import java.util.Objects;
 
-import ru.iskandar.holiday.calculator.service.model.user.User;
-import ru.iskandar.holiday.calculator.service.model.user.UserId;
-
 /**
  *
  */
-public class DOBasedUserEntityFactory extends UserEntityFactory {
+public class NewUserEntityFactory extends UserEntityFactory {
 
-	private final User _user;
+	private final NewUserEntry _user;
 
 	/**
 	 * Конструктор
 	 */
-	public DOBasedUserEntityFactory(User aUser) {
+	public NewUserEntityFactory(NewUserEntry aUser) {
 		Objects.requireNonNull(aUser);
 		_user = aUser;
 	}
@@ -26,7 +23,7 @@ public class DOBasedUserEntityFactory extends UserEntityFactory {
 	 */
 	@Override
 	protected UserId getId() {
-		return _user.getId();
+		return null;
 	}
 
 	/**

@@ -7,7 +7,9 @@ import java.util.Set;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
+import ru.iskandar.holiday.calculator.service.model.user.DOBasedUserEntityFactory;
 import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.service.model.user.UserEntity;
 
 /**
  *

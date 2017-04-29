@@ -5,9 +5,9 @@ import java.util.Objects;
 import java.util.Set;
 
 import ru.iskandar.holiday.calculator.service.entities.RecallStatementEntity;
-import ru.iskandar.holiday.calculator.service.entities.UserEntity;
 import ru.iskandar.holiday.calculator.service.model.user.EntityBasedUserFactory;
 import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.service.model.user.UserEntity;
 
 /**
  *

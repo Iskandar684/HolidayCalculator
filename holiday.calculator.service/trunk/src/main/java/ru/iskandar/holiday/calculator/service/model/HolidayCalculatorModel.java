@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 
@@ -13,6 +14,7 @@ import javax.jms.JMSException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import ru.iskandar.holiday.calculator.service.ejb.PermissionId;
 import ru.iskandar.holiday.calculator.service.model.permissions.PermissionDeniedException;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
@@ -23,7 +25,9 @@ import ru.iskandar.holiday.calculator.service.model.statement.RecallStatementEnt
 import ru.iskandar.holiday.calculator.service.model.statement.Statement;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementType;
+import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
 import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.service.model.user.UserByLoginAlreadyExistException;
 
 /**
  * Модель учета отгулов
@@ -516,6 +520,24 @@ public class HolidayCalculatorModel implements Serializable {
 	public Collection<Statement<?>> getCurrentUserStatements() {
 		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
 		return service.getAllStatements(_currenUser);
+	}
+
+	public boolean canCreateUser() {
+		return _servicesProvider.getHolidayCalculatorService().canCreateUser();
+	}
+
+	public User createUser(NewUserEntry aNewUserEntry, Set<PermissionId> aNewUserPermissions)
+			throws UserByLoginAlreadyExistException {
+		Objects.requireNonNull(aNewUserEntry);
+		Objects.requireNonNull(aNewUserPermissions);
+		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
+		User newUser;
+		try {
+			newUser = service.createUser(aNewUserEntry, aNewUserPermissions);
+		} catch (EJBAccessException e) {
+			throw new PermissionDeniedException("Нет прав на рассмотрение заявлений", e);
+		}
+		return newUser;
 	}
 
 }

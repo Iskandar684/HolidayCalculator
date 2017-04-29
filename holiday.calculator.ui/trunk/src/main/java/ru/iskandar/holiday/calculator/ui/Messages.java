@@ -150,6 +150,26 @@ public class Messages extends NLS {
 
 	public static String openCurrentUserStatementsActionText;
 
+	public static String usersRootMenuText;
+
+	public static String createUserMenuItem;
+
+	public static String createUserDialogTitle;
+
+	public static String firstNameLabel;
+
+	public static String lastNameLabel;
+
+	public static String patronymicLabel;
+
+	public static String loginLabel;
+
+	public static String passwordLabel;
+
+	public static String userByLoginAlreadyExistError;
+
+	public static String creatingUserIsEmpty;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
+import ru.iskandar.holiday.calculator.service.model.user.UserEntity;
 
 /**
  * Фабрика создания сущности заявления на отгул

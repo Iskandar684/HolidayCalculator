@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
@@ -19,11 +20,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import ru.iskandar.holiday.calculator.service.entities.UserEntity;
-import ru.iskandar.holiday.calculator.service.entities.UserEntity_;
 import ru.iskandar.holiday.calculator.service.model.user.EntityBasedUserFactory;
+import ru.iskandar.holiday.calculator.service.model.user.NewUserEntityFactory;
+import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
 import ru.iskandar.holiday.calculator.service.model.user.User;
 import ru.iskandar.holiday.calculator.service.model.user.UserByLoginNotFoundException;
+import ru.iskandar.holiday.calculator.service.model.user.UserEntity;
+import ru.iskandar.holiday.calculator.service.model.user.UserEntity_;
 
 /**
  * Сервис работы с пользователями
@@ -97,6 +100,44 @@ public class UserServiceBean implements IUserServiceLocal {
 		}
 
 		return allUsers;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public User createUser(NewUserEntry aNewUserEntry) {
+		Objects.requireNonNull(aNewUserEntry);
+		UserEntity entity = new NewUserEntityFactory(aNewUserEntry).create();
+		_em.persist(entity);
+		User user = new EntityBasedUserFactory(entity).create();
+		return user;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public User findUserByLogin(String aLogin) {
+		Objects.requireNonNull(aLogin);
+
+		CriteriaBuilder cb = _em.getCriteriaBuilder();
+		CriteriaQuery<UserEntity> cq = cb.createQuery(UserEntity.class);
+		Root<UserEntity> from = cq.from(UserEntity.class);
+		cq.select(from);
+
+		Predicate loginEqual = cb.equal(from.get(UserEntity_.login), aLogin);
+		cq.where(loginEqual);
+
+		TypedQuery<UserEntity> q = _em.createQuery(cq);
+		UserEntity entity;
+		try {
+			entity = q.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
+		User user = new EntityBasedUserFactory(entity).create();
+		return user;
 	}
 
 }

@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
-import ru.iskandar.holiday.calculator.service.entities.UserEntity;
-
 /**
  * Фабрика создания описания пользователя на основе сущности пользователя
  */

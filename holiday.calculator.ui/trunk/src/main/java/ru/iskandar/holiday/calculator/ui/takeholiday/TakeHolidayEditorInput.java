@@ -32,7 +32,6 @@ public class TakeHolidayEditorInput implements IEditorInput {
 	 */
 	@Override
 	public <T> T getAdapter(Class<T> adapter) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -41,7 +40,6 @@ public class TakeHolidayEditorInput implements IEditorInput {
 	 */
 	@Override
 	public boolean exists() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -50,7 +48,6 @@ public class TakeHolidayEditorInput implements IEditorInput {
 	 */
 	@Override
 	public ImageDescriptor getImageDescriptor() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -59,7 +56,6 @@ public class TakeHolidayEditorInput implements IEditorInput {
 	 */
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -68,7 +64,6 @@ public class TakeHolidayEditorInput implements IEditorInput {
 	 */
 	@Override
 	public IPersistableElement getPersistable() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -77,7 +72,6 @@ public class TakeHolidayEditorInput implements IEditorInput {
 	 */
 	@Override
 	public String getToolTipText() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

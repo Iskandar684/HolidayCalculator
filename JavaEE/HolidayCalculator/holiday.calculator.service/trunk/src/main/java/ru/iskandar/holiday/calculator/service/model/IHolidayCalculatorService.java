@@ -244,6 +244,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 *             если пользователь с указанным логином уже существует
 	 * @throws NewUserNotValidException
 	 *             если описание создавамого пользователя заполнено некорректно
+	 * @see {@link #canCreateUser()}
 	 */
 	public User createUser(NewUserEntry aNewUserEntry, Set<PermissionId> aNewUserPermissions)
 			throws UserByLoginAlreadyExistException;
@@ -255,5 +256,23 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 *         пользователей; {@code false}, если иначе
 	 */
 	public boolean canCreateUser();
+
+	/**
+	 * Возвращает всех пользователей
+	 *
+	 * @return коллекция пользователей
+	 * @throws EJBAccessException
+	 *             если у текущего пользователя нет прав на просмотр
+	 *             пользователей
+	 */
+	public Collection<User> getAllUsers();
+
+	/**
+	 * Возвращает возможность загрузки всех пользователей
+	 *
+	 * @return {@code true}, если у текущего пользователя есть полномочие
+	 *         просматривать других пользоватей; {@code false}, если иначе
+	 */
+	public boolean canViewUsers();
 
 }

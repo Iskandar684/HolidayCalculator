@@ -170,6 +170,8 @@ public class Messages extends NLS {
 
 	public static String creatingUserIsEmpty;
 
+	public static String openUsersActionText;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

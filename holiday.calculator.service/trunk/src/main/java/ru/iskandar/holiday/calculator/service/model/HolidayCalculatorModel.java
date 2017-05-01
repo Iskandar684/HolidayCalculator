@@ -540,4 +540,33 @@ public class HolidayCalculatorModel implements Serializable {
 		return newUser;
 	}
 
+	/**
+	 * Возвращает всех пользователей
+	 *
+	 * @return коллекция пользователей
+	 * @throws PermissionDeniedException
+	 *             если у текущего пользователя нет прав на просмотр
+	 *             пользователей
+	 */
+	public Collection<User> getAllUsers() {
+		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
+		Collection<User> users;
+		try {
+			users = service.getAllUsers();
+		} catch (EJBAccessException e) {
+			throw new PermissionDeniedException("Нет прав на рассмотрение заявлений", e);
+		}
+		return users;
+	}
+
+	/**
+	 * Возвращает возможность загрузки всех пользователей
+	 *
+	 * @return {@code true}, если у текущего пользователя есть полномочие
+	 *         просматривать других пользоватей; {@code false}, если иначе
+	 */
+	public boolean canViewUsers() {
+		return _servicesProvider.getHolidayCalculatorService().canViewUsers();
+	}
+
 }

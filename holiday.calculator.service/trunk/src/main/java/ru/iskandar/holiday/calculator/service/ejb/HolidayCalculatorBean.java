@@ -26,6 +26,7 @@ import ru.iskandar.holiday.calculator.service.model.StatementAlreadySendedExcept
 import ru.iskandar.holiday.calculator.service.model.StatementConsideredEvent;
 import ru.iskandar.holiday.calculator.service.model.StatementNotFoundException;
 import ru.iskandar.holiday.calculator.service.model.StatementSendedEvent;
+import ru.iskandar.holiday.calculator.service.model.UserCreatedEvent;
 import ru.iskandar.holiday.calculator.service.model.permissions.Permission;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
@@ -49,7 +50,7 @@ import ru.iskandar.holiday.calculator.service.utils.DateUtils;
  */
 @Stateless
 @Remote(IHolidayCalculatorRemote.class)
-@DeclareRoles({ Permission.CONSIDER, Permission.USER_CREATOR })
+@DeclareRoles({ Permission.CONSIDER, Permission.USER_CREATOR, Permission.USER_VIEWER })
 public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 
 	/** Логгер */
@@ -469,6 +470,12 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		}
 
 		User newUser = _userService.createUser(aNewUserEntry);
+		try {
+			_messageSender.send(new UserCreatedEvent(newUser));
+		} catch (JMSException e) {
+			LOG.error(String.format("Ошибка оповещения о создании пользователя %s", newUser), e);
+		}
+
 		// FIXME назначить роли
 		return newUser;
 	}
@@ -513,6 +520,24 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	public boolean canCreateUser() {
 		boolean canCreate = _permissionsService.hasPermission(PermissionId.from(Permission.USER_CREATOR));
 		return canCreate;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@RolesAllowed(Permission.USER_VIEWER)
+	@Override
+	public Collection<User> getAllUsers() {
+		return _userService.getAllUsers();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean canViewUsers() {
+		boolean canView = _permissionsService.hasPermission(PermissionId.from(Permission.USER_VIEWER));
+		return canView;
 	}
 
 }

@@ -46,6 +46,14 @@ public class UserServiceBean implements IUserServiceLocal {
 	public UserServiceBean() {
 	}
 
+	/**
+	 * Конструктор
+	 */
+	UserServiceBean(EntityManager aEntityManager) {
+		Objects.requireNonNull(aEntityManager);
+		_em = aEntityManager;
+	}
+
 	/** Контекст сессии */
 	@Resource
 	private SessionContext _context;

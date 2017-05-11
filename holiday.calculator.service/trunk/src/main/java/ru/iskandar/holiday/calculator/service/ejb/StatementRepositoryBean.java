@@ -57,6 +57,20 @@ public class StatementRepositoryBean implements IStatementRepository {
 	private EntityManager _em;
 
 	/**
+	 * Конструктор
+	 */
+	public StatementRepositoryBean() {
+	}
+
+	/**
+	 * Конструктор
+	 */
+	public StatementRepositoryBean(EntityManager aEntityManager) {
+		Objects.requireNonNull(aEntityManager);
+		_em = aEntityManager;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override

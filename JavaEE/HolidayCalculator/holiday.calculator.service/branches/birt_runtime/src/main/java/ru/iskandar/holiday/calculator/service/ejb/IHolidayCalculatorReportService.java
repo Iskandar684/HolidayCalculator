@@ -7,6 +7,6 @@ import ru.iskandar.holiday.calculator.report.service.api.IReport;
  */
 public interface IHolidayCalculatorReportService {
 
-	public IReport generate();
+	public IReport generate() throws HolidayCalculatorException;
 
 }

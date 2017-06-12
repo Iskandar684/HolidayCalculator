@@ -16,6 +16,7 @@ import javax.jms.JMSException;
 
 import org.jboss.logging.Logger;
 
+import ru.iskandar.holiday.calculator.report.service.api.IReport;
 import ru.iskandar.holiday.calculator.service.ejb.jms.MessageSenderBean;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelFactory;
@@ -175,12 +176,16 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 				throw new StatementAlreadySendedException(aStatement, st);
 			}
 		}
+		IReport report = null;
 		try {
-			_reportService.generate();
+			report =	_reportService.generate();
 		} catch (HolidayCalculatorException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+			throw new IllegalStateException("Ошибка генерациии отчета", e1);
 		}
+		System.out.println("Сформированный отчет "+ report);
+		System.out.println("контент сформированного отчета "+ report.getContent());
 		HolidayStatement statement = _statementRepo.createHolidayStatement(aStatement);
 		try {
 			_messageSender.send(new StatementSendedEvent(statement));

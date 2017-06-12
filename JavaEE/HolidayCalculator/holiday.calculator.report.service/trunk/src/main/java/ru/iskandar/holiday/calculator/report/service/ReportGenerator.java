@@ -3,8 +3,10 @@ package ru.iskandar.holiday.calculator.report.service;
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.eclipse.birt.core.exception.BirtException;
+import org.eclipse.birt.core.framework.Platform;
 import org.eclipse.birt.report.engine.api.EngineConfig;
 import org.eclipse.birt.report.engine.api.EngineConstants;
 import org.eclipse.birt.report.engine.api.HTMLRenderOption;
@@ -43,8 +45,13 @@ public class ReportGenerator {
 		// if (BIRTRuntimesLocation != null) {
 		// conf.setEngineHome("");
 		// }
-		IReportEngineFactory factory = (IReportEngineFactory) org.eclipse.birt.core.framework.Platform
-				.createFactoryObject(IReportEngineFactory.EXTENSION_REPORT_ENGINE_FACTORY);
+		//config.setEngineHome("/home/iskandar/wildfly-10.1.0.Final/standalone/deployments/main.ear");
+		config.setLogConfig("/home/iskandar/wildfly-10.1.0.Final/standalone/deployments", Level.ALL);
+		Platform.startup( config );
+		
+		IReportEngineFactory factory = (IReportEngineFactory) Platform
+				.createFactoryObject( IReportEngineFactory.EXTENSION_REPORT_ENGINE_FACTORY );
+		
 		IReportEngine engine = factory.createReportEngine(config);
 		IReportRunnable design = engine.openReportDesign(aUrlToRptdesignFile);
 		IRunAndRenderTask task = engine.createRunAndRenderTask(design);

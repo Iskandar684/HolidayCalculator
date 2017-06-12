@@ -75,6 +75,9 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	@EJB
 	private IStatementRepository _statementRepo;
 
+	@EJB
+	private IHolidayCalculatorReportService _reportService;
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -172,7 +175,12 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 				throw new StatementAlreadySendedException(aStatement, st);
 			}
 		}
-
+		try {
+			_reportService.generate();
+		} catch (HolidayCalculatorException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		HolidayStatement statement = _statementRepo.createHolidayStatement(aStatement);
 		try {
 			_messageSender.send(new StatementSendedEvent(statement));

@@ -3,7 +3,7 @@ package ru.iskandar.holiday.calculator.report.service;
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
+import java.util.Objects;
 
 import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.Platform;
@@ -24,7 +24,7 @@ public class ReportGenerator {
 
 	/**
 	 * Генерировать HTML отчет
-	 * 
+	 *
 	 * @param aUrlToRptdesignFile
 	 *            путь в BIRT файлу .rptdesign
 	 * @param aParameters
@@ -38,20 +38,20 @@ public class ReportGenerator {
 	@SuppressWarnings("unchecked")
 	public static byte[] generateHTMLReport(String aUrlToRptdesignFile, Map<String, IReportParameter> aParameters,
 			ClassLoader aClassLoader) throws BirtException {
+		Objects.requireNonNull(aUrlToRptdesignFile, "Не указан путь к файлу с описанием отчета (.rptdesign)");
+		Objects.requireNonNull(aParameters, "Не указана карта параметров отчета");
+		Objects.requireNonNull(aClassLoader, "Не указан загрузчик классов");
+
 		EngineConfig config = new EngineConfig();
 		HashMap<Object, Object> map = config.getAppContext();
 		map.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, aClassLoader);
 		config.setAppContext(map);
-		// if (BIRTRuntimesLocation != null) {
-		// conf.setEngineHome("");
-		// }
-		//config.setEngineHome("/home/iskandar/wildfly-10.1.0.Final/standalone/deployments/main.ear");
-		config.setLogConfig("/home/iskandar/wildfly-10.1.0.Final/standalone/deployments", Level.ALL);
-		Platform.startup( config );
-		
+
+		Platform.startup(config);
+
 		IReportEngineFactory factory = (IReportEngineFactory) Platform
-				.createFactoryObject( IReportEngineFactory.EXTENSION_REPORT_ENGINE_FACTORY );
-		
+				.createFactoryObject(IReportEngineFactory.EXTENSION_REPORT_ENGINE_FACTORY);
+
 		IReportEngine engine = factory.createReportEngine(config);
 		IReportRunnable design = engine.openReportDesign(aUrlToRptdesignFile);
 		IRunAndRenderTask task = engine.createRunAndRenderTask(design);
@@ -62,16 +62,16 @@ public class ReportGenerator {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		options.setOutputStream(out);
 		task.setRenderOption(options);
-		if (aParameters != null) {
-			for (IReportParameter param : aParameters.values()) {
-				if (param != null) {
-					String id = param.getId();
-					Object value = param.getValue();
-					String displayText = param.getDisplayText();
-					task.setParameter(id, value, displayText);
-				}
+
+		for (IReportParameter param : aParameters.values()) {
+			if (param != null) {
+				String id = param.getId();
+				Object value = param.getValue();
+				String displayText = param.getDisplayText();
+				task.setParameter(id, value, displayText);
 			}
 		}
+
 		task.run();
 		task.close();
 		byte[] report = out.toByteArray();

@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.8.2
+Created-By: 1.8.0_65-b17 (Oracle Corporation)
+Bundle-Version: 4.6.0-20160607
+Bundle-Name: BIRT Runtime SDK
+Bundle-SymbolicName: org.eclipse.birt.runtime
+Bundle-Vendor: Eclipse.org
+

@@ -27,7 +27,6 @@ public class HolidayCalculatorReportServiceBean implements IHolidayCalculatorRep
 	@Override
 	public IReport generate() throws HolidayCalculatorException {
 		IReportInput input = new TestReportInput();
-		System.out.println("UrlToReportDesignFile  " + input.getUrlToReportDesignFile());
 		try {
 			return _reportServiceLocal.generateReport(input);
 		} catch (ReportServiceException e) {

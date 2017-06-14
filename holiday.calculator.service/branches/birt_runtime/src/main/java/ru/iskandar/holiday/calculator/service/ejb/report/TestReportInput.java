@@ -1,9 +1,5 @@
 package ru.iskandar.holiday.calculator.service.ejb.report;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Collections;
 import java.util.Map;
 
@@ -32,36 +28,10 @@ public class TestReportInput implements IReportInput {
 	 */
 	@Override
 	public String getUrlToReportDesignFile() {
-		return "/home/iskandar/wildfly-10.1.0.Final/standalone/deployments/report/diagramReport.rptdesign";
-	}
-
-	/**
-	 * Преобразовать относительный путь к абсолютной (Метод в разработке!!!)
-	 *
-	 * @param aUrl
-	 *            относительный путь
-	 * @see org.eclipse.osgi.service.urlconversion.URLConverter#toFileURL(java.net
-	 *      .URL)
-	 * @return абсолютный путь
-	 * @throws IOException
-	 *             если не удалось найти файл
-	 */
-	private URL toFileURL(URL aUrl) throws IOException {
-		// FIXME разобраться!!!
-		try {
-			Class<?>[] parameterTypes = null;
-			URLConnection connection = aUrl.openConnection();
-			Class<? extends URLConnection> cl = connection.getClass();
-			Method m = cl.getMethod("getFileURL", parameterTypes);
-			Object[] args = null;
-			return (URL) m.invoke(connection, args);
-		} catch (Exception e) {
-			e.printStackTrace();
-			String err = String.format(
-					"The URL %1$s could not be extracted probably due to insufficient permissions or insufficient disk space",
-					aUrl);
-			throw new IOException(err);
-		}
+		RptdesignDirectoryProvider provider = new RptdesignDirectoryProvider();
+		String path = String.format("%s%s", provider.getDirectory(), URL_TO_REPORT_FILE);
+		System.out.println("путь к отчету " + path);
+		return path;
 	}
 
 	/**

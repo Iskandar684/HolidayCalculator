@@ -8,6 +8,6 @@ import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorService;
 public interface IHolidayCalculatorRemote extends IHolidayCalculatorService {
 
 	/** JNDI имя */
-	public static String JNDI_NAME = "main/holiday.calculator.service/HolidayCalculatorBean!ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorRemote";
+	public static String JNDI_NAME = "holiday/holiday.calculator.service/HolidayCalculatorBean!ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorRemote";
 
 }

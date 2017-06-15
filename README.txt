@@ -10,8 +10,29 @@
 2. Скачать WildFly (Jboss) версии 10.1.0.Final из сайта:
 http://wildfly.org/downloads/
 
-3. Скопировать собранный holiday.calculator.service/trunk/target/holiday.calculator.service.jar по следующему пути:
-/wildfly-10.1.0.Final/standalone/deployments/ 
+3. Скопировать модули 
+   3а. Скопировать собранный 
+   holiday.calculator.service/target/holiday.calculator.service.jar и 
+   holiday.calculator.report.service/holiday.calculator.report.service.jar
+   по следующему пути:
+   /wildfly-10.1.0.Final/standalone/deployments/holiday.ear
+   
+   3б. В папку    /wildfly-10.1.0.Final/standalone/deployments/holiday.ear/lib скопировать
+  - org.eclipse.birt.runtime/org.eclipse.birt.runtime-patched-4.6.0.jar
+   
+   3в. Скачать из http://download.eclipse.org/birt/downloads/ org.eclipse.birt.runtime-4.6.0.zip
+   Распаковать и скопировать папку содержимое папки birt-runtime-4.6.0-20160607/ReportEngine/lib/ в
+   /wildfly-10.1.0.Final/standalone/deployments/holiday.ear/lib
+   
+   3г. Скачать Tidy.jar и скопировать в /wildfly-10.1.0.Final/standalone/deployments/holiday.ear/lib
+       <groupId>org.eclipse.birt.runtime.3_7_1</groupId>  
+       <artifactId>Tidy</artifactId>
+       <version>1</version>
+       <packaging>jar</packaging>
+       <name>Tidy.jar</name>
+   3е. В папку /wildfly-10.1.0.Final/standalone/deployments/report/ 
+   скопировать файлы с расширением .rptdesign из /holiday.calculator.service/src/main/resources/ru/iskandar/holiday/calculator/service/ejb/report
+   
 
 4. Добавить пользователей с ролью guest 
 (см. wildfly-10.1.0.Final/bin/add-user.bat)
@@ -31,7 +52,8 @@ wildfly-10.1.0.Final\standalone\configuration\standalone.xml
 wildfly-10.1.0.Final\standalone\configuration\standalone.xml
 <default-missing-method-permissions-deny-access value="false"/>
 
-8. Запустить wildfly-10.1.0.Final/bin/standalone.bat
+8. В папке wildfly-10.1.0.Final/standalone/deployments/ создать holiday.ear.dodeploy
+9. Запустить wildfly-10.1.0.Final/bin/standalone.bat
 
 Инструкция по настройки БД.
 

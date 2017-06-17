@@ -44,7 +44,7 @@
         <simple-master-page name="Simple MasterPage" id="2">
             <property name="type">custom</property>
             <property name="orientation">auto</property>
-            <property name="leftMargin">0.2708333333333333in</property>
+            <property name="leftMargin">0.39166666666666666in</property>
             <property name="rightMargin">0.25in</property>
             <property name="height">297mm</property>
             <property name="width">210mm</property>
@@ -63,13 +63,7 @@
                         <property name="width">1.90625in</property>
                     </column>
                     <row id="34">
-                        <cell id="35">
-                            <text id="36">
-                                <property name="marginLeft">10pt</property>
-                                <property name="contentType">auto</property>
-                                <text-property name="content"><![CDATA[Отчет был сгенерирован из Design Ultrasonic Phased Array 1.0.0]]></text-property>
-                            </text>
-                        </cell>
+                        <cell id="35"/>
                         <cell id="37">
                             <auto-text id="38">
                                 <property name="type">page-number</property>
@@ -88,29 +82,70 @@
     </page-setup>
     <body>
         <label id="27">
-            <property name="fontSize">18pt</property>
+            <property name="fontSize">30pt</property>
         </label>
-        <label id="7">
-            <property name="fontSize">16pt</property>
+        <label id="75">
+            <property name="fontSize">14pt</property>
+            <property name="paddingLeft">300pt</property>
+            <property name="textAlign">left</property>
+            <text-property name="text">Генеральному директору</text-property>
+        </label>
+        <label id="74">
+            <property name="fontSize">14pt</property>
+            <property name="paddingLeft">300pt</property>
+            <property name="textAlign">left</property>
+            <text-property name="text">ООО "XXX"</text-property>
+        </label>
+        <label id="76">
+            <property name="fontSize">14pt</property>
+            <property name="paddingLeft">300pt</property>
+            <text-property name="text">Смирнову Василию Григорьевичу</text-property>
+        </label>
+        <label id="77">
+            <property name="fontSize">14pt</property>
+            <property name="paddingLeft">300pt</property>
+            <text-property name="text">от Гаврилова И.Т.</text-property>
+        </label>
+        <label id="78">
+            <property name="fontSize">150pt</property>
+        </label>
+        <label id="81">
+            <property name="fontSize">24pt</property>
             <property name="textAlign">center</property>
-            <text-property name="text">Печатная форма заявления на отгул</text-property>
+            <text-property name="text">Заявление</text-property>
         </label>
-        <label id="13">
-            <property name="fontSize">36pt</property>
+        <label id="82">
+            <property name="fontSize">20pt</property>
         </label>
-        <label id="45">
-            <property name="display">block</property>
+        <label id="83">
+            <property name="fontSize">14pt</property>
+            <property name="paddingLeft">20pt</property>
+            <property name="textAlign">left</property>
+            <text-property name="text">Прошу Вас предоставить мне оплачиваемый отгул на 17.06.2017.</text-property>
         </label>
-        <label id="72">
-            <property name="fontSize">18pt</property>
+        <label id="84">
+            <property name="fontSize">150pt</property>
         </label>
-        <label id="43"/>
-        <label id="41">
-            <property name="fontSize">36pt</property>
-            <property name="display">inline</property>
+        <label id="85">
+            <property name="fontSize">14pt</property>
+            <property name="paddingRight">20pt</property>
+            <property name="textAlign">right</property>
+            <text-property name="text">________________Гаврилов И.Т.</text-property>
         </label>
-        <label id="73">
-            <property name="fontSize">36pt</property>
+        <label id="89"/>
+        <label id="86">
+            <property name="fontSize">14pt</property>
+            <property name="paddingRight">20pt</property>
+            <property name="textAlign">right</property>
+            <text-property name="text">Генеральный директор ______________Смирнов В.Г.</text-property>
+        </label>
+        <label id="87">
+            <property name="fontSize">150pt</property>
+        </label>
+        <label id="88">
+            <property name="fontSize">14pt</property>
+            <property name="paddingLeft">20pt</property>
+            <text-property name="text">16.06.2017</text-property>
         </label>
     </body>
 </report>

@@ -33,6 +33,7 @@ import ru.iskandar.holiday.calculator.service.model.TakeHolidayStatementBuilder;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.Messages;
 import ru.iskandar.holiday.calculator.ui.Utils;
+import ru.iskandar.holiday.calculator.ui.document.IHTMLContentProvider;
 import ru.iskandar.holiday.calculator.ui.outgoing.OutgoingStatementsEditor;
 import ru.iskandar.holiday.calculator.ui.outgoing.OutgoingStatementsEditorInput;
 
@@ -47,6 +48,9 @@ public class TakeHolidayEditor extends EditorPart {
 
 	/** Поставщик модели */
 	private HolidayCalculatorModelProvider _modelProvider;
+
+	/** Поставщик содержимого документа заявления на отгул */
+	private IHTMLContentProvider _statementDocumentContentProvider;
 
 	/**
 	 * Конструктор
@@ -77,6 +81,8 @@ public class TakeHolidayEditor extends EditorPart {
 		setInput(aInput);
 		_modelProvider = ((TakeHolidayEditorInput) aInput).getModelProvider();
 		Objects.requireNonNull(_modelProvider);
+		_statementDocumentContentProvider = new HTMLContentProvider(
+				new HolidayStatementDocumentContentLoader(_modelProvider));
 	}
 
 	/**
@@ -197,8 +203,7 @@ public class TakeHolidayEditor extends EditorPart {
 		main.setLayout(leftLayout);
 		main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		HTMLDocumentViewer viewer = new HTMLDocumentViewer(
-				new HTMLContentProvider(new HolidayStatementDocumentContentLoader(_modelProvider)));
+		HTMLDocumentViewer viewer = new HTMLDocumentViewer(_statementDocumentContentProvider);
 		Control control = viewer.create(main, _toolkit);
 		control.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		return main;

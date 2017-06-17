@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import ru.iskandar.holiday.calculator.service.model.document.DocumentPreviewException;
+import ru.iskandar.holiday.calculator.service.model.document.StatementDocument;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementType;
 
@@ -23,6 +25,7 @@ public class TakeHolidayStatementBuilder implements Serializable {
 
 	/** Тип заявления на отгул */
 	private HolidayStatementType _statementType = HolidayStatementType.BY_HOLIDAY_DAYS;
+
 	/** Дни на отгул */
 	private final Set<Date> _days = new HashSet<>();
 
@@ -56,8 +59,18 @@ public class TakeHolidayStatementBuilder implements Serializable {
 	 *             если не удалось получить сервис учета отгулов
 	 */
 	public void sendHolidayStatement() throws StatementAlreadySendedException {
-		HolidayStatementEntry statement = new HolidayStatementEntry(_days, _model.getCurrentUser());
+		HolidayStatementEntry statement = build();
 		_model.sendHolidayStatement(statement);
+	}
+
+	/**
+	 * Возвращает описание заявления на отгул
+	 *
+	 * @return описание заявления на отгул
+	 */
+	private HolidayStatementEntry build() {
+		HolidayStatementEntry statement = new HolidayStatementEntry(_days, _model.getCurrentUser());
+		return statement;
 	}
 
 	/**
@@ -101,6 +114,19 @@ public class TakeHolidayStatementBuilder implements Serializable {
 	 */
 	public Set<Date> getDays() {
 		return Collections.unmodifiableSet(_days);
+	}
+
+	/**
+	 * Формирует документ заявления на отгул
+	 *
+	 * @param aEntry
+	 *            содержание заявления на отгул
+	 * @return документ заявления
+	 * @throws DocumentPreviewException
+	 *             если не удалось сформировать документ
+	 */
+	public StatementDocument preview() throws DocumentPreviewException {
+		return _model.preview(build());
 	}
 
 }

@@ -15,6 +15,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import ru.iskandar.holiday.calculator.service.ejb.PermissionId;
+import ru.iskandar.holiday.calculator.service.model.document.DocumentPreviewException;
+import ru.iskandar.holiday.calculator.service.model.document.StatementDocument;
 import ru.iskandar.holiday.calculator.service.model.permissions.PermissionDeniedException;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
@@ -567,6 +569,20 @@ public class HolidayCalculatorModel implements Serializable {
 	 */
 	public boolean canViewUsers() {
 		return _servicesProvider.getHolidayCalculatorService().canViewUsers();
+	}
+
+	/**
+	 * Формирует документ заявления на отгул
+	 *
+	 * @param aEntry
+	 *            содержание заявления на отгул
+	 * @return документ заявления
+	 * @throws DocumentPreviewException
+	 *             если не удалось сформировать документ
+	 */
+	StatementDocument preview(HolidayStatementEntry aEntry) throws DocumentPreviewException {
+		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
+		return service.preview(aEntry);
 	}
 
 }

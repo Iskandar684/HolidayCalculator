@@ -2,9 +2,6 @@ package ru.iskandar.holiday.calculator.ui;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -15,13 +12,10 @@ import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorEvent;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorModelListener;
 
-public class HolidayCalculatorModelProvider implements ILoadingProvider {
-
-	/** Задача загрузки модели */
-	private FutureTask<HolidayCalculatorModel> _task = new LoadModelTask(new LoadModelCallable());
-
-	/** Слушатели изменения статуса загрузки */
-	private final CopyOnWriteArrayList<ILoadListener> _loadListeners = new CopyOnWriteArrayList<>();
+/**
+ * Поставщик модели отгулов
+ */
+public class HolidayCalculatorModelProvider extends ModelProvider<HolidayCalculatorModel> implements ILoadingProvider {
 
 	/** Слушатели модели */
 	private final CopyOnWriteArrayList<IHolidayCalculatorModelListener> _modelListeners = new CopyOnWriteArrayList<>();
@@ -33,29 +27,21 @@ public class HolidayCalculatorModelProvider implements ILoadingProvider {
 	 * Конструктор
 	 */
 	HolidayCalculatorModelProvider() {
-		Executors.newSingleThreadExecutor().submit(_task);
+		super(new LoadModelCallable());
 	}
 
 	/**
-	 * Возвращает модель
-	 *
-	 * @return модель
-	 * @throws IllegalStateException
-	 *             если не удалось загрузить модель
-	 * @see #getLoadStatus()
+	 * {@inheritDoc}
 	 */
+	@Override
 	public HolidayCalculatorModel getModel() {
-		try {
-			return _task.get();
-		} catch (InterruptedException | ExecutionException e) {
-			throw new IllegalStateException("Ошибка получения модели учета отгулов", e);
-		}
+		return super.getModel();
 	}
 
 	/**
 	 * Загрузчик модели
 	 */
-	private class LoadModelCallable implements Callable<HolidayCalculatorModel> {
+	private static class LoadModelCallable implements Callable<HolidayCalculatorModel> {
 
 		/**
 		 * {@inheritDoc}
@@ -63,93 +49,6 @@ public class HolidayCalculatorModelProvider implements ILoadingProvider {
 		@Override
 		public HolidayCalculatorModel call() throws Exception {
 			return new ClientConnector().loadModel();
-		}
-
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public LoadStatus getLoadStatus() {
-		if (!_task.isDone() && !_task.isCancelled()) {
-			return LoadStatus.LOADING;
-		}
-		try {
-			_task.get();
-		} catch (InterruptedException | ExecutionException e) {
-			return LoadStatus.LOAD_ERROR;
-		}
-		return LoadStatus.LOADED;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void addLoadListener(ILoadListener aLoadListener) {
-		_loadListeners.add(aLoadListener);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void removeLoadListener(ILoadListener aLoadListener) {
-		_loadListeners.remove(aLoadListener);
-	}
-
-	/**
-	 * Оповещает слушателей об изменении статуса загрузки
-	 */
-	private void fireLoadStatusChangedEvent() {
-		for (ILoadListener listener : _loadListeners) {
-			listener.loadStatusChanged();
-		}
-	}
-
-	/**
-	 * Асинхронно перезагружает модель
-	 */
-	public synchronized void asynReload() {
-		_task = new LoadModelTask(new LoadModelCallable());
-		Executors.newSingleThreadExecutor().submit(_task);
-		fireLoadStatusChangedEvent();
-	}
-
-	/**
-	 * Задача загрузки модели
-	 */
-	private class LoadModelTask extends FutureTask<HolidayCalculatorModel> {
-
-		/**
-		 * Конструктор
-		 */
-		public LoadModelTask(Callable<HolidayCalculatorModel> aCallable) {
-			super(aCallable);
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		protected void done() {
-
-			try {
-				HolidayCalculatorModel newModel = get();
-				// FIXME переделать подписку
-				newModel.addListener(_internalModelListener);
-			} catch (InterruptedException | ExecutionException e) {
-				StatusManager.getManager().handle(
-						new Status(IStatus.ERROR, Activator.PLUGIN_ID, Messages.modelLoadError, e), StatusManager.LOG);
-			}
-
-			try {
-				fireLoadStatusChangedEvent();
-			} catch (Exception e) {
-				StatusManager.getManager().handle(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-						Messages.modelLoadStatusChangedNotificationError, e), StatusManager.LOG);
-			}
 		}
 
 	}
@@ -174,6 +73,22 @@ public class HolidayCalculatorModelProvider implements ILoadingProvider {
 		_modelListeners.remove(aListener);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void internalModelSwitched(HolidayCalculatorModel aOldModel, HolidayCalculatorModel aNewModel) {
+		if (aOldModel != null) {
+			aOldModel.removeListener(_internalModelListener);
+		}
+		if (aNewModel != null) {
+			aNewModel.addListener(_internalModelListener);
+		}
+	}
+
+	/**
+	 * Внутренний слушатель модели
+	 */
 	private class InternalHolidayCalculatorModelListener implements IHolidayCalculatorModelListener {
 
 		/**
@@ -182,7 +97,12 @@ public class HolidayCalculatorModelProvider implements ILoadingProvider {
 		@Override
 		public void handleEvent(HolidayCalculatorEvent aEvent) {
 			for (IHolidayCalculatorModelListener listener : _modelListeners) {
-				listener.handleEvent(aEvent);
+				try {
+					listener.handleEvent(aEvent);
+				} catch (Exception e) {
+					StatusManager.getManager().handle(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+							String.format("Ошибка перессылки события", aEvent), e), StatusManager.LOG);
+				}
 			}
 
 		}

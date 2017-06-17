@@ -58,7 +58,16 @@ public class ViewUsersAction extends Action {
 			 */
 			@Override
 			public void loadStatusChanged() {
-				update();
+				Display.getDefault().asyncExec(new Runnable() {
+
+					/**
+					 * {@inheritDoc}
+					 */
+					@Override
+					public void run() {
+						update();
+					}
+				});
 			}
 		});
 		update();

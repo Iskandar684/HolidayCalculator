@@ -19,7 +19,7 @@ import ru.iskandar.holiday.calculator.ui.menu.handlers.CreateUserAction;
 import ru.iskandar.holiday.calculator.ui.menu.handlers.ViewUsersAction;
 
 /**
- * Контроллер меню "Заявления"
+ * Контроллер меню "Пользователи"
  */
 public class UsersRootMenuPM {
 
@@ -61,7 +61,6 @@ public class UsersRootMenuPM {
 				@Override
 				public void run() {
 					UsersRootMenuPM.this.update();
-
 				}
 
 			});

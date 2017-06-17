@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+import ru.iskandar.holiday.calculator.ui.document.HTMLContent;
 import ru.iskandar.holiday.calculator.ui.document.IHTMLContentProvider;
 
 /**
@@ -52,8 +53,8 @@ public class HTMLDocumentViewer {
 	}
 
 	public void refresh() {
-		byte[] content = _contentProvider.getContent();
-		String text = new String(content);
+		HTMLContent content = _contentProvider.getContent();
+		String text = new String(content.getContent());
 		_browser.setText(text);
 	}
 

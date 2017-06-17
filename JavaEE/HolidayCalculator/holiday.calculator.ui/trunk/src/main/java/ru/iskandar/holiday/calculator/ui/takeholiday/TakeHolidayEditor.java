@@ -197,7 +197,8 @@ public class TakeHolidayEditor extends EditorPart {
 		main.setLayout(leftLayout);
 		main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		HTMLDocumentViewer viewer = new HTMLDocumentViewer(new HTMLContentProvider(_modelProvider));
+		HTMLDocumentViewer viewer = new HTMLDocumentViewer(
+				new HTMLContentProvider(new HolidayStatementDocumentContentLoader(_modelProvider)));
 		Control control = viewer.create(main, _toolkit);
 		control.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		return main;

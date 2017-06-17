@@ -25,7 +25,7 @@ public class ModelProvider<M> implements ILoadingProvider {
 	/**
 	 * Конструктор
 	 */
-	ModelProvider(Callable<M> aLoader) {
+	protected ModelProvider(Callable<M> aLoader) {
 		Objects.requireNonNull(aLoader);
 		_loader = aLoader;
 		load();

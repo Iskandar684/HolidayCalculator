@@ -8,6 +8,8 @@ import java.util.Set;
 import javax.ejb.EJBAccessException;
 
 import ru.iskandar.holiday.calculator.service.ejb.PermissionId;
+import ru.iskandar.holiday.calculator.service.model.document.DocumentPreviewException;
+import ru.iskandar.holiday.calculator.service.model.document.StatementDocument;
 import ru.iskandar.holiday.calculator.service.model.permissions.IHolidayCalculatorModelPermissions;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
@@ -274,5 +276,16 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 *         просматривать других пользоватей; {@code false}, если иначе
 	 */
 	public boolean canViewUsers();
+
+	/**
+	 * Формирует документ заявления на отгул
+	 *
+	 * @param aEntry
+	 *            содержание заявления на отгул
+	 * @return документ заявления
+	 * @throws DocumentPreviewException
+	 *             если не удалось сформировать документ
+	 */
+	public StatementDocument preview(HolidayStatementEntry aEntry) throws DocumentPreviewException;
 
 }

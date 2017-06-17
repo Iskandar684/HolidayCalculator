@@ -16,6 +16,7 @@ import javax.jms.JMSException;
 
 import org.jboss.logging.Logger;
 
+import ru.iskandar.holiday.calculator.report.service.api.IReport;
 import ru.iskandar.holiday.calculator.service.ejb.jms.MessageSenderBean;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelFactory;
@@ -27,6 +28,8 @@ import ru.iskandar.holiday.calculator.service.model.StatementConsideredEvent;
 import ru.iskandar.holiday.calculator.service.model.StatementNotFoundException;
 import ru.iskandar.holiday.calculator.service.model.StatementSendedEvent;
 import ru.iskandar.holiday.calculator.service.model.UserCreatedEvent;
+import ru.iskandar.holiday.calculator.service.model.document.DocumentPreviewException;
+import ru.iskandar.holiday.calculator.service.model.document.StatementDocument;
 import ru.iskandar.holiday.calculator.service.model.permissions.Permission;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
@@ -74,6 +77,9 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	/** Репозиторий заявлений */
 	@EJB
 	private IStatementRepository _statementRepo;
+
+	@EJB
+	private IHolidayCalculatorReportService _reportService;
 
 	/**
 	 * {@inheritDoc}
@@ -538,6 +544,22 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 	public boolean canViewUsers() {
 		boolean canView = _permissionsService.hasPermission(PermissionId.from(Permission.USER_VIEWER));
 		return canView;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public StatementDocument preview(HolidayStatementEntry aEntry) throws DocumentPreviewException {
+		Objects.requireNonNull(aEntry, "Не указано содержание заявления на отгул");
+		IReport report;
+		try {
+			report = _reportService.generate();
+		} catch (HolidayCalculatorException e) {
+			throw new DocumentPreviewException(String.format("Ошибка генерациии документа для заявления %s", aEntry),
+					e);
+		}
+		return new StatementDocument(report.getContent());
 	}
 
 }

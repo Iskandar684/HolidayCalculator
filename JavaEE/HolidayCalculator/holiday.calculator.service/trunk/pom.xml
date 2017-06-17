@@ -26,6 +26,17 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-jpamodelgen</artifactId>
 			<version>5.2.9.Final</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>ru.iskandar.holiday.calculator</groupId>
+			<artifactId>report.service</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>ru.iskandar.holiday.calculator</groupId>
+			<artifactId>report.service</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<!-- Тестирование -->
 		<dependency>

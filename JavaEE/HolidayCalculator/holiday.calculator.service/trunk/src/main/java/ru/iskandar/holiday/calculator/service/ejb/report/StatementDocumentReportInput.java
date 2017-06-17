@@ -8,12 +8,12 @@ import ru.iskandar.holiday.calculator.report.service.api.IReportParameter;
 import ru.iskandar.holiday.calculator.report.service.api.ReportType;
 
 /**
- *
+ * Входные данные для генерации документа заявления на отгул
  */
-public class TestReportInput implements IReportInput {
+public class StatementDocumentReportInput implements IReportInput {
 
 	/** Путь к файлу с исходным кодом отчета */
-	private static final String URL_TO_REPORT_FILE = "diagramReport.rptdesign";
+	private static final String URL_TO_REPORT_FILE = "statementDocument.rptdesign";
 
 	/**
 	 * {@inheritDoc}
@@ -30,7 +30,6 @@ public class TestReportInput implements IReportInput {
 	public String getUrlToReportDesignFile() {
 		RptdesignDirectoryProvider provider = new RptdesignDirectoryProvider();
 		String path = String.format("%s%s", provider.getDirectory(), URL_TO_REPORT_FILE);
-		System.out.println("путь к отчету " + path);
 		return path;
 	}
 

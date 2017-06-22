@@ -36,7 +36,7 @@ public class ReportGenerator {
 	 *             ошибка генерации отчета
 	 */
 	@SuppressWarnings("unchecked")
-	public static byte[] generateHTMLReport(String aUrlToRptdesignFile, Map<String, IReportParameter> aParameters,
+	public static byte[] generateHTMLReport(String aUrlToRptdesignFile, Map<String, IReportParameter<?>> aParameters,
 			ClassLoader aClassLoader) throws BirtException {
 		Objects.requireNonNull(aUrlToRptdesignFile, "Не указан путь к файлу с описанием отчета (.rptdesign)");
 		Objects.requireNonNull(aParameters, "Не указана карта параметров отчета");
@@ -63,7 +63,7 @@ public class ReportGenerator {
 		options.setOutputStream(out);
 		task.setRenderOption(options);
 
-		for (IReportParameter param : aParameters.values()) {
+		for (IReportParameter<?> param : aParameters.values()) {
 			if (param != null) {
 				String id = param.getId();
 				Object value = param.getValue();

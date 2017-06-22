@@ -50,11 +50,11 @@ public class StatementDocumentReportInput implements IReportInput {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Map<String, IReportParameter> getParameters() {
-		Map<String, IReportParameter> params = new HashMap<>();
+	public Map<String, IReportParameter<?>> getParameters() {
+		Map<String, IReportParameter<?>> params = new HashMap<>();
 		HolidayStatementReportParameter param = _paramFactory.create();
 		String id = "statement";
-		params.put(id, new ReportParameter(id, param, param.toString()));
+		params.put(id, new ReportParameter<HolidayStatementReportParameter>(id, param, param.toString()));
 		return params;
 	}
 

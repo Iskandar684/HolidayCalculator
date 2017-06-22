@@ -9,6 +9,7 @@ import ru.iskandar.holiday.calculator.report.service.api.IReportInput;
 import ru.iskandar.holiday.calculator.report.service.api.IReportServiceLocal;
 import ru.iskandar.holiday.calculator.report.service.api.ReportServiceException;
 import ru.iskandar.holiday.calculator.service.ejb.report.StatementDocumentReportInput;
+import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
 
 /**
  *
@@ -25,8 +26,8 @@ public class HolidayCalculatorReportServiceBean implements IHolidayCalculatorRep
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IReport generate() throws HolidayCalculatorException {
-		IReportInput input = new StatementDocumentReportInput();
+	public IReport generate(HolidayStatementEntry aEntry) throws HolidayCalculatorException {
+		IReportInput input = new StatementDocumentReportInput(aEntry);
 		try {
 			return _reportServiceLocal.generateReport(input);
 		} catch (ReportServiceException e) {

@@ -110,13 +110,13 @@
             <property name="paddingLeft">300pt</property>
             <list-property name="boundDataColumns">
                 <structure>
-                    <property name="name">author</property>
-                    <text-property name="displayName">author</text-property>
-                    <expression name="expression" type="javascript">vars["author"]</expression>
+                    <property name="name">from</property>
+                    <text-property name="displayName">from</text-property>
+                    <expression name="expression" type="javascript">vars["from"]</expression>
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
-            <property name="resultSetColumn">author</property>
+            <property name="resultSetColumn">from</property>
         </data>
         <label id="78">
             <property name="fontSize">150pt</property>
@@ -161,8 +161,12 @@
         </label>
     </body>
     <property name="pageVariables">
-        <variable-element name="author">
-            <expression name="value" type="javascript">params["statement"].value.getAuthor().getPatronymic();</expression>
+        <variable-element name="from">
+            <expression name="value" type="javascript">author=params["statement"].value.getAuthor();&#13;
+lastname=author.getLastName();&#13;
+name=author.getFirstName().substring(0,1).toUpperCase();&#13;
+patronymic=author.getPatronymic().substring(0,1).toUpperCase();&#13;
+from="от "+lastname+" "+name+"."+patronymic+".";</expression>
             <property name="type">report</property>
         </variable-element>
     </property>

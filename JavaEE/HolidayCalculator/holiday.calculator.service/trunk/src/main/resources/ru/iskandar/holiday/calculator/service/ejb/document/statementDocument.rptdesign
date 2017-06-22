@@ -6,6 +6,19 @@
     <property name="layoutPreference">auto layout</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="statement" id="90">
+            <property name="valueType">static</property>
+            <property name="dataType">object</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
     <styles>
         <style name="report" id="4">
             <property name="fontFamily">sans-serif</property>
@@ -92,11 +105,19 @@
             <property name="paddingLeft">300pt</property>
             <text-property name="text">Смирнову Василию Григорьевичу</text-property>
         </label>
-        <label id="77">
+        <data id="91">
             <property name="fontSize">14pt</property>
             <property name="paddingLeft">300pt</property>
-            <text-property name="text">от Гаврилова И.Т.</text-property>
-        </label>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">author</property>
+                    <text-property name="displayName">author</text-property>
+                    <expression name="expression" type="javascript">vars["author"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <property name="resultSetColumn">author</property>
+        </data>
         <label id="78">
             <property name="fontSize">150pt</property>
         </label>
@@ -139,4 +160,10 @@
             <text-property name="text">16.06.2017</text-property>
         </label>
     </body>
+    <property name="pageVariables">
+        <variable-element name="author">
+            <expression name="value" type="javascript">params["statement"].value.getAuthor().getPatronymic();</expression>
+            <property name="type">report</property>
+        </variable-element>
+    </property>
 </report>

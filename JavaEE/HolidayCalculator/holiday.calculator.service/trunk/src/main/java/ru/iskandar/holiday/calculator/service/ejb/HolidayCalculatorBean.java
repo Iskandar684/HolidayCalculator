@@ -554,10 +554,11 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
 		Objects.requireNonNull(aEntry, "Не указано содержание заявления на отгул");
 		IReport report;
 		try {
-			report = _reportService.generate();
+			report = _reportService.generate(aEntry);
 		} catch (HolidayCalculatorException e) {
-			throw new DocumentPreviewException(String.format("Ошибка генерациии документа для заявления %s", aEntry),
-					e);
+			String err = String.format("Ошибка генерациии документа для заявления %s", aEntry);
+			LOG.error(err, e);
+			throw new DocumentPreviewException(err, e);
 		}
 		return new StatementDocument(report.getContent());
 	}

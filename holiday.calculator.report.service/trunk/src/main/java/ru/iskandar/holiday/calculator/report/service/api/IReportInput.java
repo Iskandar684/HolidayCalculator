@@ -9,21 +9,21 @@ public interface IReportInput {
 
 	/**
 	 * Получить тип отчета
-	 * 
+	 *
 	 * @return тип отчета
 	 */
 	public ReportType getType();
 
 	/**
 	 * Получить путь к файлу с исходным кодом отчета
-	 * 
+	 *
 	 * @return путь к файлу с исходным кодом отчета
 	 */
 	public String getUrlToReportDesignFile();
 
 	/**
 	 * Получить параметры отчета
-	 * 
+	 *
 	 * @return карта параметров отчета, где
 	 *         <p>
 	 *         ключ-идентификатор параметра {@link IReportParameter#getId()},
@@ -32,7 +32,7 @@ public interface IReportInput {
 	 *         значение-параметр отчета {@link IReportParameter}
 	 *         </p>
 	 */
-	public Map<String, IReportParameter> getParameters();
+	public Map<String, IReportParameter<?>> getParameters();
 
 	/**
 	 * Возвращает загрузчик классов. Необходимо вернуть загрузчик класса,
@@ -42,7 +42,7 @@ public interface IReportInput {
 	 * классов из BIRT возможно (если загрузчики классов отличаются) падение при
 	 * генерации отчета с текстом is not a function, it is a object </b>
 	 * </p>
-	 * 
+	 *
 	 * @return загрузчик классов или {@code null}, если в скрипте не
 	 *         используются Java классы.
 	 */

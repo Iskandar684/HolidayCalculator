@@ -37,7 +37,7 @@ public class BirtReportServiceBean implements IReportServiceLocal {
 				// TODO доработать сервис для остальных форматов
 				throw new ReportServiceException(String.format("Тип отчета %s не поддерживается", type));
 			}
-			Map<String, IReportParameter> params = aReportInput.getParameters();
+			Map<String, IReportParameter<?>> params = aReportInput.getParameters();
 			String url = aReportInput.getUrlToReportDesignFile();
 			ClassLoader classLoader = aReportInput.getClassLoader();
 			if (classLoader == null) {

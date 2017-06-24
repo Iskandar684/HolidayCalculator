@@ -103,7 +103,7 @@
         <label id="76">
             <property name="fontSize">14pt</property>
             <property name="paddingLeft">300pt</property>
-            <text-property name="text">Смирнову Василию Григорьевичу</text-property>
+            <text-property name="text">Смирнову В.Г.</text-property>
         </label>
         <data id="91">
             <property name="fontSize">14pt</property>
@@ -157,7 +157,7 @@
             <property name="fontSize">14pt</property>
             <property name="paddingRight">20pt</property>
             <property name="textAlign">right</property>
-            <text-property name="text">Генеральный директор ______________Смирнов В.Г.</text-property>
+            <text-property name="text">Генеральный директор ______________Смирнов Василий Григорьевич</text-property>
         </label>
         <label id="87">
             <property name="fontSize">150pt</property>

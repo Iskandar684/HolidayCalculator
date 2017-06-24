@@ -138,12 +138,20 @@
         <label id="84">
             <property name="fontSize">150pt</property>
         </label>
-        <label id="85">
+        <data id="92">
             <property name="fontSize">14pt</property>
             <property name="paddingRight">20pt</property>
             <property name="textAlign">right</property>
-            <text-property name="text">________________Гаврилов И.Т.</text-property>
-        </label>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">fio</property>
+                    <text-property name="displayName">fio</text-property>
+                    <expression name="expression" type="javascript">vars["fio"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <property name="resultSetColumn">fio</property>
+        </data>
         <label id="89"/>
         <label id="86">
             <property name="fontSize">14pt</property>
@@ -167,6 +175,14 @@ lastname=author.getLastName();&#13;
 name=author.getFirstName().substring(0,1).toUpperCase();&#13;
 patronymic=author.getPatronymic().substring(0,1).toUpperCase();&#13;
 from="от "+lastname+" "+name+"."+patronymic+".";</expression>
+            <property name="type">report</property>
+        </variable-element>
+        <variable-element name="fio">
+            <expression name="value" type="javascript">author=params["statement"].value.getAuthor();&#13;
+lastname=author.getLastName();&#13;
+name=author.getFirstName();&#13;
+patronymic=author.getPatronymic();&#13;
+fio="________________ "+lastname+" "+name+" "+patronymic;</expression>
             <property name="type">report</property>
         </variable-element>
     </property>

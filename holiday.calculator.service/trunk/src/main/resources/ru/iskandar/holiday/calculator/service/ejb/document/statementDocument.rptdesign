@@ -129,12 +129,19 @@
         <label id="82">
             <property name="fontSize">20pt</property>
         </label>
-        <label id="83">
+        <data id="93">
             <property name="fontSize">14pt</property>
             <property name="paddingLeft">20pt</property>
-            <property name="textAlign">left</property>
-            <text-property name="text">Прошу Вас предоставить мне оплачиваемый отгул на 17.06.2017.</text-property>
-        </label>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">content</property>
+                    <text-property name="displayName">content</text-property>
+                    <expression name="expression" type="javascript">vars["content"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <property name="resultSetColumn">content</property>
+        </data>
         <label id="84">
             <property name="fontSize">150pt</property>
         </label>
@@ -183,6 +190,13 @@ lastname=author.getLastName();&#13;
 name=author.getFirstName();&#13;
 patronymic=author.getPatronymic();&#13;
 fio="________________ "+lastname+" "+name+" "+patronymic;</expression>
+            <property name="type">report</property>
+        </variable-element>
+        <variable-element name="content">
+            <expression name="value" type="javascript">statement=params["statement"].value;&#13;
+dates=statement.getDates();&#13;
+datesAsStr=statement.format(dates);&#13;
+content="Прошу Вас предоставить мне оплачиваемый отгул "+datesAsStr+".";</expression>
             <property name="type">report</property>
         </variable-element>
     </property>

@@ -3,13 +3,14 @@
  */
 package ru.iskandar.holiday.calculator.service.ejb.report;
 
+import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.user.User;
 
 /**
- * @author Искандар
  *
  */
 public class EntryBasedHolidayStatementReportParamFactory extends HolidayStatementReportParameterFactory {
@@ -27,6 +28,11 @@ public class EntryBasedHolidayStatementReportParamFactory extends HolidayStateme
 	@Override
 	protected User getAuthor() {
 		return _entry.getAuthor();
+	}
+
+	@Override
+	protected Set<Date> getDates() {
+		return _entry.getDays();
 	}
 
 }

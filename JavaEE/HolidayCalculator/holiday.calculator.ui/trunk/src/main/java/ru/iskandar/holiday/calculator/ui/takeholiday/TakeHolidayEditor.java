@@ -28,12 +28,12 @@ import org.eclipse.ui.part.EditorPart;
 
 import ru.iskandar.holiday.calculator.service.model.ClientId;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorListenerAdapter;
+import ru.iskandar.holiday.calculator.service.model.StatementContentChangedEvent;
 import ru.iskandar.holiday.calculator.service.model.StatementSendedEvent;
 import ru.iskandar.holiday.calculator.service.model.TakeHolidayStatementBuilder;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.Messages;
 import ru.iskandar.holiday.calculator.ui.Utils;
-import ru.iskandar.holiday.calculator.ui.document.IHTMLContentProvider;
 import ru.iskandar.holiday.calculator.ui.outgoing.OutgoingStatementsEditor;
 import ru.iskandar.holiday.calculator.ui.outgoing.OutgoingStatementsEditorInput;
 
@@ -50,7 +50,7 @@ public class TakeHolidayEditor extends EditorPart {
 	private HolidayCalculatorModelProvider _modelProvider;
 
 	/** Поставщик содержимого документа заявления на отгул */
-	private IHTMLContentProvider _statementDocumentContentProvider;
+	private HTMLContentProvider _statementDocumentContentProvider;
 
 	/**
 	 * Конструктор
@@ -206,7 +206,30 @@ public class TakeHolidayEditor extends EditorPart {
 		HTMLDocumentViewer viewer = new HTMLDocumentViewer(_statementDocumentContentProvider);
 		Control control = viewer.create(main, _toolkit);
 		control.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		StatementContentChangedHandler contentChangedListener = new StatementContentChangedHandler();
+		_modelProvider.addListener(contentChangedListener);
+		control.addDisposeListener(new DisposeListener() {
+
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public void widgetDisposed(DisposeEvent aE) {
+				_modelProvider.removeListener(contentChangedListener);
+			}
+
+		});
 		return main;
+	}
+
+	private class StatementContentChangedHandler extends HolidayCalculatorListenerAdapter {
+
+		@Override
+		protected void statementContentChangedEvent(StatementContentChangedEvent aEvent) {
+			_statementDocumentContentProvider.asynReload();
+		}
+
 	}
 
 	/**

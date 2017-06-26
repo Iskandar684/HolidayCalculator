@@ -13,7 +13,12 @@ public class HolidayCalculatorListenerAdapter implements IHolidayCalculatorModel
 			statementConsidered((StatementConsideredEvent) aEvent);
 		} else if (aEvent instanceof UserCreatedEvent) {
 			userCreated((UserCreatedEvent) aEvent);
+		} else if (aEvent instanceof StatementContentChangedEvent) {
+			statementContentChangedEvent((StatementContentChangedEvent) aEvent);
 		}
+	}
+
+	protected void statementContentChangedEvent(StatementContentChangedEvent aEvent) {
 	}
 
 	protected void statementSended(StatementSendedEvent aEvent) {

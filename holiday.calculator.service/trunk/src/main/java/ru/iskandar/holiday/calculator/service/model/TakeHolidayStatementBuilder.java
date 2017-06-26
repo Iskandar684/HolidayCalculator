@@ -47,6 +47,7 @@ public class TakeHolidayStatementBuilder implements Serializable {
 		}
 		_days.clear();
 		_days.addAll(aDates);
+		notifyContentChanged();
 	}
 
 	/**
@@ -95,18 +96,22 @@ public class TakeHolidayStatementBuilder implements Serializable {
 	 */
 	public void setStatementType(HolidayStatementType aStatementType) {
 		_statementType = aStatementType;
+		notifyContentChanged();
 	}
 
 	public void addDate(Date aDate) {
 		_days.add(aDate);
+		notifyContentChanged();
 	}
 
 	public void removeDate(Date aDate) {
 		_days.remove(aDate);
+		notifyContentChanged();
 	}
 
 	public void clearDates() {
 		_days.clear();
+		notifyContentChanged();
 	}
 
 	/**
@@ -127,6 +132,10 @@ public class TakeHolidayStatementBuilder implements Serializable {
 	 */
 	public StatementDocument preview() throws DocumentPreviewException {
 		return _model.preview(build());
+	}
+
+	private void notifyContentChanged() {
+		_model.fireEvent(new StatementContentChangedEvent(build()));
 	}
 
 }

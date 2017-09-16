@@ -3,12 +3,15 @@ package ru.iskandar.holiday.calculator.clientlibraries.authentification;
 import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
@@ -34,8 +37,6 @@ public class AuthentificationDialog extends TitleAreaDialog {
 	public AuthentificationDialog(Shell aParentShell, ConnectionParams aConnectionParams) {
 		super(aParentShell);
 		_model = Objects.requireNonNull(aConnectionParams);
-		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-		scheduler.scheduleAtFixedRate(new ShowServerStatusTask(), 0, 1, TimeUnit.SECONDS);
 	}
 
 	/**
@@ -112,6 +113,17 @@ public class AuthentificationDialog extends TitleAreaDialog {
 			}
 		});
 		updateOkButton();
+
+		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+		ScheduledFuture<?> future = scheduler.scheduleAtFixedRate(new ShowServerStatusTask(), 0, 1, TimeUnit.SECONDS);
+		main.addDisposeListener(new DisposeListener() {
+
+			@Override
+			public void widgetDisposed(DisposeEvent e) {
+				future.cancel(true);
+			}
+		});
+
 		return main;
 	}
 
@@ -119,13 +131,23 @@ public class AuthentificationDialog extends TitleAreaDialog {
 
 		@Override
 		public void run() {
+			if (Thread.interrupted()) {
+				return;
+			}
 			String host = _model.getServerHost();
 			if ((host == null) || host.isEmpty() || _model.ping()) {
+				if (Thread.interrupted()) {
+					return;
+				}
 				setMessage(AuthentificationDialogMessages.description, IMessageProvider.INFORMATION);
 			} else {
+				if (Thread.interrupted()) {
+					return;
+				}
 				asyncSetMessage(NLS.bind(AuthentificationDialogMessages.serverNotAvailableText, host),
 						IMessageProvider.WARNING);
 			}
+
 		}
 	}
 

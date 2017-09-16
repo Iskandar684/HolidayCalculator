@@ -1,5 +1,10 @@
 package ru.iskandar.holiday.calculator.clientlibraries.authentification;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.util.Objects;
+
 /**
  * Поставщик аргументов программы
  */
@@ -45,6 +50,24 @@ public class ConnectionParams {
 		return (getPassword() == null) || getPassword().isEmpty() || (getUser() == null) || getUser().isEmpty()
 				|| (getServerHost() == null) || getServerHost().isEmpty();
 
+	}
+
+	public boolean ping() {
+		String host = getServerHost();
+		if ((host == null) || host.isEmpty()) {
+			return false;
+		}
+		return ping(getServerHost(), 8080, 2000);
+	}
+
+	private boolean ping(String host, int port, int timeout) {
+		Objects.requireNonNull(host, "Не указан пингуемый хост");
+		try (Socket socket = new Socket()) {
+			socket.connect(new InetSocketAddress(host, port), timeout);
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
 	}
 
 }

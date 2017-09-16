@@ -1,9 +1,13 @@
 package ru.iskandar.holiday.calculator.clientlibraries.authentification;
 
 import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -12,6 +16,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -28,8 +33,9 @@ public class AuthentificationDialog extends TitleAreaDialog {
 	 */
 	public AuthentificationDialog(Shell aParentShell, ConnectionParams aConnectionParams) {
 		super(aParentShell);
-		Objects.requireNonNull(aConnectionParams);
-		_model = aConnectionParams;
+		_model = Objects.requireNonNull(aConnectionParams);
+		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+		scheduler.scheduleAtFixedRate(new ShowServerStatusTask(), 0, 1, TimeUnit.SECONDS);
 	}
 
 	/**
@@ -107,6 +113,33 @@ public class AuthentificationDialog extends TitleAreaDialog {
 		});
 		updateOkButton();
 		return main;
+	}
+
+	private class ShowServerStatusTask implements Runnable {
+
+		@Override
+		public void run() {
+			String host = _model.getServerHost();
+			if ((host == null) || host.isEmpty() || _model.ping()) {
+				setMessage(AuthentificationDialogMessages.description, IMessageProvider.INFORMATION);
+			} else {
+				asyncSetMessage(NLS.bind(AuthentificationDialogMessages.serverNotAvailableText, host),
+						IMessageProvider.WARNING);
+			}
+		}
+	}
+
+	private void asyncSetMessage(String newMessage, int newType) {
+		Display.getDefault().asyncExec(new Runnable() {
+
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public void run() {
+				setMessage(newMessage, newType);
+			}
+		});
 	}
 
 	/**

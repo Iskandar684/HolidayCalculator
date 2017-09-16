@@ -20,6 +20,8 @@ public class AuthentificationDialogMessages extends NLS {
 
 	public static String serverLabel;
 
+	public static String serverNotAvailableText;
+
 	static {
 		// инициализация ресурсов бандла
 		NLS.initializeMessages(BUNDLE_NAME, AuthentificationDialogMessages.class);

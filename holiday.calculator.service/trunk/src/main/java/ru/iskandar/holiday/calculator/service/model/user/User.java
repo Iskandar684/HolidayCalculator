@@ -5,30 +5,45 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * Пользователь
  */
+@XmlRootElement(name = "User")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class User implements Serializable {
 
 	/**
-	 * Идентфикатор для сериализации
+	 * Уникальный идентификатор класса для сериализации
 	 */
 	private static final long serialVersionUID = 7332495096773696543L;
 
 	/** Имя */
+	@XmlElement
 	private final String _firstName;
+
 	/** Фамилия */
+	@XmlElement
 	private final String _lastName;
+
 	/** Отчество */
+	@XmlElement
 	private final String _patronymic;
 
 	/** Идентификатор */
+	@XmlElement
 	private final UUID _uuid;
 
 	/** Дата приема на работу */
+	@XmlElement
 	private final Date _employmentDate;
 
 	/** Логин */
+	@XmlElement
 	private final String _login;
 
 	/**
@@ -108,18 +123,23 @@ public class User implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object aObj) {
-		if (this == aObj)
+		if (this == aObj) {
 			return true;
-		if (aObj == null)
+		}
+		if (aObj == null) {
 			return false;
-		if (getClass() != aObj.getClass())
+		}
+		if (getClass() != aObj.getClass()) {
 			return false;
+		}
 		User other = (User) aObj;
 		if (_uuid == null) {
-			if (other._uuid != null)
+			if (other._uuid != null) {
 				return false;
-		} else if (!_uuid.equals(other._uuid))
+			}
+		} else if (!_uuid.equals(other._uuid)) {
 			return false;
+		}
 		return true;
 	}
 

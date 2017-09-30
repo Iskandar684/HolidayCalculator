@@ -24,7 +24,10 @@ http://wildfly.org/downloads/
    Распаковать и скопировать папку содержимое папки birt-runtime-4.6.0-20160607/ReportEngine/lib/ в
    /wildfly-10.1.0.Final/standalone/deployments/holiday.ear/lib
    
-   3г. Скачать Tidy.jar и скопировать в /wildfly-10.1.0.Final/standalone/deployments/holiday.ear/lib
+   3г. В папку /wildfly-10.1.0.Final/standalone/deployments/ скопировать 
+   holiday-calculator-web-service.war
+   
+   3д. Скачать Tidy.jar и скопировать в /wildfly-10.1.0.Final/standalone/deployments/holiday.ear/lib
        <groupId>org.eclipse.birt.runtime.3_7_1</groupId>  
        <artifactId>Tidy</artifactId>
        <version>1</version>
@@ -32,6 +35,7 @@ http://wildfly.org/downloads/
        <name>Tidy.jar</name>
    3е. В папку /wildfly-10.1.0.Final/standalone/deployments/report/ 
    скопировать файлы с расширением .rptdesign из /holiday.calculator.service/src/main/resources/ru/iskandar/holiday/calculator/service/ejb/report
+   3ж. В папку wildfly-10.1.0.Final/welcome-content/скопировать файлы (*html, *js, ...) из holiday.calculator.web.client
    
 
 4. Добавить пользователей с ролью guest 

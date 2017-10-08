@@ -57,7 +57,11 @@ wildfly-10.1.0.Final\standalone\configuration\standalone.xml
 <default-missing-method-permissions-deny-access value="false"/>
 
 8. В папке wildfly-10.1.0.Final/standalone/deployments/ создать holiday.ear.dodeploy
-9. Запустить wildfly-10.1.0.Final/bin/standalone.bat
+
+Запуск сервера.
+1. Запустить postgresql
+(service postgresql start) 
+2. Запустить wildfly-10.1.0.Final/bin/standalone.bat
 
 Инструкция по настройки БД.
 

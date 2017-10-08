@@ -23,27 +23,27 @@ public class User implements Serializable {
 	private static final long serialVersionUID = 7332495096773696543L;
 
 	/** Имя */
-	@XmlElement
+	@XmlElement(name = "firstName")
 	private final String _firstName;
 
 	/** Фамилия */
-	@XmlElement
+	@XmlElement(name = "lastName")
 	private final String _lastName;
 
 	/** Отчество */
-	@XmlElement
+	@XmlElement(name = "patronymic")
 	private final String _patronymic;
 
 	/** Идентификатор */
-	@XmlElement
+	@XmlElement(name = "uuid")
 	private final UUID _uuid;
 
 	/** Дата приема на работу */
-	@XmlElement
+	@XmlElement(name = "employmentDate")
 	private final Date _employmentDate;
 
 	/** Логин */
-	@XmlElement
+	@XmlElement(name = "login")
 	private final String _login;
 
 	/**

@@ -17,12 +17,22 @@ function updateFIO(aFIO) {
 	document.getElementById('fio').innerHTML = aFIO;
 }
 
+function updateHolidayCount(aCount) {
+	document.getElementById('holidaycount').innerHTML = aCount;
+}
+
 $(document).ready(function() {
 
-//	updateFIO () ;
+	// updateFIO () ;
 	$.getJSON(url + "user", function(data) {
 		var fio = data.lastName + ' ' + data.firstName + ' ' + data.patronymic;
 		updateFIO(fio);
+	});
+
+	updateHolidayCount(1);
+
+	$.getJSON(url + "HolidaysQuantity", function(data) {
+		updateHolidayCount(data);
 	});
 
 	$('#callBt').click(function() {

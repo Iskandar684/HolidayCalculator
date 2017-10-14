@@ -54,4 +54,19 @@ public class HolidayCalculatorWebService {
 		return new CurrentUserInfoFactory().create();
 	}
 
+	/**
+	 * Возвращает количество отгулов у текущего пользователя
+	 *
+	 * @param aUser
+	 *            пользователь
+	 * @return количество отгулов
+	 * 
+	 */
+	@GET
+	@Path("/HolidaysQuantity")
+	@Produces({ "application/json" })
+	public int getHolidaysQuantity() {
+		return 3;
+	}
+
 }

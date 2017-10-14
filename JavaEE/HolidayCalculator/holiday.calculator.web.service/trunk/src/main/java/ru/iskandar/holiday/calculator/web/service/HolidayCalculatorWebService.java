@@ -10,7 +10,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-import ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorLocal;
+import ru.iskandar.holiday.calculator.service.ejb.IUserServiceLocal;
 import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorService;
 import ru.iskandar.holiday.calculator.service.model.user.User;
 import ru.iskandar.holiday.calculator.service.model.user.UserFactory;
@@ -21,9 +21,19 @@ public class HolidayCalculatorWebService {
 	// @EJB
 	// private IHolidayCalculatorLocal _service;
 
+	/** JNDI имя */
+	private static final String HOLIDAY_CALCULATOR_JNDI_NAME = "java:app/holiday-calculator-web-service/HolidayCalculatorBean!ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorLocal";
+
+	/** JNDI имя */
+	private static final String USER_SERVICE_JNDI_NAME = "java:app/holiday-calculator-web-service/UserServiceBean!ru.iskandar.holiday.calculator.service.ejb.IUserServiceLocal";
+
 	private IHolidayCalculatorService lookupHolidayCalculatorService() throws NamingException {
 		// return _service;
-		return InitialContext.doLookup(IHolidayCalculatorLocal.JNDI_NAME);
+		return InitialContext.doLookup(HOLIDAY_CALCULATOR_JNDI_NAME);
+	}
+
+	private IUserServiceLocal lookupUserServiceLocal() throws NamingException {
+		return InitialContext.doLookup(USER_SERVICE_JNDI_NAME);
 	}
 
 	private class CurrentUserInfoFactory extends UserFactory {
@@ -64,12 +74,26 @@ public class HolidayCalculatorWebService {
 	@Path("/user")
 	@Produces({ "application/json" })
 	public User getUser() {
+		IHolidayCalculatorService service;
 		try {
-			System.out.println("service " + lookupHolidayCalculatorService());
+			service = lookupHolidayCalculatorService();
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			service = null;
 		}
+		System.out.println("service " + service);
+
+		IUserServiceLocal userService;
+		try {
+			userService = lookupUserServiceLocal();
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			userService = null;
+		}
+		System.out.println("userService " + userService);
+
 		return new CurrentUserInfoFactory().create();
 	}
 

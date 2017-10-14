@@ -7,7 +7,4 @@ import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorService;
  */
 public interface IHolidayCalculatorLocal extends IHolidayCalculatorService {
 
-	/** JNDI имя */
-	public static String JNDI_NAME = "java:app/holiday-calculator-web-service/HolidayCalculatorBean!ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorLocal";
-
 }

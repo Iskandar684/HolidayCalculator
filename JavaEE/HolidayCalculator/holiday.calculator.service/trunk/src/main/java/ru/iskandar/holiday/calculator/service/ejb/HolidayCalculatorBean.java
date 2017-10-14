@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
+import javax.ejb.Local;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.jms.JMSException;
@@ -53,8 +54,9 @@ import ru.iskandar.holiday.calculator.service.utils.DateUtils;
  */
 @Stateless
 @Remote(IHolidayCalculatorRemote.class)
+@Local(IHolidayCalculatorLocal.class)
 @DeclareRoles({ Permission.CONSIDER, Permission.USER_CREATOR, Permission.USER_VIEWER })
-public class HolidayCalculatorBean implements IHolidayCalculatorRemote {
+public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHolidayCalculatorLocal {
 
 	/** Логгер */
 	private static final Logger LOG = Logger.getLogger(HolidayCalculatorBean.class);

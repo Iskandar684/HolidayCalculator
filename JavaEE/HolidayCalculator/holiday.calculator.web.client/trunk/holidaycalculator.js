@@ -1,16 +1,16 @@
 var url = "http://192.168.196.129:8080/holiday-calculator-web-service/";
+var login;
+var password;
 
-function showFIODialog() {
-	$.getJSON(url + "user", function(data) {
-		alert(data.lastName + ' ' + data.firstName + ' ' + data.patronymic);
-	});
-}
+
 
 function updateFIO() {
-	$.getJSON(url + "user", function(data) {
+
+	$.getJSON(url + "user/" + login + "/" + password, function(data) {
 		var fio = data.lastName + ' ' + data.firstName + ' ' + data.patronymic;
 		updateFIO(fio);
 	});
+
 }
 
 function updateFIO(aFIO) {
@@ -21,22 +21,52 @@ function updateHolidayCount(aCount) {
 	document.getElementById('holidaycount').innerHTML = aCount;
 }
 
+function authorization() {
+
+	$(function() {
+		$("#dialog_auth")
+				.dialog(
+						{
+							resizable : false,
+							bgiframe : true,
+							autoOpen : false,
+							modal : true,
+							width : "400px",
+							position : [ "center", "center" ],
+							buttons : {
+								"Вход" : function() {
+									login = document
+											.getElementById('user_name').value;
+									password = document
+											.getElementById('user_password').value;
+
+									$.getJSON(url + "user/" + login + "/"
+											+ password, function(data) {
+										var fio = data.lastName + ' '
+												+ data.firstName + ' '
+												+ data.patronymic;
+										updateFIO(fio);
+									});
+
+									$.getJSON(url + "HolidaysQuantity/" + login
+											+ "/" + password, function(data) {
+										updateHolidayCount(data);
+									});
+
+									$(this).dialog("close");
+								},
+								"Закрыть" : function() {
+									$(this).dialog("close");
+								}
+							}
+						});
+		$('#user_auth').click(function() {
+			$('#dialog_auth').dialog('open');
+		});
+	});
+
+}
+
 $(document).ready(function() {
-
-	// updateFIO () ;
-	$.getJSON(url + "user/user1/password1", function(data) {
-		var fio = data.lastName + ' ' + data.firstName + ' ' + data.patronymic;
-		updateFIO(fio);
-	});
-
-	updateHolidayCount(1);
-
-	$.getJSON(url + "HolidaysQuantity/user1/password1", function(data) {
-		updateHolidayCount(data);
-	});
-
-	$('#callBt').click(function() {
-		showFIODialog();
-	});
-
+	authorization();
 });

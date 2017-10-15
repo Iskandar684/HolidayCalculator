@@ -9,6 +9,7 @@ import java.util.Objects;
 import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
 import javax.ejb.Local;
+import javax.ejb.Remote;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -34,7 +35,8 @@ import ru.iskandar.holiday.calculator.service.model.user.UserEntity_;
  */
 @Stateless
 @Local(IUserServiceLocal.class)
-public class UserServiceBean implements IUserServiceLocal {
+@Remote(IUserServiceRemote.class)
+public class UserServiceBean implements IUserServiceLocal, IUserServiceRemote {
 
 	/** Менеджер сущностей */
 	@PersistenceContext

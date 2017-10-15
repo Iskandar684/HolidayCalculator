@@ -1,25 +1,32 @@
 package ru.iskandar.holiday.calculator.web.service;
 
-import java.util.Date;
-import java.util.UUID;
+import java.util.Properties;
 
+import javax.annotation.security.PermitAll;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
+import ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorLocal;
+import ru.iskandar.holiday.calculator.service.ejb.IUserService;
 import ru.iskandar.holiday.calculator.service.ejb.IUserServiceLocal;
 import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorService;
 import ru.iskandar.holiday.calculator.service.model.user.User;
-import ru.iskandar.holiday.calculator.service.model.user.UserFactory;
 
 @Path("/")
 @Stateless
 public class HolidayCalculatorWebService {
-	// @EJB
-	// private IHolidayCalculatorLocal _service;
+	@EJB
+	private IHolidayCalculatorLocal _holidayService;
+	@EJB
+	private IUserServiceLocal _userService;
 
 	/** JNDI имя */
 	private static final String HOLIDAY_CALCULATOR_JNDI_NAME = "java:app/holiday-calculator-web-service/HolidayCalculatorBean!ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorLocal";
@@ -27,74 +34,36 @@ public class HolidayCalculatorWebService {
 	/** JNDI имя */
 	private static final String USER_SERVICE_JNDI_NAME = "java:app/holiday-calculator-web-service/UserServiceBean!ru.iskandar.holiday.calculator.service.ejb.IUserServiceLocal";
 
+	/** JNDI имя */
+	// private static final String REMOTE_USER_SERVICE_JNDI_NAME =
+	// "java:app/holiday-calculator-web-service/UserServiceBean!ru.iskandar.holiday.calculator.service.ejb.IUserServiceRemote";
+
 	private IHolidayCalculatorService lookupHolidayCalculatorService() throws NamingException {
 		// return _service;
 		return InitialContext.doLookup(HOLIDAY_CALCULATOR_JNDI_NAME);
 	}
 
-	private IUserServiceLocal lookupUserServiceLocal() throws NamingException {
-		return InitialContext.doLookup(USER_SERVICE_JNDI_NAME);
+	private IUserService lookupUserServiceLocal() throws NamingException {
+		InitialContext context = createInitialContext("user1", "password1");
+		return (IUserServiceLocal) context.lookup(USER_SERVICE_JNDI_NAME);
 	}
 
-	private class CurrentUserInfoFactory extends UserFactory {
-
-		@Override
-		protected UUID getUUID() {
-			return UUID.randomUUID();
-		}
-
-		@Override
-		protected String getFirstName() {
-			return "Олег";
-		}
-
-		@Override
-		protected String getLastName() {
-			return "Сидоров";
-		}
-
-		@Override
-		protected String getPatronymic() {
-			return "Михайлович";
-		}
-
-		@Override
-		protected Date getEmploymentDate() {
-			return new Date();
-		}
-
-		@Override
-		protected String getLogin() {
-			return "user1";
-		}
-
+	private InitialContext createInitialContext(String aUser, String aPassword) throws NamingException {
+		Properties props = new Properties();
+		props.put(Context.SECURITY_PRINCIPAL, aUser);
+		props.put(Context.SECURITY_CREDENTIALS, aPassword);
+		InitialContext context = new InitialContext(props);
+		return context;
 	}
 
 	@GET
-	@Path("/user")
-	@Produces({ "application/json" })
-	public User getUser() {
-		IHolidayCalculatorService service;
-		try {
-			service = lookupHolidayCalculatorService();
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			service = null;
-		}
-		System.out.println("service " + service);
-
-		IUserServiceLocal userService;
-		try {
-			userService = lookupUserServiceLocal();
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			userService = null;
-		}
-		System.out.println("userService " + userService);
-
-		return new CurrentUserInfoFactory().create();
+	@Path("/user/{login}/{password}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	@PermitAll
+	public User getUser(@PathParam("login") String login, @PathParam("password") String password) {
+		User user = _userService.findUserByLogin(login);
+		System.out.println("currentUser " + user);
+		return user;
 	}
 
 	/**
@@ -106,10 +75,11 @@ public class HolidayCalculatorWebService {
 	 *
 	 */
 	@GET
-	@Path("/HolidaysQuantity")
+	@Path("/HolidaysQuantity/{login}/{password}")
 	@Produces({ "application/json" })
-	public int getHolidaysQuantity() {
-		return 3;
+	public int getHolidaysQuantity(@PathParam("login") String login, @PathParam("password") String password) {
+		User user = getUser(login, password);
+		return _holidayService.getHolidaysQuantity(user);
 	}
 
 }

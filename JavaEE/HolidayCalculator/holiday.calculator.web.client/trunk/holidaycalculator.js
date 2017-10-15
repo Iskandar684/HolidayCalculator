@@ -53,6 +53,9 @@ function authorization() {
 										updateHolidayCount(data);
 									});
 
+									document.getElementById('user_auth').innerHTML='Сменить пользователя';
+									document.getElementById("userinfo").style.display = 'block'; 
+									
 									$(this).dialog("close");
 								},
 								"Закрыть" : function() {

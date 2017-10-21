@@ -31,3 +31,7 @@ h2 {
 	autoOpen: false;
 	modal: true;
 }
+
+.dialog_auth_field {
+	float: right;
+}

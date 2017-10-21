@@ -49,7 +49,7 @@ function enterPressed() {
 			function(data) {
 				updateHolidayCount(data);
 			});
-	document.getElementById('user_auth').innerHTML = 'Сменить пользователя';
+	document.getElementById('user_auth').style.display= 'none';
 	document.getElementById("userinfo").style.display = 'block';
 }
 

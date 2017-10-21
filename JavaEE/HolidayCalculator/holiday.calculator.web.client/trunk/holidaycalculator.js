@@ -2,8 +2,6 @@ var url = "http://192.168.196.129:8080/holiday-calculator-web-service/";
 var login;
 var password;
 
-
-
 function updateFIO() {
 
 	$.getJSON(url + "user/" + login + "/" + password, function(data) {
@@ -27,12 +25,6 @@ function authorization() {
 		$("#dialog_auth")
 				.dialog(
 						{
-							resizable : false,
-							bgiframe : true,
-							autoOpen : false,
-							modal : true,
-							width : "400px",
-							position : [ "center", "center" ],
 							buttons : {
 								"Вход" : function() {
 									login = document
@@ -53,9 +45,9 @@ function authorization() {
 										updateHolidayCount(data);
 									});
 
-									document.getElementById('user_auth').innerHTML='Сменить пользователя';
-									document.getElementById("userinfo").style.display = 'block'; 
-									
+									document.getElementById('user_auth').innerHTML = 'Сменить пользователя';
+									document.getElementById("userinfo").style.display = 'block';
+
 									$(this).dialog("close");
 								},
 								"Закрыть" : function() {

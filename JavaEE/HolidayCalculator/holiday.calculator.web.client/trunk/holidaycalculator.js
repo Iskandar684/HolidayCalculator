@@ -43,13 +43,12 @@ function enterPressed() {
 	$.getJSON(url + "user/" + login + "/" + password, function(data) {
 		var fio = data.lastName + ' ' + data.firstName + ' ' + data.patronymic;
 		updateFIO(fio);
+		$.getJSON(url + "HolidaysQuantity", function(data) {
+			updateHolidayCount(data);
+		});
 	});
 
-	$.getJSON(url + "HolidaysQuantity/" + login + "/" + password,
-			function(data) {
-				updateHolidayCount(data);
-			});
-	document.getElementById('user_auth').style.display= 'none';
+	document.getElementById('user_auth').style.display = 'none';
 	document.getElementById("userinfo").style.display = 'block';
 }
 

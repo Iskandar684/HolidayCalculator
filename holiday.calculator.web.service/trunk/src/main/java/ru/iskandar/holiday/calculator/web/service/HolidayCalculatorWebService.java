@@ -1,67 +1,57 @@
 package ru.iskandar.holiday.calculator.web.service;
 
-import java.util.Properties;
-
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorLocal;
-import ru.iskandar.holiday.calculator.service.ejb.IUserService;
 import ru.iskandar.holiday.calculator.service.ejb.IUserServiceLocal;
-import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorService;
+import ru.iskandar.holiday.calculator.service.model.permissions.Permission;
 import ru.iskandar.holiday.calculator.service.model.user.User;
 
 @Path("/")
 @Stateless
 public class HolidayCalculatorWebService {
+
 	@EJB
 	private IHolidayCalculatorLocal _holidayService;
 	@EJB
 	private IUserServiceLocal _userService;
 
-	/** JNDI имя */
-	private static final String HOLIDAY_CALCULATOR_JNDI_NAME = "java:app/holiday-calculator-web-service/HolidayCalculatorBean!ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorLocal";
-
-	/** JNDI имя */
-	private static final String USER_SERVICE_JNDI_NAME = "java:app/holiday-calculator-web-service/UserServiceBean!ru.iskandar.holiday.calculator.service.ejb.IUserServiceLocal";
-
-	/** JNDI имя */
-	// private static final String REMOTE_USER_SERVICE_JNDI_NAME =
-	// "java:app/holiday-calculator-web-service/UserServiceBean!ru.iskandar.holiday.calculator.service.ejb.IUserServiceRemote";
-
-	private IHolidayCalculatorService lookupHolidayCalculatorService() throws NamingException {
-		// return _service;
-		return InitialContext.doLookup(HOLIDAY_CALCULATOR_JNDI_NAME);
-	}
-
-	private IUserService lookupUserServiceLocal() throws NamingException {
-		InitialContext context = createInitialContext("user1", "password1");
-		return (IUserServiceLocal) context.lookup(USER_SERVICE_JNDI_NAME);
-	}
-
-	private InitialContext createInitialContext(String aUser, String aPassword) throws NamingException {
-		Properties props = new Properties();
-		props.put(Context.SECURITY_PRINCIPAL, aUser);
-		props.put(Context.SECURITY_CREDENTIALS, aPassword);
-		InitialContext context = new InitialContext(props);
-		return context;
-	}
+	@Context
+	private HttpServletRequest _request;
 
 	@GET
 	@Path("/user/{login}/{password}")
 	@Produces({ MediaType.APPLICATION_JSON })
 	@PermitAll
 	public User getUser(@PathParam("login") String login, @PathParam("password") String password) {
-		User user = _userService.findUserByLogin(login);
+		// User user = _userService.findUserByLogin(login);
+		User user = null;
+
+		System.out.println("request " + _request);
+		try {
+			_request.login(login, password);
+			System.out.println("login OK");
+			String authType = _request.getAuthType();
+			System.out.println("authType  " + authType);
+			System.out.println("getRemoteUser " + _request.getRemoteUser());
+			System.out.println("getUserPrincipal " + _request.getUserPrincipal());
+			System.out.println("isUserInRole CONSIDER " + _request.isUserInRole(Permission.CONSIDER));
+			user = _userService.getCurrentUser();
+		} catch (ServletException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("login FAIL");
+		}
 		System.out.println("currentUser " + user);
 		return user;
 	}
@@ -75,10 +65,11 @@ public class HolidayCalculatorWebService {
 	 *
 	 */
 	@GET
-	@Path("/HolidaysQuantity/{login}/{password}")
+	@Path("/HolidaysQuantity")
 	@Produces({ "application/json" })
-	public int getHolidaysQuantity(@PathParam("login") String login, @PathParam("password") String password) {
-		User user = getUser(login, password);
+	public int getHolidaysQuantity() {
+		System.out.println("getHolidaysQuantity  UserPrincipal " + _request.getUserPrincipal());
+		User user = _userService.getCurrentUser();
 		return _holidayService.getHolidaysQuantity(user);
 	}
 

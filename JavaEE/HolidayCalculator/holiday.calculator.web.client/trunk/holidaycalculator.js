@@ -43,11 +43,13 @@ function reload(aIsLogged) {
 
 function updateLoginControls(aIsLogged) {
 	if (aIsLogged) {
-		document.getElementById('user_auth').style.display = 'none';
+		document.getElementById('user_auth_holder').style.visibility = 'hidden';
 		document.getElementById("userinfo").style.display = 'block';
+		document.getElementById('logout_holder').style.visibility = 'visible';
 	} else {
-		document.getElementById('user_auth').style.display = 'block';
+		document.getElementById('user_auth_holder').style.visibility = 'visible';
 		document.getElementById("userinfo").style.display = 'none';
+		document.getElementById('logout_holder').style.visibility = 'hidden';
 	}
 }
 
@@ -72,6 +74,9 @@ $(document).ready(function() {
 	$('#user_auth').click(function() {
 		openAuthorizationDialog();
 	});
+	$('#logout').click(function() {
+		logout();
+	});
 	$.getJSON(url + "isLoggedIn").done(function(aIsLogged) {
 		reload(aIsLogged);
 
@@ -80,3 +85,13 @@ $(document).ready(function() {
 		console.log("isLoggedIn Failed: " + err + "  " + jqxhr);
 	});
 });
+
+function logout() {
+	$.getJSON(url + "logout").done(function() {
+		updateLoginControls(false);
+
+	}).fail(function(jqxhr, textStatus, error) {
+		var err = textStatus + ", " + error;
+		console.log("logout Failed: " + err + "  " + jqxhr);
+	});
+}

@@ -33,6 +33,10 @@ h2 {
 	visibility: hidden;
 }
 
+#logout_holder{
+	visibility: hidden;
+}
+
 .dialog_auth_field {
 	float: right;
 }

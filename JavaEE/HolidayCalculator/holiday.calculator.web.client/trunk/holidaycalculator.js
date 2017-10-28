@@ -23,7 +23,7 @@ function authorization() {
 	$("#dialog_auth").dialog({
 		buttons : {
 			"Вход" : function() {
-				enterPressed();
+				login();
 				$(this).dialog("close");
 			},
 			"Закрыть" : function() {
@@ -36,20 +36,25 @@ function authorization() {
 	});
 }
 
-function enterPressed() {
+function login() {
 	login = document.getElementById('user_name').value;
 	password = document.getElementById('user_password').value;
 
-	$.getJSON(url + "user/" + login + "/" + password, function(data) {
-		var fio = data.lastName + ' ' + data.firstName + ' ' + data.patronymic;
-		updateFIO(fio);
+	$.getJSON(url + "login/" + login + "/" + password, function(data) {
+
 		$.getJSON(url + "HolidaysQuantity", function(data) {
 			updateHolidayCount(data);
 		});
-	});
 
-	document.getElementById('user_auth').style.display = 'none';
-	document.getElementById("userinfo").style.display = 'block';
+		$.getJSON(url + "user", function(data) {
+			var fio = data.lastName + ' ' + data.firstName + ' '
+					+ data.patronymic;
+			updateFIO(fio);
+		});
+
+		document.getElementById('user_auth').style.display = 'none';
+		document.getElementById("userinfo").style.display = 'block';
+	});
 }
 
 $(document).ready(function() {

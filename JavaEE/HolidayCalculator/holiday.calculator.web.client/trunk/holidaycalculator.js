@@ -1,5 +1,5 @@
 var url = "http://192.168.196.129:8080/holiday-calculator-web-service/";
-var login;
+var userName;
 var password;
 
 function updateFIO() {
@@ -19,44 +19,53 @@ function updateHolidayCount(aCount) {
 	document.getElementById('holidaycount').innerHTML = aCount;
 }
 
-function authorization() {
+function openAuthorizationDialog() {
+	$('#dialog_auth').dialog('open');
+}
+
+function initAuthorizationDialog() {
 	$("#dialog_auth").dialog({
 		buttons : {
 			"Вход" : function() {
-				login();
 				$(this).dialog("close");
+				login();
 			},
 			"Закрыть" : function() {
 				$(this).dialog("close");
 			}
 		}
 	});
-	$('#user_auth').click(function() {
-		$('#dialog_auth').dialog('open');
-	});
 }
 
 function login() {
-	login = document.getElementById('user_name').value;
+	userName = document.getElementById('user_name').value;
 	password = document.getElementById('user_password').value;
+	$.getJSON(url + "login/" + userName + "/" + password, function(logged) {
+		if (logged) {
+			loadContentByLoggedUser();
+			document.getElementById('user_auth').style.display = 'none';
+			document.getElementById("userinfo").style.display = 'block';
+		} else {
+			openAuthorizationDialog()
+		}
 
-	$.getJSON(url + "login/" + login + "/" + password, function(data) {
+	});
+}
 
-		$.getJSON(url + "HolidaysQuantity", function(data) {
-			updateHolidayCount(data);
-		});
+function loadContentByLoggedUser() {
+	$.getJSON(url + "HolidaysQuantity", function(data) {
+		updateHolidayCount(data);
+	});
 
-		$.getJSON(url + "user", function(data) {
-			var fio = data.lastName + ' ' + data.firstName + ' '
-					+ data.patronymic;
-			updateFIO(fio);
-		});
-
-		document.getElementById('user_auth').style.display = 'none';
-		document.getElementById("userinfo").style.display = 'block';
+	$.getJSON(url + "user", function(data) {
+		var fio = data.lastName + ' ' + data.firstName + ' ' + data.patronymic;
+		updateFIO(fio);
 	});
 }
 
 $(document).ready(function() {
-	authorization();
+	initAuthorizationDialog();
+	$('#user_auth').click(function() {
+		openAuthorizationDialog();
+	});
 });

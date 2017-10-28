@@ -9,10 +9,6 @@ function updateHolidayCount(aCount) {
 }
 
 function openAuthorizationDialog() {
-	$('#dialog_auth').dialog('open');
-}
-
-function initAuthorizationDialog() {
 	$("#dialog_auth").dialog({
 		buttons : {
 			"Вход" : function() {
@@ -24,21 +20,35 @@ function initAuthorizationDialog() {
 			}
 		}
 	});
+
+	document.getElementById("dialog_auth").style.visibility = 'visible';
 }
 
 function login() {
 	var userName = document.getElementById('user_name').value;
 	var password = document.getElementById('user_password').value;
-	$.getJSON(url + "login/" + userName + "/" + password, function(logged) {
-		if (logged) {
-			loadContentByLoggedUser();
-			document.getElementById('user_auth').style.display = 'none';
-			document.getElementById("userinfo").style.display = 'block';
-		} else {
-			openAuthorizationDialog()
-		}
-
+	$.getJSON(url + "login/" + userName + "/" + password, function(aIsLogged) {
+		reload(aIsLogged);
 	});
+}
+
+function reload(aIsLogged) {
+	updateLoginControls(aIsLogged);
+	if (aIsLogged) {
+		loadContentByLoggedUser();
+	} else {
+		openAuthorizationDialog()
+	}
+}
+
+function updateLoginControls(aIsLogged) {
+	if (aIsLogged) {
+		document.getElementById('user_auth').style.display = 'none';
+		document.getElementById("userinfo").style.display = 'block';
+	} else {
+		document.getElementById('user_auth').style.display = 'block';
+		document.getElementById("userinfo").style.display = 'none';
+	}
 }
 
 function loadContentByLoggedUser() {
@@ -59,8 +69,14 @@ function loadContentByLoggedUser() {
 }
 
 $(document).ready(function() {
-	initAuthorizationDialog();
 	$('#user_auth').click(function() {
 		openAuthorizationDialog();
+	});
+	$.getJSON(url + "isLoggedIn").done(function(aIsLogged) {
+		reload(aIsLogged);
+
+	}).fail(function(jqxhr, textStatus, error) {
+		var err = textStatus + ", " + error;
+		console.log("isLoggedIn Failed: " + err + "  " + jqxhr);
 	});
 });

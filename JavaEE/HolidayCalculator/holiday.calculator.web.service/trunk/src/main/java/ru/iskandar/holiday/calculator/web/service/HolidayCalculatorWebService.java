@@ -2,7 +2,6 @@ package ru.iskandar.holiday.calculator.web.service;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.servlet.ServletException;
@@ -73,8 +72,9 @@ public class HolidayCalculatorWebService {
 	@GET
 	@Path("/user")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@RolesAllowed(Permission.USER_VIEWER)
+	@PermitAll
 	public User getUser() {
+		System.out.println("getUser  UserPrincipal " + _request.getUserPrincipal());
 		User user = _userService.getCurrentUser();
 		System.out.println("getUser " + user);
 		return user;

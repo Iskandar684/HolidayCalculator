@@ -1,6 +1,7 @@
 package ru.iskandar.holiday.calculator.web.service;
 
-import javax.annotation.security.DeclareRoles;
+import java.security.Principal;
+
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -20,7 +21,6 @@ import ru.iskandar.holiday.calculator.service.model.user.User;
 
 @Path("/")
 @Stateless
-@DeclareRoles({ Permission.CONSIDER, Permission.USER_CREATOR, Permission.USER_VIEWER })
 public class HolidayCalculatorWebService {
 
 	@EJB
@@ -33,13 +33,13 @@ public class HolidayCalculatorWebService {
 	private HttpServletRequest _request;
 
 	@GET
-	@Path("/login/{login}/{password}")
+	@Path("/login/{username}/{password}")
 	@Produces({ MediaType.APPLICATION_JSON })
 	@PermitAll
-	public boolean login(@PathParam("login") String login, @PathParam("password") String password) {
+	public boolean login(@PathParam("username") String username, @PathParam("password") String password) {
 		System.out.println("login request " + _request);
 		try {
-			_request.login(login, password);
+			_request.login(username, password);
 			System.out.println("login OK");
 			String authType = _request.getAuthType();
 			System.out.println("authType  " + authType);
@@ -67,6 +67,16 @@ public class HolidayCalculatorWebService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@GET
+	@Path("/isLoggedIn")
+	@Produces({ MediaType.APPLICATION_JSON })
+	@PermitAll
+	public boolean isLoggedIn() {
+		System.out.println("isLoggedIn  UserPrincipal " + _request.getUserPrincipal());
+		Principal principal = _request.getUserPrincipal();
+		return (principal != null) && !"anonymous".equalsIgnoreCase(principal.getName());
 	}
 
 	@GET

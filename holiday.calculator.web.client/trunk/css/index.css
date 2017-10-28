@@ -17,7 +17,7 @@ h2 {
 	text-align: center;
 }
 
-.user_auth_holder {
+.login_holder {
 	position: absolute;
 	text-align: center;
 	width: 100%;
@@ -35,6 +35,7 @@ h2 {
 
 #logout_holder{
 	visibility: hidden;
+	float: right; 
 }
 
 .dialog_auth_field {

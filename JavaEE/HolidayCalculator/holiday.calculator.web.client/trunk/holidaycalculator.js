@@ -42,12 +42,19 @@ function login() {
 }
 
 function loadContentByLoggedUser() {
-	$.getJSON(url + "user", function(data) {
+	$.getJSON(url + "user").done(function(data) {
 		var fio = data.lastName + ' ' + data.firstName + ' ' + data.patronymic;
 		updateFIO(fio);
+	}).fail(function(jqxhr, textStatus, error) {
+		var err = textStatus + ", " + error;
+		console.log("getUser Failed: " + err + "  " + jqxhr);
 	});
-	$.getJSON(url + "HolidaysQuantity", function(data) {
+
+	$.getJSON(url + "HolidaysQuantity").done(function(data) {
 		updateHolidayCount(data);
+	}).fail(function(jqxhr, textStatus, error) {
+		var err = textStatus + ", " + error;
+		console.log("getHolidaysQuantity Failed: " + err + "  " + jqxhr);
 	});
 }
 

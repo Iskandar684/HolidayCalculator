@@ -37,7 +37,7 @@ function reload(aIsLogged) {
 	if (aIsLogged) {
 		loadContentByLoggedUser();
 	} else {
-		openAuthorizationDialog()
+		openAuthorizationDialog();
 	}
 }
 

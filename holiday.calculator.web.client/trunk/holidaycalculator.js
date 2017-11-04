@@ -9,19 +9,38 @@ function updateHolidayCount(aCount) {
 }
 
 function openAuthorizationDialog() {
-    $("#dialog_auth").dialog({
-        buttons: {
-            "Вход": function () {
-                $(this).dialog("close");
-                login();
-            },
-            "Закрыть": function () {
-                $(this).dialog("close");
-            }
+    var dialogParent = $("#dialog_auth");
+
+    dialogParent.load("login.html", function (responseTxt, statusTxt, xhr) {
+        if (statusTxt == "success") {
+            console.log("Форма авторизации удачно загружена!");
+        } else if (statusTxt == "error") {
+            console.log("Ошибка загрузки формы авторизации: " + xhr.status + ": " + xhr.statusText);
+        }else {
+            console.log("Загрузка формы авторизации: " + xhr.status + ": " + xhr.statusText);
         }
     });
 
-    document.getElementById("dialog_auth").style.visibility = 'visible';
+    dialogParent.dialog({
+        open: function () {
+
+        },
+
+        buttons: [{
+            text: "Войти",
+            click: function () {
+                dialogParent.dialog("close");
+                login();
+            }
+        }, {
+            text: "Закрыть",
+            click: function () {
+                dialogParent.dialog("close");
+            }
+        }
+        ],
+    });
+    document.getElementById('dialog_auth').style.visibility = 'visible';
 }
 
 function login() {

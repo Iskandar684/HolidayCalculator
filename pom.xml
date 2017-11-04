@@ -34,10 +34,13 @@
 		<module>org.eclipse.birt.runtime/trunk</module>
 		<module>holiday.calculator.report.service/trunk</module>
 		<module>holiday.calculator.service/trunk</module>
+		<!-- Десктоп -->
 		<module>holiday.calculator.client-libraries/trunk</module>
 		<module>holiday.calculator.ui/trunk</module>
 		<module>holiday.calculator.branding/trunk</module>
 		<module>holiday.calculator.product/trunk</module>
+		<!-- Веб -->
+		<module>holiday.calculator.web.service/trunk</module>
 	</modules>
 
 	<build>

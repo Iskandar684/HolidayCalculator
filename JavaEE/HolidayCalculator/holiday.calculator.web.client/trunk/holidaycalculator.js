@@ -16,7 +16,7 @@ function openAuthorizationDialog() {
             console.log("Форма авторизации удачно загружена!");
         } else if (statusTxt == "error") {
             console.log("Ошибка загрузки формы авторизации: " + xhr.status + ": " + xhr.statusText);
-        }else {
+        } else {
             console.log("Загрузка формы авторизации: " + xhr.status + ": " + xhr.statusText);
         }
     });
@@ -103,7 +103,29 @@ $(document).ready(function () {
         var err = textStatus + ", " + error;
         console.log("isLoggedIn Failed: " + err + "  " + jqxhr);
     });
+    $('#takeHolidayBt').click(function () {
+        openTakeHolidayDialog();
+    });
 });
+
+
+function openTakeHolidayDialog() {
+    var today = new Date();
+    var dates = [today];
+    takeHoliday(dates);
+}
+
+function takeHoliday(aDates) {
+    $.getJSON(url + "takeHoliday/" + aDates).done(function () {
+        alert('Заявление на отгул успешно подано.');
+    }).fail(function (response, textStatus, error) {
+        var err = textStatus + ", " + error;
+        console.log("takeHoliday Failed: " + err + "  " + response);
+        if ('conflict'.toUpperCase() == error.toUpperCase()) {
+            alert('Заявление на указанную дату (даты) уже было подано Вами ранее.');
+        }
+    });
+}
 
 function logout() {
     $.getJSON(url + "logout").done(function () {

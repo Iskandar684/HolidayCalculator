@@ -219,6 +219,8 @@ function openTakeHolidayDialog() {
 
 function takeHoliday(aDates) {
     $.getJSON(url + "takeHoliday/" + aDates).done(function () {
+        updateHolidayCount();
+        updateOutgoingHolidaysQuantity();
         alert('Заявление на отгул успешно подано.');
     }).fail(function (response, textStatus, error) {
         var err = textStatus + ", " + error;

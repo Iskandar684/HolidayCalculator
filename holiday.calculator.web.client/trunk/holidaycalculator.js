@@ -111,25 +111,28 @@ $(document).ready(function () {
 
 function openTakeHolidayDialog() {
     var dialogParent = $("#takeHolidayParent");
-
-    dialogParent.load("takeHoliday.html", function (responseTxt, statusTxt, xhr) {
-        if (statusTxt == "success") {
-            console.log("Форма подачи заявления на отгул удачно загружена!");
-        } else if (statusTxt == "error") {
-            console.log("Ошибка загрузки формы подачи заявления на отгул: " + xhr.status + ": " + xhr.statusText);
-        } else {
-            console.log("Загрузка формы подачи заявления на отгул: " + xhr.status + ": " + xhr.statusText);
-        }
-    });
-
+    var loaded = $("#holidayDateChooser").length;
+    if (!loaded) {
+        dialogParent.load("takeHoliday.html", function (responseTxt, statusTxt, xhr) {
+            if (statusTxt == "success") {
+                dialogParent.datepicker();
+                loaded = true;
+                console.log("Форма подачи заявления на отгул удачно загружена!");
+            } else if (statusTxt == "error") {
+                console.log("Ошибка загрузки формы подачи заявления на отгул: " + xhr.status + ": " + xhr.statusText);
+            } else {
+                console.log("Загрузка формы подачи заявления на отгул: " + xhr.status + ": " + xhr.statusText);
+            }
+        });
+    }
     dialogParent.dialog({
-        open: function () {
-
-        },
+        resizable: false,
+        modal: true,
+        width: 'auto',
         buttons: [{
             text: "Подать",
             click: function () {
-                var date = document.getElementById('holidayDateChooser').value;
+                var date = $(this).datepicker('getDate');
                 date = new Date(date);
                 if (isNaN(date)) {
                     alert('Пожалуйста, выберите дату.');

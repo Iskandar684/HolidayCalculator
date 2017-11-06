@@ -22,10 +22,9 @@ function openAuthorizationDialog() {
     });
 
     dialogParent.dialog({
-        open: function () {
-
-        },
-
+        resizable: false,
+        modal: true,
+        width: 'auto',
         buttons: [{
             text: "Войти",
             click: function () {

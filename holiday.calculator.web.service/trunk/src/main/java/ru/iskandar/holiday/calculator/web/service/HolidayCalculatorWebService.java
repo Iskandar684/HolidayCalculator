@@ -85,7 +85,9 @@ public class HolidayCalculatorWebService {
 	@PermitAll
 	public boolean isLoggedIn() {
 		Principal principal = _request.getUserPrincipal();
-		return (principal != null) && !"anonymous".equalsIgnoreCase(principal.getName());
+		boolean logged = (principal != null) && !"anonymous".equalsIgnoreCase(principal.getName());
+		LOG.info("isLoggedIn=" + principal + " logged=" + logged);
+		return logged;
 	}
 
 	@GET

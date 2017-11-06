@@ -8,6 +8,33 @@ function updateHolidayCount(aCount) {
     document.getElementById('holidaycount').innerHTML = aCount;
 }
 
+function updateOutgoingHolidaysQuantity() {
+    $.getJSON(url + "OutgoingHolidaysQuantity").done(function (aData) {
+        var text = "";
+        if (aData!=0){
+            text = '(-'+aData+')';
+        }
+        document.getElementById('OutgoingHolidaysQuantity').innerHTML = text;
+    }).fail(function (details, textStatus, error) {
+        var err = textStatus + ", " + error;
+        console.log("getOutgoingHolidaysQuantity Failed: " + err + "  " + details);
+    });
+}
+
+
+function updateIncomingHolidaysQuantity() {
+    $.getJSON(url + "IncomingHolidaysQuantity").done(function (aData) {
+        var text = "";
+        if (aData!=0){
+            text = '(+'+aData+')';
+        }
+        document.getElementById('IncomingHolidaysQuantity').innerHTML = text;
+    }).fail(function (details, textStatus, error) {
+        var err = textStatus + ", " + error;
+        console.log("getIncomingHolidaysQuantity Failed: " + err + "  " + details);
+    });
+}
+
 function openAuthorizationDialog() {
     var dialogParent = $("#dialog_auth");
 
@@ -86,6 +113,8 @@ function loadContentByLoggedUser() {
         var err = textStatus + ", " + error;
         console.log("getHolidaysQuantity Failed: " + err + "  " + jqxhr);
     });
+    updateOutgoingHolidaysQuantity();
+    updateIncomingHolidaysQuantity();
 }
 
 $(document).ready(function () {

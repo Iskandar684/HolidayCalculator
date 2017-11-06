@@ -26,10 +26,15 @@ import ru.iskandar.holiday.calculator.service.ejb.HolidayCalculatorBean;
 import ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorLocal;
 import ru.iskandar.holiday.calculator.service.ejb.IUserServiceLocal;
 import ru.iskandar.holiday.calculator.service.model.StatementAlreadySendedException;
-import ru.iskandar.holiday.calculator.service.model.permissions.Permission;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.user.User;
 
+/**
+ * Веб-сервис учета отгулов
+ *
+ * @author Искандар
+ *
+ */
 @Path("/")
 @Stateless
 public class HolidayCalculatorWebService {
@@ -51,20 +56,12 @@ public class HolidayCalculatorWebService {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@PermitAll
 	public boolean login(@PathParam("username") String username, @PathParam("password") String password) {
-		System.out.println("login request " + _request);
 		try {
 			_request.login(username, password);
-			System.out.println("login OK");
-			String authType = _request.getAuthType();
-			System.out.println("authType  " + authType);
-			System.out.println("getRemoteUser " + _request.getRemoteUser());
-			System.out.println("getUserPrincipal " + _request.getUserPrincipal());
-			System.out.println("isUserInRole CONSIDER " + _request.isUserInRole(Permission.CONSIDER));
+			LOG.info(String.format("Успешный вход в систему [login=%s].", username));
 			return true;
 		} catch (ServletException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("login FAIL");
+			LOG.error(String.format("Ошибка входа в систему [login=%s].", username), e);
 			return false;
 		}
 	}
@@ -74,12 +71,11 @@ public class HolidayCalculatorWebService {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@PermitAll
 	public void logout() {
-		System.out.println("logout");
 		try {
 			_request.logout();
+			LOG.info(String.format("Успешный выход из системы [login=%s].", _request.getUserPrincipal()));
 		} catch (ServletException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error(String.format("Ошибка выхода из системы [login=%s].", _request.getUserPrincipal()), e);
 		}
 	}
 
@@ -88,7 +84,6 @@ public class HolidayCalculatorWebService {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@PermitAll
 	public boolean isLoggedIn() {
-		System.out.println("isLoggedIn  UserPrincipal " + _request.getUserPrincipal());
 		Principal principal = _request.getUserPrincipal();
 		return (principal != null) && !"anonymous".equalsIgnoreCase(principal.getName());
 	}
@@ -98,9 +93,10 @@ public class HolidayCalculatorWebService {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@PermitAll
 	public User getUser() {
-		System.out.println("getUser  UserPrincipal " + _request.getUserPrincipal());
 		User user = _userService.getCurrentUser();
-		System.out.println("getUser " + user);
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("getUser  UserPrincipal " + _request.getUserPrincipal());
+		}
 		return user;
 	}
 
@@ -117,9 +113,39 @@ public class HolidayCalculatorWebService {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@PermitAll
 	public int getHolidaysQuantity() {
-		System.out.println("getHolidaysQuantity  UserPrincipal " + _request.getUserPrincipal());
 		User user = _userService.getCurrentUser();
 		return _holidayService.getHolidaysQuantity(user);
+	}
+
+	/**
+	 * Возвращает количество исходящих дней отгула. Это количество дней, на
+	 * которое уменьшется количество общее дней отгула, после того как заявление
+	 * на отгул будет принят.
+	 *
+	 * @return не отрицательное количество исходящих дней отгула
+	 */
+	@GET
+	@Path("/OutgoingHolidaysQuantity")
+	@Produces({ MediaType.APPLICATION_JSON })
+	@PermitAll
+	public int getOutgoingHolidaysQuantity() {
+		User user = _userService.getCurrentUser();
+		return _holidayService.getOutgoingHolidaysQuantity(user);
+	}
+
+	/**
+	 * Возвращает количество приходящих отгулов. Это количество дней, на которое
+	 * будет увеличино общее количество отгулов, после того как засчитают отзыв.
+	 *
+	 * @return количество приходящих отгулов
+	 */
+	@GET
+	@Path("/IncomingHolidaysQuantity")
+	@Produces({ MediaType.APPLICATION_JSON })
+	@PermitAll
+	public int getIncomingHolidaysQuantity() {
+		User user = _userService.getCurrentUser();
+		return _holidayService.getIncomingHolidaysQuantity(user);
 	}
 
 	@GET

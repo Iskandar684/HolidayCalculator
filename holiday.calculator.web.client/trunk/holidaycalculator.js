@@ -116,8 +116,12 @@ function openAuthorizationDialog() {
 function login() {
     var userName = document.getElementById('user_name').value;
     var password = document.getElementById('user_password').value;
-    $.getJSON(url + "login/" + userName + "/" + password, function (aIsLogged) {
+    $.getJSON(url + "login/" + userName + "/" + password).done(function (aIsLogged) {
+        console.log("Вход в систему. Удачно: "+ aIsLogged);
         reload(aIsLogged);
+    }).fail(function (details, textStatus, error) {
+        var err = textStatus + ", " + error;
+        console.log("LoggedIn Failed: " + err + "  " + details);
     });
 }
 

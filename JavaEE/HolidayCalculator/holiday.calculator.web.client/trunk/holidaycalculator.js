@@ -57,6 +57,17 @@ function updateOutgoingLeaveCount() {
     });
 }
 
+function updateNextLeaveStartDate() {
+    $.getJSON(url + "NextLeaveStartDate").done(function (aDate) {
+        var date = new Date(aDate);
+        var text = date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear();
+        document.getElementById('NextLeaveStartDate').innerHTML = text;
+    }).fail(function (details, textStatus, error) {
+        var err = textStatus + ", " + error;
+        console.log("getNextLeaveStartDate Failed: " + err + "  " + details);
+    });
+}
+
 function openAuthorizationDialog() {
     var dialogParent = $("#dialog_auth");
 
@@ -139,6 +150,7 @@ function loadContentByLoggedUser() {
     updateIncomingHolidaysQuantity();
     updateLeaveCount();
     updateOutgoingLeaveCount();
+    updateNextLeaveStartDate();
 }
 
 $(document).ready(function () {

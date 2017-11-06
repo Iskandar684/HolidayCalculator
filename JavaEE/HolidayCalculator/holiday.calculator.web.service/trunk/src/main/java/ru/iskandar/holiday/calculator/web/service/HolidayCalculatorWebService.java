@@ -176,8 +176,6 @@ public class HolidayCalculatorWebService {
 	 * Возвращает количество неиспользованных дней отпуска
 	 *
 	 * @return количество дней
-	 * @throws NullPointerException
-	 *             если aUser {@code null}
 	 */
 	@GET
 	@Path("/LeaveCount")
@@ -194,8 +192,6 @@ public class HolidayCalculatorWebService {
 	 * заявление на отпуск будет принят.
 	 *
 	 * @return не отрицательное количество исходящих дней отпуска.
-	 * @throws NullPointerException
-	 *             если aUser {@code null}
 	 */
 	@GET
 	@Path("/OutgoingLeaveCount")
@@ -204,6 +200,20 @@ public class HolidayCalculatorWebService {
 	public int getOutgoingLeaveCount() {
 		User user = _userService.getCurrentUser();
 		return _holidayService.getOutgoingLeaveCount(user);
+	}
+
+	/**
+	 * Возвращает дату начала следующего периода
+	 *
+	 * @return дата начала следующего периода
+	 */
+	@GET
+	@Path("/NextLeaveStartDate")
+	@Produces({ MediaType.APPLICATION_JSON })
+	@PermitAll
+	public Date getNextLeaveStartDate() {
+		User user = _userService.getCurrentUser();
+		return _holidayService.getNextLeaveStartDate(user);
 	}
 
 }

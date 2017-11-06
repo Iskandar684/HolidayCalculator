@@ -117,11 +117,22 @@ function login() {
     var userName = document.getElementById('user_name').value;
     var password = document.getElementById('user_password').value;
     $.getJSON(url + "login/" + userName + "/" + password).done(function (aIsLogged) {
-        console.log("Вход в систему. Удачно: "+ aIsLogged);
-        reload(aIsLogged);
+        console.log("Вход в систему. Удачно: " + aIsLogged);
+        reload (aIsLogged);
     }).fail(function (details, textStatus, error) {
         var err = textStatus + ", " + error;
         console.log("LoggedIn Failed: " + err + "  " + details);
+    });
+}
+
+function checkAndReload() {
+    console.log("call isLoggedIn");
+    $.getJSON(url + "isLoggedIn").done(function (aIsLogged) {
+        console.log("isLoggedIn: " + aIsLogged);
+        reload(aIsLogged);
+    }).fail(function (jqxhr, textStatus, error) {
+        var err = textStatus + ", " + error;
+        console.log("isLoggedIn Failed: " + err + "  " + jqxhr);
     });
 }
 
@@ -163,13 +174,7 @@ $(document).ready(function () {
     $('#logoutBt').click(function () {
         logout();
     });
-    $.getJSON(url + "isLoggedIn").done(function (aIsLogged) {
-        reload(aIsLogged);
-
-    }).fail(function (jqxhr, textStatus, error) {
-        var err = textStatus + ", " + error;
-        console.log("isLoggedIn Failed: " + err + "  " + jqxhr);
-    });
+    checkAndReload();
     $('#takeHolidayBt').click(function () {
         openTakeHolidayDialog();
     });

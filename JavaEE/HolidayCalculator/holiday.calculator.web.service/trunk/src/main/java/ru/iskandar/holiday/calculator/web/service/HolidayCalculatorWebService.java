@@ -172,4 +172,38 @@ public class HolidayCalculatorWebService {
 		return Response.ok().build();
 	}
 
+	/**
+	 * Возвращает количество неиспользованных дней отпуска
+	 *
+	 * @return количество дней
+	 * @throws NullPointerException
+	 *             если aUser {@code null}
+	 */
+	@GET
+	@Path("/LeaveCount")
+	@Produces({ MediaType.APPLICATION_JSON })
+	@PermitAll
+	public int getLeaveCount() {
+		User user = _userService.getCurrentUser();
+		return _holidayService.getLeaveCount(user);
+	}
+
+	/**
+	 * Возвращает количество исходящих дней отпуска. Это количество дней, на
+	 * которое уменьшется количество дней отпуска в этом периоде, после того как
+	 * заявление на отпуск будет принят.
+	 *
+	 * @return не отрицательное количество исходящих дней отпуска.
+	 * @throws NullPointerException
+	 *             если aUser {@code null}
+	 */
+	@GET
+	@Path("/OutgoingLeaveCount")
+	@Produces({ MediaType.APPLICATION_JSON })
+	@PermitAll
+	public int getOutgoingLeaveCount() {
+		User user = _userService.getCurrentUser();
+		return _holidayService.getOutgoingLeaveCount(user);
+	}
+
 }

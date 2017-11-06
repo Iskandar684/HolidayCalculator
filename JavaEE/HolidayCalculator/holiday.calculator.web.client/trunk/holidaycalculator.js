@@ -11,8 +11,8 @@ function updateHolidayCount(aCount) {
 function updateOutgoingHolidaysQuantity() {
     $.getJSON(url + "OutgoingHolidaysQuantity").done(function (aData) {
         var text = "";
-        if (aData!=0){
-            text = '(-'+aData+')';
+        if (aData != 0) {
+            text = '(-' + aData + ')';
         }
         document.getElementById('OutgoingHolidaysQuantity').innerHTML = text;
     }).fail(function (details, textStatus, error) {
@@ -25,13 +25,35 @@ function updateOutgoingHolidaysQuantity() {
 function updateIncomingHolidaysQuantity() {
     $.getJSON(url + "IncomingHolidaysQuantity").done(function (aData) {
         var text = "";
-        if (aData!=0){
-            text = '(+'+aData+')';
+        if (aData != 0) {
+            text = '(+' + aData + ')';
         }
         document.getElementById('IncomingHolidaysQuantity').innerHTML = text;
     }).fail(function (details, textStatus, error) {
         var err = textStatus + ", " + error;
         console.log("getIncomingHolidaysQuantity Failed: " + err + "  " + details);
+    });
+}
+
+function updateLeaveCount() {
+    $.getJSON(url + "LeaveCount").done(function (aData) {
+        document.getElementById('LeaveCount').innerHTML = aData;
+    }).fail(function (details, textStatus, error) {
+        var err = textStatus + ", " + error;
+        console.log("getLeaveCount Failed: " + err + "  " + details);
+    });
+}
+
+function updateOutgoingLeaveCount() {
+    $.getJSON(url + "OutgoingLeaveCount").done(function (aData) {
+        var text = "";
+        if (aData != 0) {
+            text = '(-' + aData + ')';
+        }
+        document.getElementById('OutgoingLeaveCount').innerHTML = text;
+    }).fail(function (details, textStatus, error) {
+        var err = textStatus + ", " + error;
+        console.log("getOutgoingLeaveCount Failed: " + err + "  " + details);
     });
 }
 
@@ -115,6 +137,8 @@ function loadContentByLoggedUser() {
     });
     updateOutgoingHolidaysQuantity();
     updateIncomingHolidaysQuantity();
+    updateLeaveCount();
+    updateOutgoingLeaveCount();
 }
 
 $(document).ready(function () {

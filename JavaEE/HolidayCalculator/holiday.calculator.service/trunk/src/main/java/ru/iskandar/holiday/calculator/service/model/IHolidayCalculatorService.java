@@ -182,7 +182,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	public Collection<Statement<?>> getIncomingStatements();
 
 	/**
-	 * Возвращает количество не использованных дней отпуска в этом периоде
+	 * Возвращает количество неиспользованных дней отпуска
 	 *
 	 * @return количество дней
 	 * @throws NullPointerException

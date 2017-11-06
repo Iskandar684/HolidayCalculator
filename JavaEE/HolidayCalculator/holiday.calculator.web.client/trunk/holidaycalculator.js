@@ -1,18 +1,29 @@
 var url = "http://192.168.196.129:8080/holiday-calculator-web-service/";
 
-function updateFIO(aFIO) {
-    document.getElementById('fio').innerHTML = aFIO;
+function updateFIO() {
+    $.getJSON(url + "user").done(function (aUser) {
+        var fio = aUser.lastName + ' ' + aUser.firstName + ' ' + aUser.patronymic;
+        document.getElementById('fio').innerHTML = fio;
+    }).fail(function (jqxhr, textStatus, error) {
+        var err = textStatus + ", " + error;
+        console.log("getUser Failed: " + err + "  " + jqxhr);
+    });
 }
 
-function updateHolidayCount(aCount) {
-    document.getElementById('holidaycount').innerHTML = aCount;
+function updateHolidayCount() {
+    $.getJSON(url + "HolidaysQuantity").done(function (aCount) {
+        document.getElementById('holidaycount').innerHTML = aCount;
+    }).fail(function (jqxhr, textStatus, error) {
+        var err = textStatus + ", " + error;
+        console.log("getHolidaysQuantity Failed: " + err + "  " + jqxhr);
+    });
 }
 
 function updateOutgoingHolidaysQuantity() {
-    $.getJSON(url + "OutgoingHolidaysQuantity").done(function (aData) {
+    $.getJSON(url + "OutgoingHolidaysQuantity").done(function (aQuantity) {
         var text = "";
-        if (aData != 0) {
-            text = '(-' + aData + ')';
+        if (aQuantity != 0) {
+            text = '(-' + aQuantity + ')';
         }
         document.getElementById('OutgoingHolidaysQuantity').innerHTML = text;
     }).fail(function (details, textStatus, error) {
@@ -23,10 +34,10 @@ function updateOutgoingHolidaysQuantity() {
 
 
 function updateIncomingHolidaysQuantity() {
-    $.getJSON(url + "IncomingHolidaysQuantity").done(function (aData) {
+    $.getJSON(url + "IncomingHolidaysQuantity").done(function (aQuantity) {
         var text = "";
-        if (aData != 0) {
-            text = '(+' + aData + ')';
+        if (aQuantity != 0) {
+            text = '(+' + aQuantity + ')';
         }
         document.getElementById('IncomingHolidaysQuantity').innerHTML = text;
     }).fail(function (details, textStatus, error) {
@@ -36,8 +47,8 @@ function updateIncomingHolidaysQuantity() {
 }
 
 function updateLeaveCount() {
-    $.getJSON(url + "LeaveCount").done(function (aData) {
-        document.getElementById('LeaveCount').innerHTML = aData;
+    $.getJSON(url + "LeaveCount").done(function (aCount) {
+        document.getElementById('LeaveCount').innerHTML = aCount;
     }).fail(function (details, textStatus, error) {
         var err = textStatus + ", " + error;
         console.log("getLeaveCount Failed: " + err + "  " + details);
@@ -45,10 +56,10 @@ function updateLeaveCount() {
 }
 
 function updateOutgoingLeaveCount() {
-    $.getJSON(url + "OutgoingLeaveCount").done(function (aData) {
+    $.getJSON(url + "OutgoingLeaveCount").done(function (aCount) {
         var text = "";
-        if (aData != 0) {
-            text = '(-' + aData + ')';
+        if (aCount != 0) {
+            text = '(-' + aCount + ')';
         }
         document.getElementById('OutgoingLeaveCount').innerHTML = text;
     }).fail(function (details, textStatus, error) {
@@ -132,20 +143,8 @@ function updateLoginControls(aIsLogged) {
 }
 
 function loadContentByLoggedUser() {
-    $.getJSON(url + "user").done(function (data) {
-        var fio = data.lastName + ' ' + data.firstName + ' ' + data.patronymic;
-        updateFIO(fio);
-    }).fail(function (jqxhr, textStatus, error) {
-        var err = textStatus + ", " + error;
-        console.log("getUser Failed: " + err + "  " + jqxhr);
-    });
-
-    $.getJSON(url + "HolidaysQuantity").done(function (data) {
-        updateHolidayCount(data);
-    }).fail(function (jqxhr, textStatus, error) {
-        var err = textStatus + ", " + error;
-        console.log("getHolidaysQuantity Failed: " + err + "  " + jqxhr);
-    });
+    updateFIO();
+    updateHolidayCount();
     updateOutgoingHolidaysQuantity();
     updateIncomingHolidaysQuantity();
     updateLeaveCount();

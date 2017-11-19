@@ -1,5 +1,39 @@
 var url = "http://192.168.196.129:8080/holiday-calculator-web-service/";
 
+$(document).ready(function () {
+    $('#loginBt').click(function () {
+        openAuthorizationDialog();
+    });
+    $('#logoutBt').click(function () {
+        logout();
+    });
+    $('#takeHolidayBt').click(function () {
+        openTakeHolidayDialog();
+    });
+    $('#myStatementsBt').click(function () {
+        openMyStatements();
+    });
+    checkAndReload();
+});
+
+function openMyStatements() {
+    for (var i = 0; i < 3; i++) {
+        addStatement(i);
+    }
+}
+
+function addStatement(aStatement) {
+    var parent = $("#myStatements");
+    $.get("statement.html", function (aStatementHTML) {
+        console.log("Форма заявления удачно загружена!");
+        parent.append(aStatementHTML);
+        var nameLb = $('#statementID').find('#name');
+        nameLb[0].innerHTML = "Тестовое наименование заявления " + aStatement;
+        $('#statementID').attr("id", aStatement);
+    }, 'html');
+}
+
+
 function updateFIO() {
     $.getJSON(url + "user").done(function (aUser) {
         var fio = aUser.lastName + ' ' + aUser.firstName + ' ' + aUser.patronymic;
@@ -118,7 +152,7 @@ function login() {
     var password = document.getElementById('user_password').value;
     $.getJSON(url + "login/" + userName + "/" + password).done(function (aIsLogged) {
         console.log("Вход в систему. Удачно: " + aIsLogged);
-        reload (aIsLogged);
+        reload(aIsLogged);
     }).fail(function (details, textStatus, error) {
         var err = textStatus + ", " + error;
         console.log("LoggedIn Failed: " + err + "  " + details);
@@ -166,20 +200,6 @@ function loadContentByLoggedUser() {
     updateOutgoingLeaveCount();
     updateNextLeaveStartDate();
 }
-
-$(document).ready(function () {
-    $('#loginBt').click(function () {
-        openAuthorizationDialog();
-    });
-    $('#logoutBt').click(function () {
-        logout();
-    });
-    checkAndReload();
-    $('#takeHolidayBt').click(function () {
-        openTakeHolidayDialog();
-    });
-});
-
 
 function openTakeHolidayDialog() {
     var dialogParent = $("#takeHolidayParent");

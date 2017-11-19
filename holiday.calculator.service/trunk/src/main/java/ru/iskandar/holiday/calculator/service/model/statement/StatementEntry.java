@@ -4,11 +4,18 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import ru.iskandar.holiday.calculator.service.model.user.User;
 
 /**
  * Содержимое заявления
  */
+@XmlRootElement(name = "StatementEntry")
+@XmlAccessorType(XmlAccessType.FIELD)
 public abstract class StatementEntry implements Serializable {
 
 	/**
@@ -17,18 +24,23 @@ public abstract class StatementEntry implements Serializable {
 	private static final long serialVersionUID = -5045249287091738362L;
 
 	/** Автор заявления */
+	@XmlElement(name = "author")
 	private final User _author;
 
 	/** Пользователь, который рассмотрел заявление */
+	@XmlElement(name = "consider")
 	private User _consider;
 
 	/** Статус заявления */
+	@XmlElement(name = "status")
 	private StatementStatus _status = StatementStatus.NOT_CONSIDERED;
 
 	/** Время подачи заявления */
+	@XmlElement(name = "createDate")
 	private Date _createDate = new Date();
 
 	/** Время рассмотрения */
+	@XmlElement(name = "considerDate")
 	private Date _considerDate;
 
 	/**
@@ -38,8 +50,7 @@ public abstract class StatementEntry implements Serializable {
 	 *            идентификатор заявления
 	 */
 	public StatementEntry(User aAuthor) {
-		Objects.requireNonNull(aAuthor, "Не указан автор заявления");
-		_author = aAuthor;
+		_author = Objects.requireNonNull(aAuthor, "Не указан автор заявления");
 	}
 
 	/**

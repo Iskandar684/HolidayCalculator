@@ -36,9 +36,9 @@ function addStatement(aStatement) {
         var nameLb = $('#statementID').find('#name');
         var entry = aStatement.entry;
         var createDate = entry.createDate;
-        nameLb[0].innerHTML = "Заявление от" + toString(createDate);
-        //var statementId = aStatement.statementId
-        $('#statementID').attr("id", aStatement);
+        nameLb[0].innerHTML = "Заявление от " + toString(createDate);
+        var statementId = aStatement.statementId.uuid;
+        $('#statementID').attr("id", statementId);
     }, 'html');
 }
 

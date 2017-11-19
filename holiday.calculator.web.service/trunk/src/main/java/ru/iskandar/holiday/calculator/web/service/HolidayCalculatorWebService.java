@@ -1,7 +1,6 @@
 package ru.iskandar.holiday.calculator.web.service;
 
 import java.security.Principal;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
@@ -229,9 +228,9 @@ public class HolidayCalculatorWebService {
 	@Path("/currentUserStatements")
 	@Produces({ MediaType.APPLICATION_JSON })
 	@PermitAll
-	public Collection<Statement<?>> getAllStatements() {
+	public Statement<?>[] getAllStatements() {
 		User user = _userService.getCurrentUser();
-		return _holidayService.getAllStatements(user);
+		return _holidayService.getAllStatements(user).toArray(new Statement<?>[0]);
 	}
 
 }

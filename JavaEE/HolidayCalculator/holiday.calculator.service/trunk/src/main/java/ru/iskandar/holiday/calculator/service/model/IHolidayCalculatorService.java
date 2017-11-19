@@ -18,6 +18,7 @@ import ru.iskandar.holiday.calculator.service.model.statement.LeaveStatementEntr
 import ru.iskandar.holiday.calculator.service.model.statement.RecallStatement;
 import ru.iskandar.holiday.calculator.service.model.statement.RecallStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.statement.Statement;
+import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
 import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
 import ru.iskandar.holiday.calculator.service.model.user.NewUserNotValidException;
@@ -287,5 +288,16 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 *             если не удалось сформировать документ
 	 */
 	public StatementDocument preview(HolidayStatementEntry aEntry) throws DocumentPreviewException;
+
+	/**
+	 * Формирует документ заявления на отгул
+	 *
+	 * @param aEntry
+	 *            содержание заявления на отгул
+	 * @return документ заявления
+	 * @throws DocumentPreviewException
+	 *             если не удалось сформировать документ
+	 */
+	public StatementDocument getStatementDocument(StatementId aStatementID) throws DocumentPreviewException;
 
 }

@@ -37,12 +37,21 @@ function addStatement(aStatement) {
         var entry = aStatement.entry;
         var createDate = entry.createDate;
         nameLb[0].innerHTML = "Заявление от " + toString(createDate);
-        $("#statementID").dblclick(function () {
-            alert('Заявление ' + aStatement);
-        });
         var statementId = aStatement.statementId.uuid.toString();
+        $("#statementID").dblclick(function () {
+            openStatementDocument(statementId);
+        });
         $('#statementID').attr("id", statementId);
     }, 'html');
+}
+
+function openStatementDocument(aStatementID) {
+    $.getJSON(url + "getStatementDocument/"+aStatementID).done(function (aDocument) {
+        alert('Заявление ' + aDocument);
+    }).fail(function (details, textStatus, error) {
+        var err = textStatus + ", " + error;
+        console.log("getStatementDocument: " + err + "  " + details);
+    });
 }
 
 

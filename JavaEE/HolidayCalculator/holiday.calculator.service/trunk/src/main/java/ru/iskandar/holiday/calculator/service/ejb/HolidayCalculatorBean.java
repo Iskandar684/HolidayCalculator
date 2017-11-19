@@ -40,6 +40,7 @@ import ru.iskandar.holiday.calculator.service.model.statement.RecallStatement;
 import ru.iskandar.holiday.calculator.service.model.statement.RecallStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.statement.Statement;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementEntry;
+import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementValidator;
 import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
@@ -563,6 +564,17 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
 			throw new DocumentPreviewException(err, e);
 		}
 		return new StatementDocument(report.getContent());
+	}
+
+	@Override
+	public StatementDocument getStatementDocument(StatementId aStatementID) throws DocumentPreviewException {
+		HolidayStatement holidayStatement = _statementRepo.getHolidayStatement(aStatementID);
+		if (holidayStatement == null) {
+			throw new IllegalArgumentException(
+					String.format("Заявление на отгул по идентификатору %s на найдено.", aStatementID));
+		}
+		HolidayStatementEntry entry = holidayStatement.getEntry();
+		return preview(entry);
 	}
 
 }

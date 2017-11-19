@@ -1,6 +1,7 @@
 package ru.iskandar.holiday.calculator.web.service;
 
 import java.security.Principal;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
@@ -27,6 +28,7 @@ import ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorLocal;
 import ru.iskandar.holiday.calculator.service.ejb.IUserServiceLocal;
 import ru.iskandar.holiday.calculator.service.model.StatementAlreadySendedException;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
+import ru.iskandar.holiday.calculator.service.model.statement.Statement;
 import ru.iskandar.holiday.calculator.service.model.user.User;
 
 /**
@@ -216,6 +218,20 @@ public class HolidayCalculatorWebService {
 	public Date getNextLeaveStartDate() {
 		User user = _userService.getCurrentUser();
 		return _holidayService.getNextLeaveStartDate(user);
+	}
+
+	/**
+	 * Возвращает все заявления текущего пользователя
+	 *
+	 * @return заявления
+	 */
+	@GET
+	@Path("/currentUserStatements")
+	@Produces({ MediaType.APPLICATION_JSON })
+	@PermitAll
+	public Collection<Statement<?>> getAllStatements() {
+		User user = _userService.getCurrentUser();
+		return _holidayService.getAllStatements(user);
 	}
 
 }

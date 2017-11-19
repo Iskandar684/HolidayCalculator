@@ -48,3 +48,10 @@ h2 {
 #userinfo {
     margin: 20px;
 }
+
+#myStatements {
+    text-align: center;
+    width: 100%;
+    top: 50%;
+    left: 0;
+}

@@ -4,11 +4,18 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import ru.iskandar.holiday.calculator.service.model.user.User;
 
 /**
  * Заявление
  */
+@XmlRootElement(name = "Statement")
+@XmlAccessorType(XmlAccessType.FIELD)
 public abstract class Statement<E extends StatementEntry> implements Serializable {
 
 	/**
@@ -17,9 +24,11 @@ public abstract class Statement<E extends StatementEntry> implements Serializabl
 	private static final long serialVersionUID = 3589182703953347929L;
 
 	/** Идентификатор заявления */
+	@XmlElement(name = "statementId")
 	private final StatementId _statementId;
 
 	/** Содержимое заявления */
+	@XmlElement(name = "entry")
 	private final E _entry;
 
 	/**

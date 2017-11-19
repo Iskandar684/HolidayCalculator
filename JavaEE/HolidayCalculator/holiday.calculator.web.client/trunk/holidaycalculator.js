@@ -17,9 +17,15 @@ $(document).ready(function () {
 });
 
 function openMyStatements() {
-    for (var i = 0; i < 3; i++) {
-        addStatement(i);
-    }
+    $.getJSON(url + "currentUserStatements").done(function (aStatements) {
+        for (var i = 0; i < aStatements.length; i++) {
+            var statement = aStatements[i];
+            addStatement(statement);
+        }
+    }).fail(function (details, textStatus, error) {
+        var err = textStatus + ", " + error;
+        console.log("getCurrentUserStatementsFailed: " + err + "  " + details);
+    });
 }
 
 function addStatement(aStatement) {
@@ -28,7 +34,10 @@ function addStatement(aStatement) {
         console.log("Форма заявления удачно загружена!");
         parent.append(aStatementHTML);
         var nameLb = $('#statementID').find('#name');
-        nameLb[0].innerHTML = "Тестовое наименование заявления " + aStatement;
+        var entry = aStatement.entry;
+        var createDate = entry.createDate;
+        nameLb[0].innerHTML = "Заявление от" + toString(createDate);
+        //var statementId = aStatement.statementId
         $('#statementID').attr("id", aStatement);
     }, 'html');
 }
@@ -111,6 +120,12 @@ function updateNextLeaveStartDate() {
         var err = textStatus + ", " + error;
         console.log("getNextLeaveStartDate Failed: " + err + "  " + details);
     });
+}
+
+function toString(aDate) {
+    var date = new Date(aDate);
+    var text = date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear();
+    return text;
 }
 
 function openAuthorizationDialog() {

@@ -164,7 +164,7 @@ public abstract class Statement<E extends StatementEntry> implements Serializabl
 	/**
 	 * @return the entry
 	 */
-	protected E getEntry() {
+	public E getEntry() {
 		return _entry;
 	}
 

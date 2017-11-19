@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
@@ -26,8 +27,11 @@ import ru.iskandar.holiday.calculator.service.ejb.HolidayCalculatorBean;
 import ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorLocal;
 import ru.iskandar.holiday.calculator.service.ejb.IUserServiceLocal;
 import ru.iskandar.holiday.calculator.service.model.StatementAlreadySendedException;
+import ru.iskandar.holiday.calculator.service.model.document.DocumentPreviewException;
+import ru.iskandar.holiday.calculator.service.model.document.StatementDocument;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.statement.Statement;
+import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
 import ru.iskandar.holiday.calculator.service.model.user.User;
 
 /**
@@ -231,6 +235,29 @@ public class HolidayCalculatorWebService {
 	public Statement<?>[] getAllStatements() {
 		User user = _userService.getCurrentUser();
 		return _holidayService.getAllStatements(user).toArray(new Statement<?>[0]);
+	}
+
+	/**
+	 * Формирует документ заявления на отгул
+	 *
+	 * @param aStatementID
+	 *            идентификатор заявления
+	 * @return документ заявления
+	 * @throws DocumentPreviewException
+	 *             если не удалось сформировать документ
+	 */
+	@GET
+	@Path("/getStatementDocument/{statementUUID}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	@PermitAll
+	public StatementDocument getStatementDocument(@PathParam("statementUUID") String statementUUID) {
+		StatementId statementID = StatementId.from(UUID.fromString(statementUUID));
+		try {
+			return _holidayService.getStatementDocument(statementID);
+		} catch (DocumentPreviewException e) {
+			throw new IllegalStateException(
+					String.format("Ошибка получения документа заявления с ID=%s", statementUUID), e);
+		}
 	}
 
 }

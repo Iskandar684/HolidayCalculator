@@ -45,6 +45,11 @@ h2 {
     margin: 0 auto;
 }
 
+#dialogParent {
+    text-align: center;
+    margin: 0 auto;
+}
+
 #userinfo {
     margin: 20px;
 }

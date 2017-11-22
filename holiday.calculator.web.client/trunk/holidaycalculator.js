@@ -46,14 +46,42 @@ function addStatement(aStatement) {
 }
 
 function openStatementDocument(aStatementID) {
-    $.getJSON(url + "getStatementDocument/"+aStatementID).done(function (aDocument) {
-        alert('Заявление ' + aDocument);
+    $.getJSON(url + "getStatementDocument/" + aStatementID).done(function (aDocument) {
+        openDocumentDialog(aDocument);
     }).fail(function (details, textStatus, error) {
         var err = textStatus + ", " + error;
         console.log("getStatementDocument: " + err + "  " + details);
     });
 }
 
+function openDocumentDialog(aDocument) {
+    var dialogParent = $("#dialogParent");
+
+    dialogParent.load("document.html", function (responseTxt, statusTxt, xhr) {
+        if (statusTxt == "success") {
+            console.log("Форма документа удачно загружена!");
+            var contentLb = $('#dialogParent').find('#documentContent');
+            contentLb.append(aDocument.content);
+        } else if (statusTxt == "error") {
+            console.log("Ошибка загрузки формы документа: " + xhr.status + ": " + xhr.statusText);
+        } else {
+            console.log("Загрузка формы документа: " + xhr.status + ": " + xhr.statusText);
+        }
+    });
+
+    dialogParent.dialog({
+        resizable: false,
+        modal: true,
+        width: 'auto',
+        buttons: [{
+            text: "Закрыть",
+            click: function () {
+                dialogParent.dialog("close");
+            }
+        }
+        ],
+    });
+}
 
 function updateFIO() {
     $.getJSON(url + "user").done(function (aUser) {

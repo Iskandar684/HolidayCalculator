@@ -70,9 +70,10 @@ function openDocumentDialog(aDocument) {
     });
 
     dialogParent.dialog({
-        resizable: false,
+        resizable: true,
         modal: true,
         width: 'auto',
+        height: 550,
         buttons: [{
             text: "Закрыть",
             click: function () {

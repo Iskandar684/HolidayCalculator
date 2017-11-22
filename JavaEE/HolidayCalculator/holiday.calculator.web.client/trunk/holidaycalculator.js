@@ -68,6 +68,8 @@ function openDocumentDialog(aDocument) {
             console.log("Загрузка формы документа: " + xhr.status + ": " + xhr.statusText);
         }
     });
+    //не обязательно, что на отгул. Надо смотреть по типу
+    dialogParent.prop('title', 'Заявление на отгул');
 
     dialogParent.dialog({
         resizable: true,

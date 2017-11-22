@@ -250,14 +250,16 @@ public class HolidayCalculatorWebService {
 	@Path("/getStatementDocument/{statementUUID}")
 	@Produces({ MediaType.APPLICATION_JSON })
 	@PermitAll
-	public StatementDocument getStatementDocument(@PathParam("statementUUID") String statementUUID) {
+	public HTMLDocument getStatementDocument(@PathParam("statementUUID") String statementUUID) {
 		StatementId statementID = StatementId.from(UUID.fromString(statementUUID));
+		StatementDocument document;
 		try {
-			return _holidayService.getStatementDocument(statementID);
+			document = _holidayService.getStatementDocument(statementID);
 		} catch (DocumentPreviewException e) {
 			throw new IllegalStateException(
 					String.format("Ошибка получения документа заявления с ID=%s", statementUUID), e);
 		}
+		return new HTMLDocument(new String(document.getContent()));
 	}
 
 }

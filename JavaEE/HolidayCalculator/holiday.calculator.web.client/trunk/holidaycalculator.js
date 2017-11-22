@@ -38,7 +38,7 @@ function addStatement(aStatement) {
         var createDate = entry.createDate;
         nameLb[0].innerHTML = "Заявление от " + toString(createDate);
         var statementId = aStatement.statementId.uuid.toString();
-        $("#statementID").dblclick(function () {
+        $("#statementID").click(function () {
             openStatementDocument(statementId);
         });
         $('#statementID').attr("id", statementId);

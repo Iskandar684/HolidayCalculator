@@ -16,8 +16,13 @@ $(document).ready(function () {
     checkAndReload();
 });
 
+function clearStatements() {
+    jQuery('#myStatements div').html('');
+}
+
 function openMyStatements() {
     $.getJSON(url + "currentUserStatements").done(function (aStatements) {
+        clearStatements () ;
         for (var i = 0; i < aStatements.length; i++) {
             var statement = aStatements[i];
             addStatement(statement);
@@ -200,7 +205,7 @@ function openAuthorizationDialog() {
                 dialogParent.dialog("close");
             }
         }
-        ],
+        ]
     });
     document.getElementById('dialog_auth').style.visibility = 'visible';
 }
@@ -246,6 +251,7 @@ function updateLoginControls(aIsLogged) {
         document.getElementById('login_holder').style.visibility = 'visible';
         document.getElementById("userinfo").style.display = 'none';
         document.getElementById('logout_holder').style.visibility = 'hidden';
+        clearStatements();
     }
 }
 

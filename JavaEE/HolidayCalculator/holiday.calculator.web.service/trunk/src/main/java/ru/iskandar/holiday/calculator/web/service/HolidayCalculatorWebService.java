@@ -34,6 +34,7 @@ import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEn
 import ru.iskandar.holiday.calculator.service.model.statement.Statement;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
 import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.service.model.user.UserByLoginNotFoundException;
 
 /**
  * Веб-сервис учета отгулов
@@ -65,9 +66,15 @@ public class HolidayCalculatorWebService {
 		try {
 			_request.login(username, password);
 			LOG.info(String.format("Успешный вход в систему [login=%s].", username));
-			return true;
 		} catch (ServletException e) {
 			LOG.error(String.format("Ошибка входа в систему [login=%s].", username), e);
+			return false;
+		}
+		try {
+			return _userService.getCurrentUser() != null;
+		} catch (UserByLoginNotFoundException e) {
+			LOG.error(String.format("Ошибка входа в систему: для логина [login=%s] пользователь не найден.", username),
+					e);
 			return false;
 		}
 	}

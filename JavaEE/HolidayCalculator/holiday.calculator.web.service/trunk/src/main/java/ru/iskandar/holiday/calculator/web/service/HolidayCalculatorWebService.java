@@ -1,5 +1,6 @@
 package ru.iskandar.holiday.calculator.web.service;
 
+import java.nio.charset.Charset;
 import java.security.Principal;
 import java.util.Date;
 import java.util.HashSet;
@@ -259,7 +260,7 @@ public class HolidayCalculatorWebService {
 			throw new IllegalStateException(
 					String.format("Ошибка получения документа заявления с ID=%s", statementUUID), e);
 		}
-		return new HTMLDocument(new String(document.getContent()));
+		return new HTMLDocument(new String(document.getContent(), Charset.forName("utf-8")));
 	}
 
 }

@@ -71,12 +71,13 @@ public class HolidayCalculatorWebService {
 			return false;
 		}
 		try {
-			return _userService.getCurrentUser() != null;
+			_holidayService.checkAuthentification();
 		} catch (UserByLoginNotFoundException e) {
 			LOG.error(String.format("Ошибка входа в систему: для логина [login=%s] пользователь не найден.", username),
 					e);
 			return false;
 		}
+		return true;
 	}
 
 	@GET

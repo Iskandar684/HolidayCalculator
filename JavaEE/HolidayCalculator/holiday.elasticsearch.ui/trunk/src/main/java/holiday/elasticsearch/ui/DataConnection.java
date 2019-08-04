@@ -47,7 +47,7 @@ public class DataConnection {
 		jsonMap.put("firstName", "Ilmir");
 		jsonMap.put("docContent", "например");
 		jsonMap.put("postDate", new Date());
-		IndexRequest indexRequest = new IndexRequest("test_index").source(jsonMap);
+		IndexRequest indexRequest = new IndexRequest("test_index").id("10").source(jsonMap);
 		IndexResponse indexResponse;
 		try {
 			indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
@@ -61,8 +61,7 @@ public class DataConnection {
 	private void search(RestHighLevelClient client) {
 		SearchRequest searchRequest = new SearchRequest();
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-		searchSourceBuilder
-				.query(QueryBuilders.matchQuery("docContent", "например характер Восприятие в широком значении"));
+		searchSourceBuilder.query(QueryBuilders.matchQuery("postDate", "2019-08-04"));
 		// searchSourceBuilder.query(QueryBuilders.matchAllQuery());
 		searchRequest.source(searchSourceBuilder);
 

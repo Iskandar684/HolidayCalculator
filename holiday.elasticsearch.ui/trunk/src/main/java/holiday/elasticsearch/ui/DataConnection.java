@@ -12,6 +12,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.document.DocumentField;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 public class DataConnection {
@@ -24,13 +25,17 @@ public class DataConnection {
 
 		SearchRequest searchRequest = new SearchRequest();
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-		searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+		searchSourceBuilder
+				.query(QueryBuilders.matchQuery("docContent", "например характер Восприятие в широком значении"));
+		// searchSourceBuilder.query(QueryBuilders.matchAllQuery());
 		searchRequest.source(searchSourceBuilder);
 
 		RequestOptions options = RequestOptions.DEFAULT;
 		try {
 			SearchResponse response = client.search(searchRequest, options);
-			for (SearchHit hit : response.getHits()) {
+			SearchHits hits = response.getHits();
+			System.out.println("hits size " + hits.getHits().length);
+			for (SearchHit hit : hits) {
 				System.out.println("hit " + hit);
 				Map<String, DocumentField> fields = hit.getFields();
 				System.out.println("fields " + fields);

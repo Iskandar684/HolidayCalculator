@@ -1,9 +1,13 @@
 package holiday.elasticsearch.ui;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.http.HttpHost;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -22,7 +26,39 @@ public class DataConnection {
 		HttpHost host = new HttpHost("localhost", 9200, "http");
 		RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(host));
 		System.out.println("connect client " + client);
+		addToIndex(client);
+		search(client);
+		try {
+			client.close();
+			System.out.println("close");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
+	public static void main(String[] args) {
+		DataConnection connection = new DataConnection();
+		connection.connect();
+	}
+
+	private void addToIndex(RestHighLevelClient client) {
+		Map<String, Object> jsonMap = new HashMap<>();
+		jsonMap.put("firstName", "Ilmir");
+		jsonMap.put("docContent", "например");
+		jsonMap.put("postDate", new Date());
+		IndexRequest indexRequest = new IndexRequest("test_index").source(jsonMap);
+		IndexResponse indexResponse;
+		try {
+			indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
+			System.out.println("indexResponse " + indexResponse);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void search(RestHighLevelClient client) {
 		SearchRequest searchRequest = new SearchRequest();
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 		searchSourceBuilder
@@ -50,18 +86,6 @@ public class DataConnection {
 			e1.printStackTrace();
 		}
 
-		try {
-			client.close();
-			System.out.println("close");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public static void main(String[] args) {
-		DataConnection connection = new DataConnection();
-		connection.connect();
 	}
 
 }

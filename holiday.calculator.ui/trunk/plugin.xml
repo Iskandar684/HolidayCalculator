@@ -61,6 +61,12 @@
             id="holiday.calculator.ui.editor.users"
             name="%users.editor.name">
       </editor>
+      <editor
+            class="ru.iskandar.holiday.calculator.ui.search.SearchEditor"
+            default="false"
+            id="ru.iskandar.holiday.calculator.ui.search.SearchView"
+            name="%search.view.name">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -80,6 +86,12 @@
             class="ru.iskandar.holiday.calculator.ui.ReloadHandler"
             commandId="org.eclipse.ui.file.refresh">
       </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="ru.iskandar.holiday.calculator.ui.search.SearchStartup">
+      </startup>
    </extension>
 
 </plugin>

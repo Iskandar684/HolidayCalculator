@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/lucene-queries.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/log4j-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hppc.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/lucene-core.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/joda-time.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jackson-core.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/elasticsearch-core.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/httpcore-nio.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/httpasyncclient.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/httpclient.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/rank-eval-client.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/lang-mustache-client.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/elasticsearch-x-content.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/elasticsearch-rest-client.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/elasticsearch.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/httpcore.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/elasticsearch-rest-high-level-client.jar" sourcepath="C:/Users/Искандар/.m2/repository/org/elasticsearch/client/elasticsearch-rest-high-level-client/7.2.0/elasticsearch-rest-high-level-client-7.2.0-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src/main/java"/>

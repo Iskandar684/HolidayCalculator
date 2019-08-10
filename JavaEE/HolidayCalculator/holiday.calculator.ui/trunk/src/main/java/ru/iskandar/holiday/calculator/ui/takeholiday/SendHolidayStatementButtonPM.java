@@ -85,7 +85,9 @@ public class SendHolidayStatementButtonPM {
 	 * Обновляет состояние
 	 */
 	private void update() {
-		_button.setEnabled(_statementBuilder.canSendHolidayStatement());
+		if (!_button.isDisposed()) {
+			_button.setEnabled(_statementBuilder.canSendHolidayStatement());
+		}
 	}
 
 }

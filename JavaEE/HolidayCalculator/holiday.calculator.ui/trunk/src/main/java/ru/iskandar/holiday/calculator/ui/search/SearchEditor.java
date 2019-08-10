@@ -1,6 +1,8 @@
 package ru.iskandar.holiday.calculator.ui.search;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -15,8 +17,12 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
+import org.eclipse.ui.statushandlers.StatusManager;
 
+import ru.iskandar.holiday.calculator.dataconnection.ISearchHit;
+import ru.iskandar.holiday.calculator.dataconnection.ISearchResult;
 import ru.iskandar.holiday.calculator.dataconnection.SearchConnector;
+import ru.iskandar.holiday.calculator.dataconnection.SearchException;
 
 /**
  * Представление поиска.
@@ -62,7 +68,20 @@ public class SearchEditor extends EditorPart {
 
 	private void search(String aText) {
 		SearchConnector connection = new SearchConnector();
-		connection.search(aText);
+		ISearchResult result;
+		try {
+			result = connection.search(aText);
+		} catch (SearchException e) {
+			StatusManager.getManager().handle(new Status(IStatus.ERROR, getClass().getName(), e.getMessage(), e));
+			return;
+		}
+		showSearchResult(result);
+	}
+
+	private void showSearchResult(ISearchResult aSearchResult) {
+		for (ISearchHit hit : aSearchResult.getHits()) {
+			System.out.println("hit " + hit.getSourceAsMap());
+		}
 	}
 
 	@Override

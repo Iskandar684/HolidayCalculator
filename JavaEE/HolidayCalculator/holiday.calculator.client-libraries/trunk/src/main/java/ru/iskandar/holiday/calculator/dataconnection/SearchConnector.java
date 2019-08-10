@@ -1,7 +1,6 @@
 package ru.iskandar.holiday.calculator.dataconnection;
 
 import java.io.IOException;
-import java.util.Map;
 
 import org.apache.http.HttpHost;
 import org.eclipse.core.runtime.IStatus;
@@ -13,13 +12,14 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.document.DocumentField;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 
+import ru.iskandar.holiday.calculator.dataconnection.internal.SearchResultFactory;
+
 public class SearchConnector {
+
+	private final SearchResultFactory _resultFactory = new SearchResultFactory();
 
 	public static void main(String[] args) {
 		if (args.length < 1) {
@@ -27,7 +27,11 @@ public class SearchConnector {
 		}
 		String text = args[0];
 		SearchConnector connection = new SearchConnector();
-		connection.search(text);
+		try {
+			connection.search(text);
+		} catch (SearchException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private RestHighLevelClient createClient() {
@@ -36,57 +40,25 @@ public class SearchConnector {
 		return new RestHighLevelClient(restClient);
 	}
 
-	public void search(String aSearchText) {
-		// FIXME вернуть результат
+	public ISearchResult search(String aSearchText) throws SearchException {
 		RestHighLevelClient client = createClient();
 		SearchRequest searchRequest = new SearchRequest();
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 		searchSourceBuilder.query(QueryBuilders.matchQuery("docContent", aSearchText));
-		// searchSourceBuilder.query(QueryBuilders.matchAllQuery());
 		searchRequest.source(searchSourceBuilder);
-
-		RequestOptions options = RequestOptions.DEFAULT;
+		SearchResponse response;
 		try {
-			SearchResponse response = client.search(searchRequest, options);
-			SearchHits hits = response.getHits();
-			System.out.println("hits size " + hits.getHits().length);
-			for (SearchHit hit : hits) {
-				System.out.println("hit " + hit);
-				Map<String, DocumentField> fields = hit.getFields();
-				System.out.println("fields " + fields);
-				Map<String, Object> source = hit.getSourceAsMap();
-				System.out.println("source " + source);
-				System.out.println("firstName " + source.get("firstName"));
-			}
-
-			System.out.println("response " + response);
+			response = client.search(searchRequest, RequestOptions.DEFAULT);
 		} catch (IOException e) {
-			StatusManager.getManager().handle(new Status(IStatus.ERROR, getClass().getName(), e.getMessage(), e));
+			throw new SearchException(String.format("Ошибка поиска. [searchText=%s].", aSearchText), e);
 		}
-
 		try {
 			client.close();
 		} catch (IOException e) {
 			StatusManager.getManager().handle(
 					new Status(IStatus.ERROR, getClass().getName(), "Ошибка закрытия подключения к elasticsearch.", e));
 		}
+		return _resultFactory.createSearchResult(response);
 	}
-
-	// private void addToIndex(RestHighLevelClient client) {
-	// Map<String, Object> jsonMap = new HashMap<>();
-	// jsonMap.put("firstName", "Ilmir");
-	// jsonMap.put("docContent", "например");
-	// jsonMap.put("postDate", new Date());
-	// IndexRequest indexRequest = new
-	// IndexRequest("test_index").id("10").source(jsonMap);
-	// IndexResponse indexResponse;
-	// try {
-	// indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
-	// System.out.println("indexResponse " + indexResponse);
-	// } catch (IOException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
 
 }

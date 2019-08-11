@@ -1,5 +1,6 @@
 package ru.iskandar.holiday.calculator.ui.search;
 
+import org.eclipse.jface.util.Util;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -36,9 +37,17 @@ public class SearchResultTableLabelProvider implements ITableLabelProvider {
 	@Override
 	public String getColumnText(Object aElement, int aColumnIndex) {
 		if (aElement instanceof ISearchHit) {
-			return ((ISearchHit) aElement).getSourceAsMap().toString();
+			return getSearchHitText((ISearchHit) aElement);
 		}
 		return aElement.toString();
+	}
+
+	private String getSearchHitText(ISearchHit aSearchHit) {
+		String text = aSearchHit.getSourceAsMap().toString();
+		if (text == null) {
+			return Util.ZERO_LENGTH_STRING;
+		}
+		return text += System.lineSeparator();
 	}
 
 }

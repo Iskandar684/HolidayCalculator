@@ -2,6 +2,8 @@ package ru.iskandar.holiday.calculator.ui.search;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -16,7 +18,15 @@ public class SearchStartup implements IStartup {
 
 	@Override
 	public void earlyStartup() {
-		PlatformUI.getWorkbench().getDisplay().asyncExec(() -> openSearchView());
+		Display display = PlatformUI.getWorkbench().getDisplay();
+		display.asyncExec(() -> {
+			openSearchView();
+			display.addFilter(SWT.KeyDown, e -> {
+				if (((e.stateMask & SWT.CTRL) == SWT.CTRL) && (e.keyCode == 'f')) {
+					openSearchView();
+				}
+			});
+		});
 	}
 
 	/**
@@ -26,7 +36,7 @@ public class SearchStartup implements IStartup {
 		IWorkbenchWindow ww = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IWorkbenchPage page = (ww == null) ? null : ww.getActivePage();
 		try {
-			page.openEditor(new SearchEditorInput(), SearchEditor.ID);
+			page.openEditor(new SearchEditorInput(), SearchEditor.ID, true, IWorkbenchPage.MATCH_ID);
 		} catch (PartInitException e) {
 			IStatus status = new Status(IStatus.ERROR, getClass().getName(), "Ошибка открытия панели поиска.", e);
 			StatusManager.getManager().handle(status, StatusManager.LOG | StatusManager.SHOW);

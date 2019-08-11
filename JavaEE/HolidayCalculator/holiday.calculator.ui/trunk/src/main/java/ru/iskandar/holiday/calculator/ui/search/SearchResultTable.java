@@ -1,12 +1,15 @@
 package ru.iskandar.holiday.calculator.ui.search;
 
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.nebula.jface.gridviewer.GridTableViewer;
+import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.TableColumn;
 
 import ru.iskandar.holiday.calculator.dataconnection.ISearchResult;
 import ru.iskandar.holiday.calculator.ui.Messages;
@@ -16,28 +19,34 @@ import ru.iskandar.holiday.calculator.ui.Messages;
  */
 public class SearchResultTable {
 
-	private TableViewer _viewer;
+	private GridTableViewer _viewer;
 
-	public TableViewer create(Composite aParent) {
-		_viewer = new TableViewer(aParent, SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL);
-		TableColumn column = new TableColumn(_viewer.getTable(), SWT.CENTER);
-		column.setMoveable(true);
-		_viewer.getTable().setHeaderVisible(true);
-		_viewer.getTable().setLinesVisible(true);
+	public GridTableViewer create(Composite aParent) {
+		_viewer = new GridTableViewer(aParent, SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL);
+		GridColumn column = new GridColumn(_viewer.getGrid(), SWT.LEFT | SWT.WRAP);
+		column.setWordWrap(true);
+		column.getCellRenderer().setWordWrap(true);
+		_viewer.getGrid().setHeaderVisible(false);
+		_viewer.getGrid().setLinesVisible(false);
+		_viewer.getGrid().setAutoHeight(true);
 		_viewer.setContentProvider(new SearchResultTableContentProvider());
 		_viewer.setLabelProvider(new SearchResultTableLabelProvider());
-		_viewer.getTable().addPaintListener(new PaintHandler());
-		updateLinesVisible();
+		_viewer.getGrid().addPaintListener(new PaintHandler());
+		fillColumn();
+		_viewer.getGrid().addControlListener(new ControlAdapter() {
+
+			@Override
+			public void controlResized(ControlEvent aE) {
+				fillColumn();
+			}
+		});
 		return _viewer;
 	}
 
 	public void setInput(ISearchResult aSearchResult) {
 		_viewer.setInput(aSearchResult);
-		refreshAndPack();
-	}
-
-	private void updateLinesVisible() {
-		_viewer.getTable().setLinesVisible(hasResult());
+		_viewer.refresh();
+		fillColumn();
 	}
 
 	private boolean hasResult() {
@@ -60,11 +69,10 @@ public class SearchResultTable {
 
 	}
 
-	private void refreshAndPack() {
-		_viewer.refresh();
-		for (TableColumn col : _viewer.getTable().getColumns()) {
-			col.pack();
-		}
+	private void fillColumn() {
+		Rectangle area = _viewer.getGrid().getClientArea();
+		GridColumn column = _viewer.getGrid().getColumn(0);
+		column.setWidth(area.width);
 	}
 
 	public Control getControl() {

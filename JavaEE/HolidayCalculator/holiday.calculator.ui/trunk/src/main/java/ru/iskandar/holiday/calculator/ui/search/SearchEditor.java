@@ -35,14 +35,13 @@ public class SearchEditor extends EditorPart {
 	/** Строка поиска */
 	private Text _searchText;
 
-	/** Таблица с результатами поиска. */
-	private SearchResultTable _searchResultTable;
-
 	private GridData _searchControlLayoutData;
 
-	private final GridData _searchResultTableLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
+	private final GridData _searchResultControlLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
 
 	private Control _searchControl;
+
+	private final SearchResultControl _searchResultControl = new SearchResultControl();
 
 	@Override
 	public void createPartControl(Composite aParent) {
@@ -52,11 +51,10 @@ public class SearchEditor extends EditorPart {
 		_searchControl = createSearchControl(main);
 		_searchControlLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		_searchControl.setLayoutData(_searchControlLayoutData);
-		_searchResultTable = new SearchResultTable();
-		_searchResultTable.create(main);
-		_searchResultTableLayoutData.exclude = true;
-		_searchResultTable.getControl().setLayoutData(_searchResultTableLayoutData);
-		_searchResultTable.getControl().setVisible(false);
+		_searchResultControl.create(main);
+		_searchResultControlLayoutData.exclude = true;
+		_searchResultControl.getControl().setLayoutData(_searchResultControlLayoutData);
+		_searchResultControl.getControl().setVisible(false);
 	}
 
 	private Control createSearchControl(Composite aParent) {
@@ -103,12 +101,12 @@ public class SearchEditor extends EditorPart {
 	}
 
 	private void showSearchResult(ISearchResult aSearchResult) {
-		_searchResultTable.setInput(aSearchResult);
-		_searchResultTableLayoutData.exclude = false;
-		_searchResultTable.getControl().setVisible(true);
+		_searchResultControl.setInput(aSearchResult);
+		_searchResultControlLayoutData.exclude = false;
+		_searchResultControl.getControl().setVisible(true);
 		GridData layoutData = new GridData(SWT.FILL, SWT.TOP, true, false);
 		_searchControl.setLayoutData(layoutData);
-		_searchResultTable.getControl().getParent().layout();
+		_searchResultControl.getControl().getParent().layout();
 		_searchControl.getParent().layout();
 	}
 

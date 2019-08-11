@@ -12,6 +12,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -19,7 +20,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.statushandlers.StatusManager;
 
-import ru.iskandar.holiday.calculator.dataconnection.ISearchHit;
 import ru.iskandar.holiday.calculator.dataconnection.ISearchResult;
 import ru.iskandar.holiday.calculator.dataconnection.SearchConnector;
 import ru.iskandar.holiday.calculator.dataconnection.SearchException;
@@ -35,8 +35,31 @@ public class SearchEditor extends EditorPart {
 	/** Строка поиска */
 	private Text _searchText;
 
+	/** Таблица с результатами поиска. */
+	private SearchResultTable _searchResultTable;
+
+	private GridData _searchControlLayoutData;
+
+	private final GridData _searchResultTableLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
+
+	private Control _searchControl;
+
 	@Override
 	public void createPartControl(Composite aParent) {
+		Composite main = new Composite(aParent, SWT.NONE);
+		GridLayout mainLayout = new GridLayout();
+		main.setLayout(mainLayout);
+		_searchControl = createSearchControl(main);
+		_searchControlLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		_searchControl.setLayoutData(_searchControlLayoutData);
+		_searchResultTable = new SearchResultTable();
+		_searchResultTable.create(main);
+		_searchResultTableLayoutData.exclude = true;
+		_searchResultTable.getControl().setLayoutData(_searchResultTableLayoutData);
+		_searchResultTable.getControl().setVisible(false);
+	}
+
+	private Control createSearchControl(Composite aParent) {
 		Composite main = new Composite(aParent, SWT.NONE);
 		GridLayout mainLayout = new GridLayout(2, false);
 		mainLayout.marginWidth = 100;
@@ -64,6 +87,7 @@ public class SearchEditor extends EditorPart {
 				search(_searchText.getText());
 			}
 		});
+		return main;
 	}
 
 	private void search(String aText) {
@@ -79,9 +103,13 @@ public class SearchEditor extends EditorPart {
 	}
 
 	private void showSearchResult(ISearchResult aSearchResult) {
-		for (ISearchHit hit : aSearchResult.getHits()) {
-			System.out.println("hit " + hit.getSourceAsMap());
-		}
+		_searchResultTable.setInput(aSearchResult);
+		_searchResultTableLayoutData.exclude = false;
+		_searchResultTable.getControl().setVisible(true);
+		GridData layoutData = new GridData(SWT.FILL, SWT.TOP, true, false);
+		_searchControl.setLayoutData(layoutData);
+		_searchResultTable.getControl().getParent().layout();
+		_searchControl.getParent().layout();
 	}
 
 	@Override

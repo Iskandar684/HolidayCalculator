@@ -6,8 +6,8 @@ import ru.iskandar.holiday.calculator.dataconnection.ISearchResult;
 
 public class SearchResultFactory {
 
-	public ISearchResult createSearchResult(SearchResponse aResponse) {
-		return new SearchResultImpl(aResponse);
+	public ISearchResult createSearchResult(SearchResponse aResponse, String aSearchText) {
+		return new SearchResultImpl(aResponse, aSearchText);
 	}
 
 }

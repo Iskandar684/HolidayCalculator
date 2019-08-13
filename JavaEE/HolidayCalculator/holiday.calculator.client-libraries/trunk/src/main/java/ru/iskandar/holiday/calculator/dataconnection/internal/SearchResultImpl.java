@@ -13,13 +13,18 @@ import ru.iskandar.holiday.calculator.dataconnection.ISearchResult;
 
 class SearchResultImpl implements ISearchResult {
 
+	/** Совпадения */
 	private final List<ISearchHit> _hits = new ArrayList<>();
 
 	/** Ответ запроса поиска */
 	private final SearchResponse _response;
 
-	SearchResultImpl(SearchResponse aResponse) {
+	/** Строка поиска */
+	private final String _searchString;
+
+	SearchResultImpl(SearchResponse aResponse, String aSearchString) {
 		_response = Objects.requireNonNull(aResponse);
+		_searchString = Objects.requireNonNull(aSearchString);
 		for (SearchHit hit : aResponse.getHits()) {
 			_hits.add(new SearchHitImpl(hit));
 		}
@@ -38,6 +43,11 @@ class SearchResultImpl implements ISearchResult {
 	@Override
 	public long getTotalHitsCount() {
 		return _response.getHits().getTotalHits().value;
+	}
+
+	@Override
+	public String getSearchString() {
+		return _searchString;
 	}
 
 }

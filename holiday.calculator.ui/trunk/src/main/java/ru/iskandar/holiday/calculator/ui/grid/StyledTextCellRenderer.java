@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.nebula.jface.gridviewer.GridTableViewer;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridCellRenderer;
+import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.nebula.widgets.grid.IInternalWidget;
 import org.eclipse.nebula.widgets.grid.internal.BranchRenderer;
@@ -208,10 +209,36 @@ public class StyledTextCellRenderer extends GridCellRenderer {
 
 			textLayout.setText(item.getText(getColumn()));
 			textLayout.setFont(item.getFont(getColumn()));
+			textLayout.setAlignment(getAlignment());
+			textLayout.setWidth(width < 1 ? 1 : width);
 
 			for (int i = 0; i < styleRanges.length; i++) {
 				StyleRange curr = prepareStyleRange(styleRanges[i], true);
 				textLayout.setStyle(curr, curr.start, (curr.start + curr.length) - 1);
+			}
+			if (item.getParent().isAutoHeight()) {
+				// Look through all columns (except this one) to get the max
+				// height needed for this item
+				int columnCount = item.getParent().getColumnCount();
+				int maxHeight = textLayout.getBounds().height + textTopMargin + textBottomMargin;
+				for (int i = 0; i < columnCount; i++) {
+					GridColumn column = item.getParent().getColumn(i);
+					if ((i != getColumn()) && column.getWordWrap()) {
+						int height = column.getCellRenderer().computeSize(gc, column.getWidth(), SWT.DEFAULT, item).y;
+						maxHeight = Math.max(maxHeight, height);
+					}
+				}
+
+				// Also look at the row header if necessary
+				if (item.getParent().isWordWrapHeader()) {
+					int height = item.getParent().getRowHeaderRenderer().computeSize(gc, SWT.DEFAULT, SWT.DEFAULT,
+							item).y;
+					maxHeight = Math.max(maxHeight, height);
+				}
+
+				if (maxHeight != item.getHeight()) {
+					item.setHeight(maxHeight);
+				}
 			}
 
 			textLayout.draw(gc, x, getBounds().y + textTopMargin + topMargin);
@@ -241,7 +268,30 @@ public class StyledTextCellRenderer extends GridCellRenderer {
 			textLayout.setText(item.getText(getColumn()));
 			textLayout.setAlignment(getAlignment());
 			textLayout.setWidth(width < 1 ? 1 : width);
+			if (item.getParent().isAutoHeight()) {
+				// Look through all columns (except this one) to get the max
+				// height needed for this item
+				int columnCount = item.getParent().getColumnCount();
+				int maxHeight = textLayout.getBounds().height + textTopMargin + textBottomMargin;
+				for (int i = 0; i < columnCount; i++) {
+					GridColumn column = item.getParent().getColumn(i);
+					if ((i != getColumn()) && column.getWordWrap()) {
+						int height = column.getCellRenderer().computeSize(gc, column.getWidth(), SWT.DEFAULT, item).y;
+						maxHeight = Math.max(maxHeight, height);
+					}
+				}
 
+				// Also look at the row header if necessary
+				if (item.getParent().isWordWrapHeader()) {
+					int height = item.getParent().getRowHeaderRenderer().computeSize(gc, SWT.DEFAULT, SWT.DEFAULT,
+							item).y;
+					maxHeight = Math.max(maxHeight, height);
+				}
+
+				if (maxHeight != item.getHeight()) {
+					item.setHeight(maxHeight);
+				}
+			}
 			textLayout.draw(gc, getBounds().x + x, getBounds().y + textTopMargin + topMargin);
 		}
 

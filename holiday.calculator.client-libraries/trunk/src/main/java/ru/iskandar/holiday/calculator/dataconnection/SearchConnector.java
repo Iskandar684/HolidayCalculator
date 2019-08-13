@@ -58,7 +58,7 @@ public class SearchConnector {
 			StatusManager.getManager().handle(
 					new Status(IStatus.ERROR, getClass().getName(), "Ошибка закрытия подключения к elasticsearch.", e));
 		}
-		return _resultFactory.createSearchResult(response);
+		return _resultFactory.createSearchResult(response, aSearchText);
 	}
 
 }

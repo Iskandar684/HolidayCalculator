@@ -5,10 +5,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
@@ -33,7 +31,7 @@ public class IncomingStatementsEditor extends EditorPart {
 
 	private HolidayCalculatorModelProvider _holidayModelProvider;
 
-	private TableViewer _statementsViewer;
+	private StructuredViewer _statementsViewer;
 
 	/**
 	 * Конструктор
@@ -99,7 +97,7 @@ public class IncomingStatementsEditor extends EditorPart {
 		StatementsTableCreator creator = new StatementsTableCreator(
 				new IncomingStatementsProvider(_holidayModelProvider));
 		_statementsViewer = creator.create(sash);
-		_statementsViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		_statementsViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		//
 		StatementReviewForm reviewForm = new StatementReviewForm(_holidayModelProvider,
 				new StatementProvider(_statementsViewer));
@@ -110,24 +108,16 @@ public class IncomingStatementsEditor extends EditorPart {
 
 		private final CopyOnWriteArrayList<IStatementChangedListener> _listeners = new CopyOnWriteArrayList<>();
 
-		private final TableViewer _viewer;
+		private final StructuredViewer _viewer;
 
 		/**
 		 * Конструктор
 		 */
-		public StatementProvider(TableViewer aViewer) {
-			Objects.requireNonNull(aViewer);
-			_viewer = aViewer;
-			aViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-				/**
-				 * {@inheritDoc}
-				 */
-				@Override
-				public void selectionChanged(SelectionChangedEvent aEvent) {
-					for (IStatementChangedListener listeners : _listeners) {
-						listeners.statementChanged();
-					}
+		public StatementProvider(StructuredViewer aViewer) {
+			_viewer = Objects.requireNonNull(aViewer);
+			aViewer.addSelectionChangedListener(aEvent -> {
+				for (IStatementChangedListener listeners : _listeners) {
+					listeners.statementChanged();
 				}
 			});
 		}

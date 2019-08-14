@@ -2,15 +2,14 @@ package ru.iskandar.holiday.calculator.ui.statement;
 
 import java.util.Objects;
 
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.nebula.jface.gridviewer.GridTableViewer;
+import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.TableColumn;
 
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
@@ -22,31 +21,34 @@ import ru.iskandar.holiday.calculator.ui.statement.IStatementsProvider.IStatemen
  */
 public class StatementsTableCreator {
 
-	private TableViewer _viewer;
+	private GridTableViewer _viewer;
 
 	public static enum StatementsTableColumn {
 
-		TYPE(StatementsTableProperties.statementsTableTypeColumnText, 0),
+		TYPE(StatementsTableProperties.statementsTableTypeColumnText, 0, false),
 
-		AUTHOR(StatementsTableProperties.statementsTableAuthorColumnText, 1),
+		AUTHOR(StatementsTableProperties.statementsTableAuthorColumnText, 1, false),
 
-		CREATE_DATE(StatementsTableProperties.statementsTableCreateDateColumnText, 2),
+		CREATE_DATE(StatementsTableProperties.statementsTableCreateDateColumnText, 2, false),
 
-		STATUS(StatementsTableProperties.statementsTableStatusColumnText, 3),
+		STATUS(StatementsTableProperties.statementsTableStatusColumnText, 3, false),
 
-		CONSIDER(StatementsTableProperties.statementsTableConsiderColumnText, 4),
+		CONSIDER(StatementsTableProperties.statementsTableConsiderColumnText, 4, false),
 
-		CONSIDER_DATE(StatementsTableProperties.statementsTableConsiderDateColumnText, 5),
+		CONSIDER_DATE(StatementsTableProperties.statementsTableConsiderDateColumnText, 5, false),
 
-		CONTENT(StatementsTableProperties.statementsTableContentColumnText, 6);
+		CONTENT(StatementsTableProperties.statementsTableContentColumnText, 6, true);
 
 		private String _text;
 
 		private int _index;
 
-		StatementsTableColumn(String aText, int aIndex) {
+		private boolean _wordWrap;
+
+		StatementsTableColumn(String aText, int aIndex, boolean aWordWrap) {
 			_text = aText;
 			_index = aIndex;
+			_wordWrap = aWordWrap;
 		}
 
 		/**
@@ -61,6 +63,10 @@ public class StatementsTableCreator {
 		 */
 		public int getIndex() {
 			return _index;
+		}
+
+		public boolean isWordWrap() {
+			return _wordWrap;
 		}
 
 		public static StatementsTableColumn findColumnByIndex(int aIndex) {
@@ -81,23 +87,25 @@ public class StatementsTableCreator {
 		_modelProvider = aHolidayCalculatorModelProvider;
 	}
 
-	public TableViewer create(Composite aParent) {
-		_viewer = new TableViewer(aParent, SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL);
-
+	public StructuredViewer create(Composite aParent) {
+		_viewer = new GridTableViewer(aParent, SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL);
+		_viewer.getGrid().setAutoHeight(true);
+		_viewer.getGrid().setAutoWidth(true);
 		for (StatementsTableColumn col : StatementsTableColumn.values()) {
-			TableColumn column = new TableColumn(_viewer.getTable(), SWT.CENTER);
+			GridColumn column = new GridColumn(_viewer.getGrid(), SWT.LEFT);
 			column.setText(col.getText());
 			column.setMoveable(true);
+			column.setWordWrap(col.isWordWrap());
 		}
-		_viewer.getTable().setHeaderVisible(true);
-		_viewer.getTable().setLinesVisible(true);
+		_viewer.getGrid().setHeaderVisible(true);
+		_viewer.getGrid().setLinesVisible(true);
 
 		initListeners();
 		_viewer.setContentProvider(new StatementTableContentProvider());
 		_viewer.setLabelProvider(new StatementsTableLabelProvider());
 		_viewer.setInput(_modelProvider);
 
-		_viewer.getTable().addPaintListener(new PaintHandler());
+		_viewer.getGrid().addPaintListener(new PaintHandler());
 		updateLinesVisible();
 
 		refreshAndPack();
@@ -106,7 +114,7 @@ public class StatementsTableCreator {
 
 	private void updateLinesVisible() {
 		boolean visible = LoadStatus.LOADED.equals(_modelProvider.getLoadStatus());
-		_viewer.getTable().setLinesVisible(visible);
+		_viewer.getGrid().setLinesVisible(visible);
 	}
 
 	private class PaintHandler implements PaintListener {
@@ -145,69 +153,27 @@ public class StatementsTableCreator {
 	}
 
 	private void initListeners() {
-		ILoadListener loadListener = new ILoadListener() {
-
-			/**
-			 * {@inheritDoc}
-			 */
-			@Override
-			public void loadStatusChanged() {
-				Display.getDefault().asyncExec(new Runnable() {
-
-					/**
-					 * {@inheritDoc}
-					 */
-					@Override
-					public void run() {
-						updateLinesVisible();
-						refreshAndPack();
-					}
-
-				});
-
-			}
-
-		};
-		IStatementsChangedListener modelListener = new IStatementsChangedListener() {
-
-			/**
-			 * @param aAEvent
-			 */
-			@Override
-			public void statementsChanged() {
-				Display.getDefault().asyncExec(new Runnable() {
-
-					/**
-					 * {@inheritDoc}
-					 */
-					@Override
-					public void run() {
-						refreshAndPack();
-					}
-
-				});
-
-			}
-		};
+		ILoadListener loadListener = () -> Display.getDefault().asyncExec(() -> {
+			updateLinesVisible();
+			refreshAndPack();
+		});
+		IStatementsChangedListener modelListener = () -> Display.getDefault().asyncExec(() -> refreshAndPack());
 		_modelProvider.addStatementsChangedListener(modelListener);
 		_modelProvider.addLoadListener(loadListener);
-		_viewer.getControl().addDisposeListener(new DisposeListener() {
-
-			/**
-			 * {@inheritDoc}
-			 */
-			@Override
-			public void widgetDisposed(DisposeEvent aE) {
-				_modelProvider.removeLoadListener(loadListener);
-				_modelProvider.removeStatementsChangedListener(modelListener);
-			}
+		_viewer.getControl().addDisposeListener(aE -> {
+			_modelProvider.removeLoadListener(loadListener);
+			_modelProvider.removeStatementsChangedListener(modelListener);
 		});
 	}
 
 	private void refreshAndPack() {
 		_viewer.refresh();
-		for (TableColumn col : _viewer.getTable().getColumns()) {
-			col.pack();
+		for (GridColumn col : _viewer.getGrid().getColumns()) {
+			if (col.getWordWrap()) {
+				col.setWidth(200);
+			} else {
+				col.pack();
+			}
 		}
 	}
 

@@ -1,7 +1,7 @@
 package ru.iskandar.holiday.calculator.ui.outgoing;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -22,7 +22,7 @@ public class OutgoingStatementsEditor extends EditorPart {
 
 	private HolidayCalculatorModelProvider _holidayModelProvider;
 
-	private TableViewer _statementsViewer;
+	private StructuredViewer _statementsViewer;
 
 	/**
 	 * Конструктор
@@ -85,9 +85,7 @@ public class OutgoingStatementsEditor extends EditorPart {
 		StatementsTableCreator creator = new StatementsTableCreator(
 				new CurrentUserStatementsProvider(_holidayModelProvider));
 		_statementsViewer = creator.create(main);
-		_statementsViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		//
-
+		_statementsViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	}
 
 	/**

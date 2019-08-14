@@ -97,12 +97,17 @@ public class SearchResultTableLabelProvider extends StyledCellLabelProvider impl
 			return Collections.emptyList();
 		}
 		List<Point> intervals = new ArrayList<>();
-		int length = highlightedText.length();
-		int startIndex = 0;
-		while (startIndex != -1) {
-			startIndex = aText.indexOf(highlightedText, startIndex + 1);
-			if (startIndex > 0) {
-				intervals.add(new Point(startIndex, length));
+		String space = " ";
+		String[] parts = highlightedText.contains(space) ? highlightedText.split(space)
+				: new String[] { highlightedText };
+		for (String part : parts) {
+			int length = part.length();
+			int startIndex = 0;
+			while (startIndex != -1) {
+				startIndex = aText.indexOf(part, startIndex + 1);
+				if (startIndex > 0) {
+					intervals.add(new Point(startIndex, length));
+				}
 			}
 		}
 		return intervals;

@@ -193,6 +193,7 @@ public class StatementReviewForm {
 		_dateChooser.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, columns, 1));
 		_toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
+		_dateChooser.setEnabled(false);
 
 		_approveBt = _toolkit.createButton(main, Messages.approveBt, SWT.NONE);
 		_approveBt.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, true));

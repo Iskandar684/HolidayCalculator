@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -13,8 +14,6 @@ import org.eclipse.nebula.widgets.datechooser.DateChooser;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -27,9 +26,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.statushandlers.StatusManager;
 
+import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorListenerAdapter;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 import ru.iskandar.holiday.calculator.service.model.ServiceLookupException;
 import ru.iskandar.holiday.calculator.service.model.StatementAlreadyConsideredException;
+import ru.iskandar.holiday.calculator.service.model.StatementContentChangedEvent;
+import ru.iskandar.holiday.calculator.service.model.document.StatementDocument;
 import ru.iskandar.holiday.calculator.service.model.permissions.PermissionDeniedException;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.statement.LeaveStatement;
@@ -41,6 +43,9 @@ import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
 import ru.iskandar.holiday.calculator.ui.Messages;
 import ru.iskandar.holiday.calculator.ui.Utils;
+import ru.iskandar.holiday.calculator.ui.document.HTMLContent;
+import ru.iskandar.holiday.calculator.ui.takeholiday.HTMLContentProvider;
+import ru.iskandar.holiday.calculator.ui.takeholiday.HTMLDocumentViewer;
 
 /**
  * Форма рассмотрения заявления
@@ -60,14 +65,30 @@ public class StatementReviewForm {
 
 	DateChooser _dateChooser;
 
+	/** Поставщик содержимого документа заявления на отгул */
+	private final HTMLContentProvider _statementDocumentContentProvider;
+
+	private class DocContentLoader implements Callable<HTMLContent> {
+
+		@Override
+		public HTMLContent call() throws Exception {
+			Statement<?> statement = _statementProvider.getStatement();
+			if (statement == null) {
+				return HTMLContent.EMPTY;
+			}
+			HolidayCalculatorModel model = _modelProvider.getModel();
+			StatementDocument doc = model.getStatementDocument(statement.getId());
+			return new HTMLContent(doc.getContent());
+		}
+	}
+
 	/**
 	 * Конструктор
 	 */
 	public StatementReviewForm(HolidayCalculatorModelProvider aModelProvider, IStatementProvider aStatementProvider) {
-		Objects.requireNonNull(aModelProvider);
-		Objects.requireNonNull(aStatementProvider);
-		_modelProvider = aModelProvider;
-		_statementProvider = aStatementProvider;
+		_modelProvider = Objects.requireNonNull(aModelProvider);
+		_statementProvider = Objects.requireNonNull(aStatementProvider);
+		_statementDocumentContentProvider = new HTMLContentProvider(new DocContentLoader());
 	}
 
 	public Control create(Composite aParent) {
@@ -93,16 +114,9 @@ public class StatementReviewForm {
 		_statementProvider.addStatementChangedListener(listener);
 		LoadListener loadListener = new LoadListener();
 		_modelProvider.addLoadListener(loadListener);
-		aControl.addDisposeListener(new DisposeListener() {
-
-			/**
-			 * {@inheritDoc}
-			 */
-			@Override
-			public void widgetDisposed(DisposeEvent aE) {
-				_statementProvider.removeStatementChangedListener(listener);
-				_modelProvider.removeLoadListener(loadListener);
-			}
+		aControl.addDisposeListener(aE -> {
+			_statementProvider.removeStatementChangedListener(listener);
+			_modelProvider.removeLoadListener(loadListener);
 		});
 	}
 
@@ -113,17 +127,7 @@ public class StatementReviewForm {
 		 */
 		@Override
 		public void loadStatusChanged() {
-			Display.getDefault().asyncExec(new Runnable() {
-
-				/**
-				 * {@inheritDoc}
-				 */
-				@Override
-				public void run() {
-					refresh();
-				}
-
-			});
+			Display.getDefault().asyncExec(() -> refresh());
 
 		}
 
@@ -142,7 +146,25 @@ public class StatementReviewForm {
 		leftLayout.marginWidth = 0;
 		leftLayout.marginHeight = 0;
 		main.setLayout(leftLayout);
+		main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		HTMLDocumentViewer viewer = new HTMLDocumentViewer(_statementDocumentContentProvider);
+		Control control = viewer.create(main, _toolkit);
+		control.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		StatementContentChangedHandler contentChangedListener = new StatementContentChangedHandler();
+		_modelProvider.addListener(contentChangedListener);
+		control.addDisposeListener(aE -> _modelProvider.removeListener(contentChangedListener));
 		return main;
+	}
+
+	private class StatementContentChangedHandler extends HolidayCalculatorListenerAdapter {
+
+		@Override
+		protected void statementContentChangedEvent(StatementContentChangedEvent aEvent) {
+			_statementDocumentContentProvider.asynReload();
+		}
+
 	}
 
 	/**
@@ -283,11 +305,9 @@ public class StatementReviewForm {
 
 	private class StatementChangedListener implements IStatementChangedListener {
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void statementChanged() {
+			_statementDocumentContentProvider.asynReload();
 			refresh();
 		}
 

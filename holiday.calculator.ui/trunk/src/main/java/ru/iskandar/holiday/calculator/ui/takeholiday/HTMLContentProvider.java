@@ -1,6 +1,3 @@
-/**
- *
- */
 package ru.iskandar.holiday.calculator.ui.takeholiday;
 
 import java.util.concurrent.Callable;
@@ -21,9 +18,6 @@ public class HTMLContentProvider extends ModelProvider<HTMLContent> implements I
 		super(aLoader);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public HTMLContent getContent() {
 		return getModel();

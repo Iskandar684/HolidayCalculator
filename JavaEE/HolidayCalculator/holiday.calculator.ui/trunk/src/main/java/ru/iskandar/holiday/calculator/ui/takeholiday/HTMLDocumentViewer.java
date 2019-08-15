@@ -7,8 +7,6 @@ import java.util.Objects;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -39,21 +37,9 @@ public class HTMLDocumentViewer {
 
 	private class LoadListener implements ILoadListener {
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
 		public void loadStatusChanged() {
-			Display.getDefault().asyncExec(new Runnable() {
-
-				/**
-				 * {@inheritDoc}
-				 */
-				@Override
-				public void run() {
-					refresh();
-				}
-			});
+			Display.getDefault().asyncExec(() -> refresh());
 		}
 	}
 
@@ -63,17 +49,7 @@ public class HTMLDocumentViewer {
 	private void initListeners() {
 		final LoadListener loadListener = new LoadListener();
 		_contentProvider.addLoadListener(loadListener);
-		_browser.addDisposeListener(new DisposeListener() {
-
-			/**
-			 * {@inheritDoc}
-			 */
-			@Override
-			public void widgetDisposed(DisposeEvent aE) {
-				_contentProvider.removeLoadListener(loadListener);
-
-			}
-		});
+		_browser.addDisposeListener(aE -> _contentProvider.removeLoadListener(loadListener));
 	}
 
 	public Control create(Composite aParent, FormToolkit aToolkit) {

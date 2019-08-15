@@ -108,28 +108,34 @@ public class IncomingStatementsEditor extends EditorPart {
 
 		private final CopyOnWriteArrayList<IStatementChangedListener> _listeners = new CopyOnWriteArrayList<>();
 
-		private final StructuredViewer _viewer;
+		private Statement<?> _statement;
 
 		/**
 		 * Конструктор
 		 */
 		public StatementProvider(StructuredViewer aViewer) {
-			_viewer = Objects.requireNonNull(aViewer);
+			Objects.requireNonNull(aViewer);
+			setSelection(getStatement(aViewer.getSelection()));
 			aViewer.addSelectionChangedListener(aEvent -> {
+				setSelection(getStatement(aEvent.getSelection()));
 				for (IStatementChangedListener listeners : _listeners) {
 					listeners.statementChanged();
 				}
 			});
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
 		@Override
-		public Statement<?> getStatement() {
-			ISelection sel = _viewer.getSelection();
-			if (sel instanceof IStructuredSelection) {
-				Object firstElement = ((IStructuredSelection) sel).getFirstElement();
+		public synchronized Statement<?> getStatement() {
+			return _statement;
+		}
+
+		private synchronized void setSelection(Statement<?> aStatement) {
+			_statement = aStatement;
+		}
+
+		private Statement<?> getStatement(ISelection aSelection) {
+			if (aSelection instanceof IStructuredSelection) {
+				Object firstElement = ((IStructuredSelection) aSelection).getFirstElement();
 				return (Statement<?>) firstElement;
 			}
 			return null;

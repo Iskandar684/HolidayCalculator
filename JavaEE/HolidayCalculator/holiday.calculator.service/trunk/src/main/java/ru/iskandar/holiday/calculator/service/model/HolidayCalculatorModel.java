@@ -25,6 +25,7 @@ import ru.iskandar.holiday.calculator.service.model.statement.LeaveStatementEntr
 import ru.iskandar.holiday.calculator.service.model.statement.RecallStatement;
 import ru.iskandar.holiday.calculator.service.model.statement.RecallStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.statement.Statement;
+import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementType;
 import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
@@ -35,9 +36,8 @@ import ru.iskandar.holiday.calculator.service.model.user.UserByLoginAlreadyExist
  * Модель учета отгулов
  */
 public class HolidayCalculatorModel implements Serializable {
-	/**
-	 * Индентификатор для сериализации
-	 */
+
+	/** Идентификатор для сериализации */
 	private static final long serialVersionUID = -2279698461127019581L;
 
 	/** Текущий пользователь */
@@ -220,19 +220,12 @@ public class HolidayCalculatorModel implements Serializable {
 		Objects.requireNonNull(aClientId, "Не указан идентификатор клиента");
 		_clientId = aClientId;
 		_servicesProvider = new RemoteServicesProvider(aInitialContext);
-		Runnable run = new Runnable() {
-			/**
-			 * {@inheritDoc}
-			 */
-			@Override
-			public void run() {
-				try {
-					new ServerEventsSubscriber().subscribe(aInitialContext,
-							new HolidayCalculatorEventListener(HolidayCalculatorModel.this));
-				} catch (NamingException | JMSException e) {
-					aLogger.logError("Ошибка подписки на серверные события", e);
-				}
-
+		Runnable run = () -> {
+			try {
+				new ServerEventsSubscriber().subscribe(aInitialContext,
+						new HolidayCalculatorEventListener(HolidayCalculatorModel.this));
+			} catch (NamingException | JMSException e) {
+				aLogger.logError("Ошибка подписки на серверные события", e);
 			}
 
 		};
@@ -584,6 +577,21 @@ public class HolidayCalculatorModel implements Serializable {
 		Objects.requireNonNull(aEntry, "Не указано содержимое заявления");
 		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
 		return service.preview(aEntry);
+	}
+
+	/**
+	 * Возвращает документ заявления.
+	 *
+	 * @param aStatementId
+	 *            идентификатор заявления
+	 * @return документ
+	 * @throws DocumentPreviewException
+	 *             в случае ошибки получения
+	 */
+	public StatementDocument getStatementDocument(StatementId aStatementId) throws DocumentPreviewException {
+		Objects.requireNonNull(aStatementId);
+		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
+		return service.getStatementDocument(aStatementId);
 	}
 
 }

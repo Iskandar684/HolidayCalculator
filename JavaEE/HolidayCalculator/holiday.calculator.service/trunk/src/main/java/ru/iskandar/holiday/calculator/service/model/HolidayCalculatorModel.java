@@ -535,6 +535,12 @@ public class HolidayCalculatorModel implements Serializable {
 		return newUser;
 	}
 
+	public void changeUserNote(User aUser, String aNote) {
+		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
+		service.changeNote(aUser.getId(), aNote);
+		aUser.setNote(aNote);
+	}
+
 	/**
 	 * Возвращает всех пользователей
 	 *

@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.nebula.jface.gridviewer.GridTableViewer;
+import org.eclipse.nebula.jface.gridviewer.GridViewerColumn;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -85,13 +86,13 @@ public class UsersTableCreator {
 
 	public StructuredViewer create(Composite aParent) {
 		_viewer = new GridTableViewer(aParent, SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL);
-
 		for (UsersTableColumn col : UsersTableColumn.values()) {
-			GridColumn column = new GridColumn(_viewer.getGrid(), SWT.CENTER);
-			column.setText(col.getText());
-			column.setMoveable(true);
+			GridViewerColumn column = new GridViewerColumn(_viewer, SWT.CENTER, col.getIndex());
+			column.getColumn().setText(col.getText());
+			column.getColumn().setMoveable(true);
 			if (UsersTableColumn.NOTE == col) {
-				column.setWordWrap(true);
+				column.getColumn().setWordWrap(true);
+				column.setEditingSupport(new UserNoteEditorSupport(_viewer, _modelProvider));
 			}
 		}
 		_viewer.getGrid().setHeaderVisible(true);

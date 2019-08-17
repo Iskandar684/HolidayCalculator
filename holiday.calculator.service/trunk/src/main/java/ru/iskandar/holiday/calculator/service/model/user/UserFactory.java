@@ -27,9 +27,16 @@ public abstract class UserFactory {
 		Objects.requireNonNull(patronymic, "Не указано отчество создаваемого пользователя");
 		Objects.requireNonNull(empDate, "Не указана дата приема на работу создаваемого пользователя");
 		Objects.requireNonNull(login, "Не указан логин создаваемого пользователя");
-		User user = new User(uuid, lastName, firstName, patronymic, empDate, login);
+		User user = new User(uuid, lastName, firstName, patronymic, empDate, login, getNote());
 		return user;
 	}
+
+	/**
+	 * Возвращает примечание.
+	 *
+	 * @return примечание или {@code null}, если примечание отсутствует
+	 */
+	protected abstract String getNote();
 
 	/**
 	 * Возвращает UUID пользователя

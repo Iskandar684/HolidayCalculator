@@ -41,6 +41,9 @@ public class UserEntity implements Serializable {
 	/** Дата приема на работу */
 	private Date _employmentDate;
 
+	/** Примечание */
+	private String _note;
+
 	/**
 	 * @return the uuid
 	 */
@@ -144,6 +147,15 @@ public class UserEntity implements Serializable {
 		_employmentDate = aEmploymentDate;
 	}
 
+	@Column(name = "note")
+	public String getNote() {
+		return _note;
+	}
+
+	public void setNote(String aNote) {
+		_note = aNote;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -160,18 +172,23 @@ public class UserEntity implements Serializable {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		UserEntity other = (UserEntity) obj;
 		if (_uuid == null) {
-			if (other._uuid != null)
+			if (other._uuid != null) {
 				return false;
-		} else if (!_uuid.equals(other._uuid))
+			}
+		} else if (!_uuid.equals(other._uuid)) {
 			return false;
+		}
 		return true;
 	}
 

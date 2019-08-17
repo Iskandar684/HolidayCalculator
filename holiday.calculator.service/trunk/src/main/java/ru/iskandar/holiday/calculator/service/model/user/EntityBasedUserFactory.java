@@ -71,4 +71,9 @@ public class EntityBasedUserFactory extends UserFactory {
 		return _userEntity.getLogin();
 	}
 
+	@Override
+	protected String getNote() {
+		return _userEntity.getNote();
+	}
+
 }

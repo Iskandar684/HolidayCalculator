@@ -16,11 +16,13 @@
 			<groupId>org.wildfly</groupId>
 			<artifactId>wildfly-ejb3</artifactId>
 			<version>10.1.0.Final</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -32,6 +34,7 @@
 			<groupId>ru.iskandar.holiday.calculator</groupId>
 			<artifactId>report.service</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+			<scope>provided</scope>
 		</dependency>
 		<!-- Тестирование -->
 		<dependency>

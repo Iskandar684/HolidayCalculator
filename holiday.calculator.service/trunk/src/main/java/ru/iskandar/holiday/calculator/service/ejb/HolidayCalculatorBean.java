@@ -48,6 +48,7 @@ import ru.iskandar.holiday.calculator.service.model.user.NewUserNotValidExceptio
 import ru.iskandar.holiday.calculator.service.model.user.User;
 import ru.iskandar.holiday.calculator.service.model.user.UserByLoginAlreadyExistException;
 import ru.iskandar.holiday.calculator.service.model.user.UserByLoginNotFoundException;
+import ru.iskandar.holiday.calculator.service.model.user.UserId;
 import ru.iskandar.holiday.calculator.service.utils.DateUtils;
 
 /**
@@ -575,6 +576,11 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
 		}
 		HolidayStatementEntry entry = holidayStatement.getEntry();
 		return preview(entry);
+	}
+
+	@Override
+	public void changeNote(UserId aUserId, String aNewNote) {
+		_userService.changeNote(aUserId, aNewNote);
 	}
 
 }

@@ -25,9 +25,11 @@ import ru.iskandar.holiday.calculator.service.model.user.EntityBasedUserFactory;
 import ru.iskandar.holiday.calculator.service.model.user.NewUserEntityFactory;
 import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
 import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.service.model.user.UserByIdNotFoundException;
 import ru.iskandar.holiday.calculator.service.model.user.UserByLoginNotFoundException;
 import ru.iskandar.holiday.calculator.service.model.user.UserEntity;
 import ru.iskandar.holiday.calculator.service.model.user.UserEntity_;
+import ru.iskandar.holiday.calculator.service.model.user.UserId;
 
 /**
  * Сервис работы с пользователями
@@ -148,6 +150,33 @@ public class UserServiceBean implements IUserServiceLocal, IUserServiceRemote {
 		}
 		User user = new EntityBasedUserFactory(entity).create();
 		return user;
+	}
+
+	private UserEntity findUser(UserId aId) {
+		Objects.requireNonNull(aId);
+
+		CriteriaBuilder cb = _em.getCriteriaBuilder();
+		CriteriaQuery<UserEntity> cq = cb.createQuery(UserEntity.class);
+		Root<UserEntity> from = cq.from(UserEntity.class);
+		cq.select(from);
+
+		Predicate loginEqual = cb.equal(from.get(UserEntity_.uuid), aId.getUUID());
+		cq.where(loginEqual);
+
+		TypedQuery<UserEntity> q = _em.createQuery(cq);
+		UserEntity entity;
+		try {
+			entity = q.getSingleResult();
+		} catch (NoResultException e) {
+			throw new UserByIdNotFoundException(String.format("Пользователь с id=%s не найден.", aId), e);
+		}
+		return entity;
+	}
+
+	@Override
+	public void changeNote(UserId aUserId, String aNewNote) {
+		UserEntity user = findUser(aUserId);
+		user.setNote(aNewNote);
 	}
 
 }

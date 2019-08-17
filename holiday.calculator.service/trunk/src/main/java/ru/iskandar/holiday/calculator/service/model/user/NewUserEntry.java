@@ -30,6 +30,9 @@ public class NewUserEntry implements Serializable {
 	/** Пароль */
 	private String _password;
 
+	/** Примечание */
+	private String _note;
+
 	/**
 	 * Конструктор
 	 */
@@ -140,6 +143,14 @@ public class NewUserEntry implements Serializable {
 	 */
 	public void setPassword(String aPassword) {
 		_password = aPassword;
+	}
+
+	public String getNote() {
+		return _note;
+	}
+
+	public void setNote(String aNote) {
+		_note = aNote;
 	}
 
 	public boolean isEmpty() {

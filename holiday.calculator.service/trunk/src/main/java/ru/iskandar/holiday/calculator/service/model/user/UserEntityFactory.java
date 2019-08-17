@@ -32,10 +32,18 @@ public abstract class UserEntityFactory {
 		entity.setLastName(lastName);
 		entity.setLogin(login);
 		entity.setPatronymic(patronymic);
+		entity.setNote(getNote());
 		// У создаваемого адреса id = null
 		entity.setUuid(id != null ? id.getUUID() : null);
 		return entity;
 	}
+
+	/**
+	 * Возвращает примечание.
+	 *
+	 * @return примечание
+	 */
+	protected abstract String getNote();
 
 	/**
 	 * @return the uuid

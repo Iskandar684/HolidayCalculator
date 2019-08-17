@@ -23,8 +23,10 @@ import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
 import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
 import ru.iskandar.holiday.calculator.service.model.user.NewUserNotValidException;
 import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.service.model.user.UserByIdNotFoundException;
 import ru.iskandar.holiday.calculator.service.model.user.UserByLoginAlreadyExistException;
 import ru.iskandar.holiday.calculator.service.model.user.UserByLoginNotFoundException;
+import ru.iskandar.holiday.calculator.service.model.user.UserId;
 
 /**
  * Сервис учета отгулов
@@ -251,6 +253,18 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 */
 	public User createUser(NewUserEntry aNewUserEntry, Set<PermissionId> aNewUserPermissions)
 			throws UserByLoginAlreadyExistException;
+
+	/**
+	 * Меняет примечание пользователя.
+	 *
+	 * @param aUserId
+	 *            идентификатор пользователя
+	 * @param aNewNote
+	 *            новое примечание
+	 * @throws UserByIdNotFoundException
+	 *             если пользователь по указанному идентификатору не найден
+	 */
+	void changeNote(UserId aUserId, String aNewNote);
 
 	/**
 	 * Возвращает возможность создания пользователя

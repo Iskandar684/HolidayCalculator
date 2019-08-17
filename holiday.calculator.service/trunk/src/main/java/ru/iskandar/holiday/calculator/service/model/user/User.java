@@ -48,7 +48,7 @@ public class User implements Serializable {
 
 	/** Примечание */
 	@XmlElement(name = "note")
-	private final String _note;
+	private String _note;
 
 	/**
 	 * Конструктор
@@ -108,6 +108,11 @@ public class User implements Serializable {
 
 	public String getNote() {
 		return _note;
+	}
+
+	public void setNote(String aNote) {
+		// FIXME убрать публичный сеттер
+		_note = aNote;
 	}
 
 	/**

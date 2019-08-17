@@ -66,4 +66,9 @@ public class DOBasedUserEntityFactory extends UserEntityFactory {
 		return _user.getEmploymentDate();
 	}
 
+	@Override
+	protected String getNote() {
+		return _user.getNote();
+	}
+
 }

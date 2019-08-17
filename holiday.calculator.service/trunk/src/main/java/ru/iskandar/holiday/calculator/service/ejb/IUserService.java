@@ -4,7 +4,9 @@ import java.util.Collection;
 
 import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
 import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.service.model.user.UserByIdNotFoundException;
 import ru.iskandar.holiday.calculator.service.model.user.UserByLoginNotFoundException;
+import ru.iskandar.holiday.calculator.service.model.user.UserId;
 
 /**
  * Сервис работы с пользователями
@@ -46,5 +48,17 @@ public interface IUserService {
 	 *             если aLogin {@code null}
 	 */
 	public User findUserByLogin(String aLogin);
+
+	/**
+	 * Меняет примечание пользователя.
+	 *
+	 * @param aUserId
+	 *            идентификатор пользователя
+	 * @param aNewNote
+	 *            новое примечание
+	 * @throws UserByIdNotFoundException
+	 *             если пользователь по указанному идентификатору не найден
+	 */
+	void changeNote(UserId aUserId, String aNewNote);
 
 }

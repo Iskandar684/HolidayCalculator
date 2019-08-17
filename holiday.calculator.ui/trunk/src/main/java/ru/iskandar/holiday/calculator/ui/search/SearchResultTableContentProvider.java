@@ -1,12 +1,12 @@
 package ru.iskandar.holiday.calculator.ui.search;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.Viewer;
 
 import ru.iskandar.holiday.calculator.dataconnection.ISearchResult;
 
 /**
- * @author Искандар
- *
+ * Поставщик результатов поиска.
  */
 public class SearchResultTableContentProvider implements IStructuredContentProvider {
 
@@ -14,4 +14,13 @@ public class SearchResultTableContentProvider implements IStructuredContentProvi
 	public Object[] getElements(Object aInputElement) {
 		return ((ISearchResult) aInputElement).getHits().toArray();
 	}
+
+	@Override
+	public void dispose() {
+	}
+
+	@Override
+	public void inputChanged(Viewer aViewer, Object aOldInput, Object aNewInput) {
+	}
+
 }

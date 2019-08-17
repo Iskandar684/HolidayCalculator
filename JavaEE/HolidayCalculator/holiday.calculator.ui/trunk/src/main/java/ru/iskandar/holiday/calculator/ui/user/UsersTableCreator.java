@@ -7,6 +7,8 @@ import org.eclipse.nebula.jface.gridviewer.GridTableViewer;
 import org.eclipse.nebula.jface.gridviewer.GridViewerColumn;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
@@ -91,6 +93,7 @@ public class UsersTableCreator {
 			column.getColumn().setText(col.getText());
 			column.getColumn().setMoveable(true);
 			if (UsersTableColumn.NOTE == col) {
+				column.getColumn().setAlignment(SWT.LEFT);
 				column.getColumn().setWordWrap(true);
 				column.setEditingSupport(new UserNoteEditorSupport(_viewer, _modelProvider));
 			}
@@ -109,6 +112,13 @@ public class UsersTableCreator {
 		updateLinesVisible();
 
 		refreshAndPack();
+		_viewer.getControl().addControlListener(new ControlAdapter() {
+
+			@Override
+			public void controlResized(ControlEvent aE) {
+				pack();
+			}
+		});
 		return _viewer;
 	}
 
@@ -214,8 +224,20 @@ public class UsersTableCreator {
 
 	private void refreshAndPack() {
 		_viewer.refresh();
+		pack();
+	}
+
+	private void pack() {
+		int width = _viewer.getGrid().getClientArea().width;
+		GridColumn noteColumn = _viewer.getGrid().getColumns()[UsersTableColumn.NOTE.getIndex()];
 		for (GridColumn col : _viewer.getGrid().getColumns()) {
 			col.pack();
+			if (!noteColumn.equals(col)) {
+				width = width - col.getWidth();
+			}
+		}
+		if (width > 1) {
+			noteColumn.setWidth(width);
 		}
 	}
 

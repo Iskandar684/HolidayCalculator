@@ -20,6 +20,8 @@ public class UsersTableProperties extends NLS {
 
 	public static String employmentDate;
 
+	public static String note;
+
 	public static String usersTableLoadingText;
 
 	public static String usersTableLoadErrorText;

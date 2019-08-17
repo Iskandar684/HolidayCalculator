@@ -94,7 +94,8 @@ public class SearchEditor extends EditorPart {
 		try {
 			result = connection.search(aText);
 		} catch (SearchException e) {
-			StatusManager.getManager().handle(new Status(IStatus.ERROR, getClass().getName(), e.getMessage(), e));
+			Status status = new Status(IStatus.ERROR, getClass().getName(), e.getMessage(), e);
+			StatusManager.getManager().handle(status, StatusManager.LOG | StatusManager.SHOW);
 			return;
 		}
 		showSearchResult(result);

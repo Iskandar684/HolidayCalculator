@@ -81,6 +81,10 @@ public class UsersTableLabelProvider implements ITableLabelProvider {
 			text = toString(user.getEmploymentDate());
 			break;
 
+		case NOTE:
+			text = user.getNote();
+			break;
+
 		default:
 			text = user.toString();
 			break;

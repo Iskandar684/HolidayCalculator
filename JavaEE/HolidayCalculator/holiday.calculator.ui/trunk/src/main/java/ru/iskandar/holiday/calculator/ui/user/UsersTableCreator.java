@@ -2,7 +2,9 @@ package ru.iskandar.holiday.calculator.ui.user;
 
 import java.util.Objects;
 
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.nebula.jface.gridviewer.GridTableViewer;
+import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -10,7 +12,6 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.TableColumn;
 
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorListenerAdapter;
 import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorModelListener;
@@ -25,7 +26,7 @@ import ru.iskandar.holiday.calculator.ui.Messages;
  */
 public class UsersTableCreator {
 
-	private TableViewer _viewer;
+	private GridTableViewer _viewer;
 
 	public static enum UsersTableColumn {
 
@@ -37,7 +38,9 @@ public class UsersTableCreator {
 
 		LOGIN(UsersTableProperties.loginLabel, 3),
 
-		EMPLOYMENT(UsersTableProperties.employmentDate, 4);
+		EMPLOYMENT(UsersTableProperties.employmentDate, 4),
+
+		NOTE(UsersTableProperties.note, 5);
 
 		private String _text;
 
@@ -80,23 +83,28 @@ public class UsersTableCreator {
 		_modelProvider = aHolidayCalculatorModelProvider;
 	}
 
-	public TableViewer create(Composite aParent) {
-		_viewer = new TableViewer(aParent, SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL);
+	public StructuredViewer create(Composite aParent) {
+		_viewer = new GridTableViewer(aParent, SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL);
 
 		for (UsersTableColumn col : UsersTableColumn.values()) {
-			TableColumn column = new TableColumn(_viewer.getTable(), SWT.CENTER);
+			GridColumn column = new GridColumn(_viewer.getGrid(), SWT.CENTER);
 			column.setText(col.getText());
 			column.setMoveable(true);
+			if (UsersTableColumn.NOTE == col) {
+				column.setWordWrap(true);
+			}
 		}
-		_viewer.getTable().setHeaderVisible(true);
-		_viewer.getTable().setLinesVisible(true);
+		_viewer.getGrid().setHeaderVisible(true);
+		_viewer.getGrid().setLinesVisible(true);
+		_viewer.getGrid().setAutoHeight(true);
+		_viewer.getGrid().setAutoWidth(true);
 
 		initListeners();
 		_viewer.setContentProvider(new UsersTableContentProvider());
 		_viewer.setLabelProvider(new UsersTableLabelProvider());
 		_viewer.setInput(_modelProvider);
 
-		_viewer.getTable().addPaintListener(new PaintHandler());
+		_viewer.getGrid().addPaintListener(new PaintHandler());
 		updateLinesVisible();
 
 		refreshAndPack();
@@ -105,7 +113,7 @@ public class UsersTableCreator {
 
 	private void updateLinesVisible() {
 		boolean visible = LoadStatus.LOADED.equals(_modelProvider.getLoadStatus());
-		_viewer.getTable().setLinesVisible(visible);
+		_viewer.getGrid().setLinesVisible(visible);
 	}
 
 	private class PaintHandler implements PaintListener {
@@ -205,7 +213,7 @@ public class UsersTableCreator {
 
 	private void refreshAndPack() {
 		_viewer.refresh();
-		for (TableColumn col : _viewer.getTable().getColumns()) {
+		for (GridColumn col : _viewer.getGrid().getColumns()) {
 			col.pack();
 		}
 	}

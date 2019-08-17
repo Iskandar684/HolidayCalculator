@@ -46,23 +46,22 @@ public class User implements Serializable {
 	@XmlElement(name = "login")
 	private final String _login;
 
+	/** Примечание */
+	@XmlElement(name = "note")
+	private final String _note;
+
 	/**
 	 * Конструктор
 	 */
 	protected User(UUID aUUID, String aLastName, String aFirstName, String aPatronymic, Date aEmploymentDate,
-			String aLogin) {
-		Objects.requireNonNull(aUUID);
-		Objects.requireNonNull(aLastName);
-		Objects.requireNonNull(aFirstName);
-		Objects.requireNonNull(aPatronymic);
-		Objects.requireNonNull(aEmploymentDate);
-		Objects.requireNonNull(aLogin);
-		_uuid = aUUID;
-		_firstName = aFirstName;
-		_lastName = aLastName;
-		_patronymic = aPatronymic;
-		_employmentDate = aEmploymentDate;
-		_login = aLogin;
+			String aLogin, String aNote) {
+		_uuid = Objects.requireNonNull(aUUID);
+		_lastName = Objects.requireNonNull(aLastName);
+		_firstName = Objects.requireNonNull(aFirstName);
+		_patronymic = Objects.requireNonNull(aPatronymic);
+		_employmentDate = Objects.requireNonNull(aEmploymentDate);
+		_login = Objects.requireNonNull(aLogin);
+		_note = aNote;
 	}
 
 	/**
@@ -105,6 +104,10 @@ public class User implements Serializable {
 	 */
 	public String getLogin() {
 		return _login;
+	}
+
+	public String getNote() {
+		return _note;
 	}
 
 	/**

@@ -9,6 +9,7 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.widgets.Composite;
 
 import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.service.model.user.UserConstants;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.grid.MultiTextCellEditor;
 
@@ -29,7 +30,9 @@ public class UserNoteEditorSupport extends EditingSupport {
 
 	@Override
 	protected CellEditor getCellEditor(Object aElement) {
-		return new MultiTextCellEditor((Composite) getViewer().getControl());
+		MultiTextCellEditor editor = new MultiTextCellEditor((Composite) getViewer().getControl());
+		editor.setTextLimit(UserConstants.NOTE_LENGHT);
+		return editor;
 	}
 
 	@Override

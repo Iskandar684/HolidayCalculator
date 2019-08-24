@@ -2,14 +2,15 @@ package ru.iskandar.holiday.calculator.ui.user;
 
 import java.util.Objects;
 
+import org.eclipse.jface.util.Util;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.widgets.Composite;
 
 import ru.iskandar.holiday.calculator.service.model.user.User;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
+import ru.iskandar.holiday.calculator.ui.grid.MultiTextCellEditor;
 
 /**
  *
@@ -28,7 +29,7 @@ public class UserNoteEditorSupport extends EditingSupport {
 
 	@Override
 	protected CellEditor getCellEditor(Object aElement) {
-		return new TextCellEditor((Composite) getViewer().getControl());
+		return new MultiTextCellEditor((Composite) getViewer().getControl());
 	}
 
 	@Override
@@ -39,12 +40,14 @@ public class UserNoteEditorSupport extends EditingSupport {
 
 	@Override
 	protected Object getValue(Object aElement) {
-		return ((User) aElement).getNote();
+		String note = ((User) aElement).getNote();
+		return note == null ? Util.ZERO_LENGTH_STRING : note;
 	}
 
 	@Override
 	protected void setValue(Object aElement, Object aValue) {
 		_modelProvider.getModel().changeUserNote((User) aElement, (String) aValue);
+		getViewer().refresh(aElement);
 	}
 
 }

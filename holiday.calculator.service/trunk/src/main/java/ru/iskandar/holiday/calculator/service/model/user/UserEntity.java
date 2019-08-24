@@ -18,9 +18,6 @@ import javax.validation.constraints.NotNull;
 @Table(name = "ru_iskandar_holiday_calculator_user")
 public class UserEntity implements Serializable {
 
-	/** Количество символов поля "Примечание" */
-	public static final int NOTE_LENGHT = 5000;
-
 	/**
 	 * Идентфикатор для сериализации
 	 */
@@ -150,7 +147,7 @@ public class UserEntity implements Serializable {
 		_employmentDate = aEmploymentDate;
 	}
 
-	@Column(name = "note", length = NOTE_LENGHT)
+	@Column(name = "note", length = UserConstants.NOTE_LENGHT)
 	public String getNote() {
 		return _note;
 	}

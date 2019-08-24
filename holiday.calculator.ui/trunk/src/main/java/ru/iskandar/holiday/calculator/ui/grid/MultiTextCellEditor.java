@@ -13,6 +13,10 @@ public class MultiTextCellEditor extends TextCellEditor {
 		super(parent, SWT.MULTI | SWT.WRAP | SWT.BORDER | SWT.H_SCROLL);
 	}
 
+	public void setTextLimit(int aLimit) {
+		text.setTextLimit(aLimit);
+	}
+
 	@Override
 	public LayoutData getLayoutData() {
 		LayoutData layoutData = new LayoutData();

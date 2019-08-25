@@ -70,4 +70,20 @@ public class ConnectionParams {
 		}
 	}
 
+	public String getElasticSearchHost() {
+		String server = System.getProperty("elasticsearch-server");
+		if ((server == null) || server.isEmpty()) {
+			return getServerHost();
+		}
+		return server;
+	}
+
+	public int getElasticSearchPort() {
+		String port = System.getProperty("elasticsearch-port");
+		if ((port == null) || port.isEmpty()) {
+			return 9200;
+		}
+		return Integer.valueOf(port);
+	}
+
 }

@@ -3,6 +3,7 @@ package ru.iskandar.holiday.calculator.service.ejb;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.util.Collection;
 import java.util.Date;
@@ -13,6 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ru.iskandar.holiday.calculator.service.ejb.search.ISearchServiceLocal;
 import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
 import ru.iskandar.holiday.calculator.service.model.user.User;
 
@@ -23,10 +25,14 @@ public class UserServiceBeanTest extends JPAHibernateTest {
 
 	private UserServiceBean _service;
 
+	/** Сервис поиска */
+	private ISearchServiceLocal _searchServiceLocal;
+
 	@Before
 	public void setUp() {
+		_searchServiceLocal = mock(ISearchServiceLocal.class);
 		EntityManager em = getEntityManager();
-		_service = new UserServiceBean(em);
+		_service = new UserServiceBean(em, _searchServiceLocal);
 		em.getTransaction().begin();
 	}
 

@@ -12,7 +12,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import ru.iskandar.holiday.calculator.dataconnection.ISearchResult;
+import ru.iskandar.holiday.calculator.service.model.search.ISearchResult;
 import ru.iskandar.holiday.calculator.ui.Messages;
 import ru.iskandar.holiday.calculator.ui.grid.StyledTextCellRenderer;
 

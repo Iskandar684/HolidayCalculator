@@ -1,8 +1,12 @@
 package ru.iskandar.holiday.calculator.ui.search;
 
+import java.util.Objects;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
+
+import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 
 /**
  * @author Искандар
@@ -10,58 +14,53 @@ import org.eclipse.ui.IPersistableElement;
  */
 public class SearchEditorInput implements IEditorInput {
 
+	/** Поставщик модели */
+	private final HolidayCalculatorModelProvider _modelProvider;
+
 	/**
-	 * {@inheritDoc}
+	 * Конструктор.
 	 */
+	public SearchEditorInput(HolidayCalculatorModelProvider aModelProvider) {
+		Objects.requireNonNull(aModelProvider);
+		_modelProvider = aModelProvider;
+	}
+
 	@Override
-	public <T> T getAdapter(Class<T> aAdapter) {
-		// TODO Auto-generated method stub
+	public <T> T getAdapter(Class<T> adapter) {
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean exists() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public ImageDescriptor getImageDescriptor() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public IPersistableElement getPersistable() {
-		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getToolTipText() {
 		return null;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Возвращает поставщика модели.
+	 *
+	 * @return поставщика модели
 	 */
-	@Override
-	public String getToolTipText() {
-		// TODO Auto-generated method stub
-		return null;
+	public HolidayCalculatorModelProvider getModelProvider() {
+		return _modelProvider;
 	}
-
 }

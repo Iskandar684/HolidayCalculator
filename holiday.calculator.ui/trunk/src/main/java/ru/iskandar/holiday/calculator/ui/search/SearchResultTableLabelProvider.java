@@ -18,7 +18,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.TextStyle;
 
-import ru.iskandar.holiday.calculator.dataconnection.ISearchHit;
+import ru.iskandar.holiday.calculator.service.model.search.ISearchHit;
 
 /**
  * Поставщик текста таблицы заявлений

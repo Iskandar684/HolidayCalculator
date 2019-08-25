@@ -6,9 +6,11 @@
 	export JAVA_HOME
 	PATH="$JAVA_HOME/bin:$PATH"
 
-
-2. Скачать WildFly (Jboss) версии 10.1.0.Final из сайта:
-http://wildfly.org/downloads/
+2. Скачать Jboss и ES
+    2а. Скачать WildFly (Jboss) версии 10.1.0.Final из сайта:
+        http://wildfly.org/downloads/
+    2б. Скачать elasticsearch версии 7.2.0
+        https://www.elastic.co/downloads/elasticsearch
 
 3. Скопировать модули 
    3а. Скопировать собранный 
@@ -36,7 +38,24 @@ http://wildfly.org/downloads/
    3е. В папку /wildfly-10.1.0.Final/standalone/deployments/report/ 
    скопировать файлы с расширением .rptdesign из /holiday.calculator.service/src/main/resources/ru/iskandar/holiday/calculator/service/ejb/report
    3ж. В папку wildfly-10.1.0.Final/welcome-content/скопировать файлы (*html, *js, ...) из holiday.calculator.web.client
-   
+   3з. В папку    /wildfly-10.1.0.Final/standalone/deployments/holiday.ear/lib 
+       из /holiday.calculator.client-libraries/lib скопировать
+       elasticsearch-core.jar
+       elasticsearch-rest-client.jar
+       elasticsearch-rest-high-level-client.jar
+       elasticsearch-x-content.jar
+       elasticsearch.jar
+       hppc.jar
+       httpasyncclient.jar 
+       httpclient.jar
+       httpcore-nio.jar
+       httpcore.jar
+       jackson-core.jar
+       joda-time.jar
+       lang-mustache-client.jar
+       lucene-core.jar
+       lucene-queries.jar
+       rank-eval-client.jar   
 
 4. Добавить пользователей с ролью guest 
 (см. wildfly-10.1.0.Final/bin/add-user.bat)
@@ -60,8 +79,9 @@ wildfly-10.1.0.Final\standalone\configuration\standalone.xml
 
 Запуск сервера.
 1. Запустить postgresql
-(service postgresql start) 
-2. Запустить wildfly-10.1.0.Final/bin/standalone.bat
+(service postgresql start)
+2. Запустить elasticsearch-7.2.0\bin\elasticsearch 
+3. Запустить wildfly-10.1.0.Final\bin\standalone.sh
 
 Инструкция по настройки БД.
 
@@ -86,12 +106,14 @@ GRANT
 Для выхода из оболочки введите команду \q.
 
 2. Добавление драйвера
-В корневой папке WildFly находим папку modules, внутри нее создаем иерархию папок org/postgres/main. Кидаем туда драйвер postgre. Я использовал postgresql-9.3-1102.jdbc4.jar
-
+Качаем драйвер из https://jdbc.postgresql.org/download.html.
+для java8: postgresql-42.2.6.jar
+В корневой папке WildFly находим папку modules, внутри нее создаем иерархию папок org/postgres/main. 
+Кидаем туда драйвер.
 Создаем тут же файл module.xml. В нем пишем:
 <module xmlns="urn:jboss:module:1.0" name="org.postgres"> 
   <resources> 
-    <resource-root path="postgresql-9.3-1102.jdbc4.jar"/> 
+    <resource-root path="postgresql-42.2.6.jar"/> 
   </resources> 
    <dependencies> 
      <module name="javax.api"/> 
@@ -131,7 +153,25 @@ GRANT
 
 Добавление пользователей.
 1. Выполнить wildfly-10.1.0.Final/bin/add-user.*
-2. Полномочие рассматривать заявления: consider
+2. Полномочия:
+   рассматрение заявления: consider
+   просмотр пользователей: user_viewer
+   полномочие на создание пользователя: user_creator
+3. Первого пользователя создать через sql скрипты в БД:     
+   SET search_path = public, pg_catalog;
+   INSERT INTO ru_iskandar_holiday_calculator_user (uuid, employmentdate, firstname, lastname, login, note, patronymic)
+   VALUES ('b8420836-c728-11e9-aa8c-2a2ae2dbcce4', '2019-08-25 14:09:01.478', 'Василий', 'Петров', 'user1', 'Примечание', 'Андреевич');
+   
+
+Настройки для отладки.
+  1. Чтобы к БД можно было подключиться из другого хоста:
+     в файл /etc/postgresql/9.6/main/postgresql.conf добавить
+     listen_addresses = '*'
+     в файл /etc/postgresql/9.6/main/pg_hba.conf
+     host all all 0.0.0.0/0 md5
+     перезагрузить: service postgresql restart
+     проверка: sudo netstat -pant | grep postgres
+
 
 
 Инструкция по разворачиванию клиента.

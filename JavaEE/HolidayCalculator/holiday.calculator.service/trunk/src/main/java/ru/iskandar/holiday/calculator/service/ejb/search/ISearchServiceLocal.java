@@ -1,5 +1,6 @@
 package ru.iskandar.holiday.calculator.service.ejb.search;
 
+import ru.iskandar.holiday.calculator.service.model.search.ISearchResult;
 import ru.iskandar.holiday.calculator.service.model.user.User;
 
 /**
@@ -15,6 +16,17 @@ public interface ISearchServiceLocal {
 	 * @throws SearchServiceException
 	 *             в случае ошибки добавления
 	 */
-	public void addOrUpdate(User aUser) throws SearchServiceException;
+	void addOrUpdate(User aUser) throws SearchServiceException;
+
+	/**
+	 * Выполняет поиск.
+	 *
+	 * @param aSearchText
+	 *            строка поиска
+	 * @return результат поиска
+	 * @throws SearchServiceException
+	 *             в случае ошибки поиска
+	 */
+	ISearchResult search(String aSearchText) throws SearchServiceException;
 
 }

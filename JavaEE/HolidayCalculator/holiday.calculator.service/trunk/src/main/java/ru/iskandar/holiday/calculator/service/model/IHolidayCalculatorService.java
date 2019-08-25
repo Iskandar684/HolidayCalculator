@@ -8,9 +8,11 @@ import java.util.Set;
 import javax.ejb.EJBAccessException;
 
 import ru.iskandar.holiday.calculator.service.ejb.PermissionId;
+import ru.iskandar.holiday.calculator.service.ejb.search.SearchServiceException;
 import ru.iskandar.holiday.calculator.service.model.document.DocumentPreviewException;
 import ru.iskandar.holiday.calculator.service.model.document.StatementDocument;
 import ru.iskandar.holiday.calculator.service.model.permissions.IHolidayCalculatorModelPermissions;
+import ru.iskandar.holiday.calculator.service.model.search.ISearchResult;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.statement.LeaveStatement;
@@ -40,7 +42,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws HolidayCalculatorModelLoadException
 	 *             ошибка загрузки модели
 	 */
-	public HolidayCalculatorModel loadHolidayCalculatorModel() throws HolidayCalculatorModelLoadException;
+	HolidayCalculatorModel loadHolidayCalculatorModel() throws HolidayCalculatorModelLoadException;
 
 	/**
 	 * Загружает заявления с указанными статусами
@@ -53,7 +55,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws NullPointerException
 	 *             если aStatuses {@code null}
 	 */
-	public Collection<Statement<?>> loadStatements(EnumSet<StatementStatus> aStatuses);
+	Collection<Statement<?>> loadStatements(EnumSet<StatementStatus> aStatuses);
 
 	/**
 	 * Одобряет заявление
@@ -72,7 +74,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws EJBAccessException
 	 *             если нет прав на рассмотрение заявлений
 	 */
-	public Statement<?> approve(Statement<?> aStatement) throws StatementAlreadyConsideredException;
+	Statement<?> approve(Statement<?> aStatement) throws StatementAlreadyConsideredException;
 
 	/**
 	 * Отклоняет заявление
@@ -91,7 +93,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws EJBAccessException
 	 *             если нет прав на рассмотрение заявлений
 	 */
-	public Statement<?> reject(Statement<?> aStatement) throws StatementAlreadyConsideredException;
+	Statement<?> reject(Statement<?> aStatement) throws StatementAlreadyConsideredException;
 
 	/**
 	 * Создает и подает заявление на отгул на рассмотрение
@@ -107,8 +109,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws InvalidStatementException
 	 *             если заявление заполнено некорректно
 	 */
-	public HolidayStatement createHolidayStatement(HolidayStatementEntry aStatement)
-			throws StatementAlreadySendedException;
+	HolidayStatement createHolidayStatement(HolidayStatementEntry aStatement) throws StatementAlreadySendedException;
 
 	/**
 	 * Подает заявление на отпуск на рассмотрение
@@ -124,7 +125,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws InvalidStatementException
 	 *             если заявление заполнено некорректно
 	 */
-	public LeaveStatement createLeaveStatement(LeaveStatementEntry aStatement) throws StatementAlreadySendedException;
+	LeaveStatement createLeaveStatement(LeaveStatementEntry aStatement) throws StatementAlreadySendedException;
 
 	/**
 	 * Создает и подает заявление на отзыв на рассмотрение
@@ -140,8 +141,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws InvalidStatementException
 	 *             если заявление заполнено некорректно
 	 */
-	public RecallStatement createRecallStatement(RecallStatementEntry aStatement)
-			throws StatementAlreadySendedException;
+	RecallStatement createRecallStatement(RecallStatementEntry aStatement) throws StatementAlreadySendedException;
 
 	/**
 	 * Возвращает количество отгулов у указанного пользователя
@@ -152,7 +152,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws NullPointerException
 	 *             если aUser {@code null}
 	 */
-	public int getHolidaysQuantity(User aUser);
+	int getHolidaysQuantity(User aUser);
 
 	/**
 	 * Возвращает количество исходящих дней отгула. Это количество дней, на
@@ -163,7 +163,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 *             если aUser {@code null}
 	 * @return не отрицательное количество исходящих дней отгула
 	 */
-	public int getOutgoingHolidaysQuantity(User aUser);
+	int getOutgoingHolidaysQuantity(User aUser);
 
 	/**
 	 * Возвращает количество приходящих отгулов. Это количество дней, на которое
@@ -173,7 +173,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 *             если aUser {@code null}
 	 * @return количество приходящих отгулов
 	 */
-	public int getIncomingHolidaysQuantity(User aUser);
+	int getIncomingHolidaysQuantity(User aUser);
 
 	/**
 	 * Возвращает входящие заявления
@@ -182,7 +182,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 *             если aUser {@code null}
 	 * @return входящие заявления
 	 */
-	public Collection<Statement<?>> getIncomingStatements();
+	Collection<Statement<?>> getIncomingStatements();
 
 	/**
 	 * Возвращает количество неиспользованных дней отпуска
@@ -191,7 +191,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws NullPointerException
 	 *             если aUser {@code null}
 	 */
-	public int getLeaveCount(User aUser);
+	int getLeaveCount(User aUser);
 
 	/**
 	 * Возвращает количество исходящих дней отпуска. Это количество дней, на
@@ -202,7 +202,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws NullPointerException
 	 *             если aUser {@code null}
 	 */
-	public int getOutgoingLeaveCount(User aUser);
+	int getOutgoingLeaveCount(User aUser);
 
 	/**
 	 * Возвращает дату начала следующего периода
@@ -211,7 +211,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws NullPointerException
 	 *             если aUser {@code null}
 	 */
-	public Date getNextLeaveStartDate(User aUser);
+	Date getNextLeaveStartDate(User aUser);
 
 	/**
 	 * Возвращает все заявления пользователя
@@ -222,7 +222,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws NullPointerException
 	 *             если aUser {@code null}
 	 */
-	public Collection<Statement<?>> getAllStatements(User aUser);
+	Collection<Statement<?>> getAllStatements(User aUser);
 
 	/**
 	 * Проверяет аутентификацию текущего пользователя
@@ -230,7 +230,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws UserByLoginNotFoundException
 	 *             если описание пользователя для вызывающего не найдено
 	 */
-	public void checkAuthentification() throws UserByLoginNotFoundException;
+	void checkAuthentification() throws UserByLoginNotFoundException;
 
 	/**
 	 * Создает нового пользователя
@@ -251,7 +251,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 *             если описание создавамого пользователя заполнено некорректно
 	 * @see {@link #canCreateUser()}
 	 */
-	public User createUser(NewUserEntry aNewUserEntry, Set<PermissionId> aNewUserPermissions)
+	User createUser(NewUserEntry aNewUserEntry, Set<PermissionId> aNewUserPermissions)
 			throws UserByLoginAlreadyExistException;
 
 	/**
@@ -272,7 +272,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @return {@code true}, если текущему пользователю разрешено создавать
 	 *         пользователей; {@code false}, если иначе
 	 */
-	public boolean canCreateUser();
+	boolean canCreateUser();
 
 	/**
 	 * Возвращает всех пользователей
@@ -282,7 +282,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 *             если у текущего пользователя нет прав на просмотр
 	 *             пользователей
 	 */
-	public Collection<User> getAllUsers();
+	Collection<User> getAllUsers();
 
 	/**
 	 * Возвращает возможность загрузки всех пользователей
@@ -290,7 +290,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @return {@code true}, если у текущего пользователя есть полномочие
 	 *         просматривать других пользоватей; {@code false}, если иначе
 	 */
-	public boolean canViewUsers();
+	boolean canViewUsers();
 
 	/**
 	 * Формирует документ заявления на отгул
@@ -301,7 +301,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws DocumentPreviewException
 	 *             если не удалось сформировать документ
 	 */
-	public StatementDocument preview(HolidayStatementEntry aEntry) throws DocumentPreviewException;
+	StatementDocument preview(HolidayStatementEntry aEntry) throws DocumentPreviewException;
 
 	/**
 	 * Формирует документ заявления на отгул
@@ -312,6 +312,17 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 * @throws DocumentPreviewException
 	 *             если не удалось сформировать документ
 	 */
-	public StatementDocument getStatementDocument(StatementId aStatementID) throws DocumentPreviewException;
+	StatementDocument getStatementDocument(StatementId aStatementID) throws DocumentPreviewException;
+
+	/**
+	 * Выполняет поиск.
+	 *
+	 * @param aSearchText
+	 *            строка поиска
+	 * @return результат поиска
+	 * @throws SearchServiceException
+	 *             в случае ошибки поиска
+	 */
+	ISearchResult search(String aSearchText) throws SearchServiceException;
 
 }

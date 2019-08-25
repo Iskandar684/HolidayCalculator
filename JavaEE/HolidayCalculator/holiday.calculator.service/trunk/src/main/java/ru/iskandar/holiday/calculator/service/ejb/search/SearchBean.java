@@ -10,10 +10,16 @@ import javax.ejb.Stateless;
 import org.apache.http.HttpHost;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 
+import ru.iskandar.holiday.calculator.service.model.search.ISearchResult;
+import ru.iskandar.holiday.calculator.service.model.search.SearchResultFactory;
 import ru.iskandar.holiday.calculator.service.model.user.User;
 
 /**
@@ -22,6 +28,9 @@ import ru.iskandar.holiday.calculator.service.model.user.User;
 @Stateless
 @Local(ISearchServiceLocal.class)
 public class SearchBean implements ISearchServiceLocal {
+
+	/** Фабрика результатов поиска */
+	private final SearchResultFactory _resultFactory = new SearchResultFactory();
 
 	private RestHighLevelClient createClient() {
 		HttpHost host = new HttpHost("localhost", 9200, "http");
@@ -45,6 +54,22 @@ public class SearchBean implements ISearchServiceLocal {
 			throw new SearchServiceException(
 					String.format("Ошибка добавления/обновления пользователя %s в elasticsearch.", aUser), e);
 		}
+	}
+
+	@Override
+	public ISearchResult search(String aSearchText) throws SearchServiceException {
+		RestHighLevelClient client = createClient();
+		SearchRequest searchRequest = new SearchRequest();
+		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		searchSourceBuilder.query(QueryBuilders.matchQuery("note", aSearchText));
+		searchRequest.source(searchSourceBuilder);
+		SearchResponse response;
+		try {
+			response = client.search(searchRequest, RequestOptions.DEFAULT);
+		} catch (IOException e) {
+			throw new SearchServiceException(String.format("Ошибка поиска. [searchText=%s].", aSearchText), e);
+		}
+		return _resultFactory.createSearchResult(response, aSearchText);
 	}
 
 }

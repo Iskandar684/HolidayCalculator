@@ -40,22 +40,24 @@
    3ж. В папку wildfly-10.1.0.Final/welcome-content/скопировать файлы (*html, *js, ...) из holiday.calculator.web.client
    3з. В папку    /wildfly-10.1.0.Final/standalone/deployments/holiday.ear/lib 
        из /holiday.calculator.client-libraries/lib скопировать
-       elasticsearch-core.jar
-       elasticsearch-rest-client.jar
-       elasticsearch-rest-high-level-client.jar
-       elasticsearch-x-content.jar
-       elasticsearch.jar
-       hppc.jar
-       httpasyncclient.jar 
-       httpclient.jar
-       httpcore-nio.jar
-       httpcore.jar
-       jackson-core.jar
-       joda-time.jar
-       lang-mustache-client.jar
-       lucene-core.jar
-       lucene-queries.jar
-       rank-eval-client.jar   
+      elasticsearch-core.jar
+      elasticsearch-x-content.jar
+      httpcore.jar      
+      lang-mustache-client.jar  
+      rank-eval-client.jar
+      elasticsearch.jar                         
+      hppc.jar                     
+      httpcore-nio.jar
+      log4j-api.jar  
+      log4j-core-2.12.0.jar
+      elasticsearch-rest-client.jar             
+      httpasyncclient.jar          
+      jackson-core.jar  
+      lucene-core.jar
+      elasticsearch-rest-high-level-client.jar  
+      httpclient.jar               
+      joda-time.jar     
+      lucene-queries.jar 
 
 4. Добавить пользователей с ролью guest 
 (см. wildfly-10.1.0.Final/bin/add-user.bat)

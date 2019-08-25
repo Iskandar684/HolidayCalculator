@@ -3,7 +3,7 @@ package ru.iskandar.holiday.calculator.ui.search;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import ru.iskandar.holiday.calculator.dataconnection.ISearchResult;
+import ru.iskandar.holiday.calculator.service.model.search.ISearchResult;
 
 /**
  * Поставщик результатов поиска.

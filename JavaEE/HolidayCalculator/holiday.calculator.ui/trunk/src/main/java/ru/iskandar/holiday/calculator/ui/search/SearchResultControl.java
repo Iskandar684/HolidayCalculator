@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
-import ru.iskandar.holiday.calculator.dataconnection.ISearchResult;
+import ru.iskandar.holiday.calculator.service.model.search.ISearchResult;
 
 /**
  * Элемент управления просмотра результатов поиска.

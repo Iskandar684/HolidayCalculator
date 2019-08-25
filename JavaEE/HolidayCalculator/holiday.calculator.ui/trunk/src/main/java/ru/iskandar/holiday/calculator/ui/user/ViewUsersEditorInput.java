@@ -27,56 +27,40 @@ public class ViewUsersEditorInput implements IEditorInput {
 		_modelProvider = aModelProvider;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public <T> T getAdapter(Class<T> adapter) {
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean exists() {
 		return false;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public ImageDescriptor getImageDescriptor() {
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getName() {
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public IPersistableElement getPersistable() {
 		return null;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getToolTipText() {
 		return null;
 	}
 
 	/**
-	 * @return the modelProvider
+	 * Возвращает поставщика модели.
+	 * 
+	 * @return поставщика модели
 	 */
 	public HolidayCalculatorModelProvider getModelProvider() {
 		return _modelProvider;

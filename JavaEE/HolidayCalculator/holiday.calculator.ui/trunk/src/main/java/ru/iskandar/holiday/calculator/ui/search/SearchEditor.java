@@ -20,9 +20,9 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.statushandlers.StatusManager;
 
-import ru.iskandar.holiday.calculator.dataconnection.ISearchResult;
-import ru.iskandar.holiday.calculator.dataconnection.SearchConnector;
-import ru.iskandar.holiday.calculator.dataconnection.SearchException;
+import ru.iskandar.holiday.calculator.service.ejb.search.SearchServiceException;
+import ru.iskandar.holiday.calculator.service.model.search.ISearchResult;
+import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 
 /**
  * Представление поиска.
@@ -42,6 +42,8 @@ public class SearchEditor extends EditorPart {
 	private Control _searchControl;
 
 	private final SearchResultControl _searchResultControl = new SearchResultControl();
+
+	private HolidayCalculatorModelProvider _modelProvider;
 
 	@Override
 	public void createPartControl(Composite aParent) {
@@ -89,11 +91,10 @@ public class SearchEditor extends EditorPart {
 	}
 
 	private void search(String aText) {
-		SearchConnector connection = new SearchConnector();
 		ISearchResult result;
 		try {
-			result = connection.search(aText);
-		} catch (SearchException e) {
+			result = _modelProvider.getModel().search(aText);
+		} catch (SearchServiceException e) {
 			Status status = new Status(IStatus.ERROR, getClass().getName(), e.getMessage(), e);
 			StatusManager.getManager().handle(status, StatusManager.LOG | StatusManager.SHOW);
 			return;
@@ -128,6 +129,7 @@ public class SearchEditor extends EditorPart {
 	public void init(IEditorSite aSite, IEditorInput aInput) throws PartInitException {
 		setSite(aSite);
 		setInput(aInput);
+		_modelProvider = ((SearchEditorInput) aInput).getModelProvider();
 	}
 
 	@Override

@@ -11,6 +11,9 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.statushandlers.StatusManager;
 
+import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
+import ru.iskandar.holiday.calculator.ui.ModelProviderHolder;
+
 /**
  * Обработчик открытия панели поиска после запуска клиента.
  */
@@ -36,7 +39,8 @@ public class SearchStartup implements IStartup {
 		IWorkbenchWindow ww = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		IWorkbenchPage page = (ww == null) ? null : ww.getActivePage();
 		try {
-			page.openEditor(new SearchEditorInput(), SearchEditor.ID, true, IWorkbenchPage.MATCH_ID);
+			HolidayCalculatorModelProvider provider = ModelProviderHolder.getInstance().getModelProvider();
+			page.openEditor(new SearchEditorInput(provider), SearchEditor.ID, true, IWorkbenchPage.MATCH_ID);
 		} catch (PartInitException e) {
 			IStatus status = new Status(IStatus.ERROR, getClass().getName(), "Ошибка открытия панели поиска.", e);
 			StatusManager.getManager().handle(status, StatusManager.LOG | StatusManager.SHOW);

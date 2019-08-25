@@ -19,6 +19,8 @@ import org.jboss.logging.Logger;
 
 import ru.iskandar.holiday.calculator.report.service.api.IReport;
 import ru.iskandar.holiday.calculator.service.ejb.jms.MessageSenderBean;
+import ru.iskandar.holiday.calculator.service.ejb.search.ISearchServiceLocal;
+import ru.iskandar.holiday.calculator.service.ejb.search.SearchServiceException;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelFactory;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModelLoadException;
@@ -32,6 +34,7 @@ import ru.iskandar.holiday.calculator.service.model.UserCreatedEvent;
 import ru.iskandar.holiday.calculator.service.model.document.DocumentPreviewException;
 import ru.iskandar.holiday.calculator.service.model.document.StatementDocument;
 import ru.iskandar.holiday.calculator.service.model.permissions.Permission;
+import ru.iskandar.holiday.calculator.service.model.search.ISearchResult;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.statement.LeaveStatement;
@@ -84,6 +87,10 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
 
 	@EJB
 	private IHolidayCalculatorReportService _reportService;
+
+	/** Сервис поиска */
+	@EJB
+	private ISearchServiceLocal _searchService;
 
 	/**
 	 * {@inheritDoc}
@@ -581,6 +588,11 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
 	@Override
 	public void changeNote(UserId aUserId, String aNewNote) {
 		_userService.changeNote(aUserId, aNewNote);
+	}
+
+	@Override
+	public ISearchResult search(String aSearchText) throws SearchServiceException {
+		return _searchService.search(aSearchText);
 	}
 
 }

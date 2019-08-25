@@ -15,9 +15,11 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import ru.iskandar.holiday.calculator.service.ejb.PermissionId;
+import ru.iskandar.holiday.calculator.service.ejb.search.SearchServiceException;
 import ru.iskandar.holiday.calculator.service.model.document.DocumentPreviewException;
 import ru.iskandar.holiday.calculator.service.model.document.StatementDocument;
 import ru.iskandar.holiday.calculator.service.model.permissions.PermissionDeniedException;
+import ru.iskandar.holiday.calculator.service.model.search.ISearchResult;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.statement.LeaveStatement;
@@ -598,6 +600,23 @@ public class HolidayCalculatorModel implements Serializable {
 		Objects.requireNonNull(aStatementId);
 		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
 		return service.getStatementDocument(aStatementId);
+	}
+
+	/**
+	 * Выполняет поиск.
+	 *
+	 * @param aSearchText
+	 *            строка поиска
+	 * @return результат поиска
+	 * @throws SearchServiceException
+	 *             в случае ошибки поиска
+	 * @throws NullPointerException
+	 *             если aSearchText == {@code null}
+	 */
+	public ISearchResult search(String aSearchText) throws SearchServiceException {
+		Objects.requireNonNull(aSearchText);
+		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
+		return service.search(aSearchText);
 	}
 
 }

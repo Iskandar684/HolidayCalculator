@@ -2,6 +2,7 @@ package ru.iskandar.holiday.calculator.service.ejb;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 import java.util.Collections;
 import java.util.Date;
@@ -14,6 +15,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ru.iskandar.holiday.calculator.service.ejb.search.ISearchServiceLocal;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
@@ -26,12 +28,18 @@ public class StatementRepositoryBeanTest extends JPAHibernateTest {
 
 	private final StatementRepositoryBean _service = new StatementRepositoryBean();
 
-	private final UserServiceBean _userService = new UserServiceBean();
+	private UserServiceBean _userService;
+
+	/** Сервис поиска */
+	private ISearchServiceLocal _searchServiceLocal;
+
 	private User user;
 
 	@Before
 	public void setUp() {
+		_searchServiceLocal = mock(ISearchServiceLocal.class);
 		EntityManager em = getEntityManager();
+		_userService = new UserServiceBean(em, _searchServiceLocal);
 		EntityManagerInjector.inject(_service, em);
 		EntityManagerInjector.inject(_userService, em);
 		em.getTransaction().begin();

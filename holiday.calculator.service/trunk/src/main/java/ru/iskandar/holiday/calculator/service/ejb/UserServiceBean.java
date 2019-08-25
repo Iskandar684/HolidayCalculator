@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
+import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Remote;
 import javax.ejb.SessionContext;
@@ -21,6 +22,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.jboss.logging.Logger;
+
+import ru.iskandar.holiday.calculator.service.ejb.search.ISearchServiceLocal;
+import ru.iskandar.holiday.calculator.service.ejb.search.SearchServiceException;
 import ru.iskandar.holiday.calculator.service.model.user.EntityBasedUserFactory;
 import ru.iskandar.holiday.calculator.service.model.user.NewUserEntityFactory;
 import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
@@ -40,9 +45,16 @@ import ru.iskandar.holiday.calculator.service.model.user.UserId;
 @Remote(IUserServiceRemote.class)
 public class UserServiceBean implements IUserServiceLocal, IUserServiceRemote {
 
+	/** Логгер */
+	private static final Logger LOG = Logger.getLogger(UserServiceBean.class.getName());
+
 	/** Менеджер сущностей */
 	@PersistenceContext
 	private EntityManager _em;
+
+	/** Сервис поиска */
+	@EJB
+	private ISearchServiceLocal _searchServiceLocal;
 
 	/**
 	 * Конструктор
@@ -53,9 +65,9 @@ public class UserServiceBean implements IUserServiceLocal, IUserServiceRemote {
 	/**
 	 * Конструктор
 	 */
-	UserServiceBean(EntityManager aEntityManager) {
-		Objects.requireNonNull(aEntityManager);
-		_em = aEntityManager;
+	UserServiceBean(EntityManager aEntityManager, ISearchServiceLocal aSearchServiceLocal) {
+		_em = Objects.requireNonNull(aEntityManager);
+		_searchServiceLocal = Objects.requireNonNull(aSearchServiceLocal);
 	}
 
 	/** Контекст сессии */
@@ -114,15 +126,17 @@ public class UserServiceBean implements IUserServiceLocal, IUserServiceRemote {
 		return allUsers;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public User createUser(NewUserEntry aNewUserEntry) {
 		Objects.requireNonNull(aNewUserEntry);
 		UserEntity entity = new NewUserEntityFactory(aNewUserEntry).create();
 		_em.persist(entity);
 		User user = new EntityBasedUserFactory(entity).create();
+		try {
+			_searchServiceLocal.addOrUpdate(user);
+		} catch (SearchServiceException e) {
+			LOG.error(e.getMessage(), e);
+		}
 		return user;
 	}
 
@@ -175,8 +189,14 @@ public class UserServiceBean implements IUserServiceLocal, IUserServiceRemote {
 
 	@Override
 	public void changeNote(UserId aUserId, String aNewNote) {
-		UserEntity user = findUser(aUserId);
-		user.setNote(aNewNote);
+		UserEntity userEntity = findUser(aUserId);
+		userEntity.setNote(aNewNote);
+		User user = new EntityBasedUserFactory(userEntity).create();
+		try {
+			_searchServiceLocal.addOrUpdate(user);
+		} catch (SearchServiceException e) {
+			LOG.error(e.getMessage(), e);
+		}
 	}
 
 }

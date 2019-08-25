@@ -15,6 +15,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 
+import ru.iskandar.holiday.calculator.clientlibraries.authentification.ConnectionParams;
 import ru.iskandar.holiday.calculator.dataconnection.internal.SearchResultFactory;
 
 public class SearchConnector {
@@ -35,7 +36,8 @@ public class SearchConnector {
 	}
 
 	private RestHighLevelClient createClient() {
-		HttpHost host = new HttpHost("localhost", 9200, "http");
+		ConnectionParams params = ConnectionParams.getInstance();
+		HttpHost host = new HttpHost(params.getElasticSearchHost(), params.getElasticSearchPort(), "http");
 		RestClientBuilder restClient = RestClient.builder(host);
 		return new RestHighLevelClient(restClient);
 	}

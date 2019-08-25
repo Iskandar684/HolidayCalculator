@@ -9,8 +9,6 @@ import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Composite;
@@ -87,9 +85,9 @@ public class UsersTableCreator {
 	}
 
 	public StructuredViewer create(Composite aParent) {
-		_viewer = new GridTableViewer(aParent, SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL);
+		_viewer = new GridTableViewer(aParent, SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		for (UsersTableColumn col : UsersTableColumn.values()) {
-			GridViewerColumn column = new GridViewerColumn(_viewer, SWT.CENTER, col.getIndex());
+			GridViewerColumn column = new GridViewerColumn(_viewer, SWT.LEFT, col.getIndex());
 			column.getColumn().setText(col.getText());
 			column.getColumn().setMoveable(true);
 			if (UsersTableColumn.NOTE == col) {
@@ -163,29 +161,10 @@ public class UsersTableCreator {
 	}
 
 	private void initListeners() {
-		ILoadListener loadListener = new ILoadListener() {
-
-			/**
-			 * {@inheritDoc}
-			 */
-			@Override
-			public void loadStatusChanged() {
-				Display.getDefault().asyncExec(new Runnable() {
-
-					/**
-					 * {@inheritDoc}
-					 */
-					@Override
-					public void run() {
-						updateLinesVisible();
-						refreshAndPack();
-					}
-
-				});
-
-			}
-
-		};
+		ILoadListener loadListener = () -> Display.getDefault().asyncExec(() -> {
+			updateLinesVisible();
+			refreshAndPack();
+		});
 		IHolidayCalculatorModelListener modelListener = new HolidayCalculatorListenerAdapter() {
 
 			/**
@@ -193,32 +172,15 @@ public class UsersTableCreator {
 			 */
 			@Override
 			protected void userCreated(UserCreatedEvent aEvent) {
-				Display.getDefault().asyncExec(new Runnable() {
-
-					/**
-					 * {@inheritDoc}
-					 */
-					@Override
-					public void run() {
-						refreshAndPack();
-					}
-
-				});
+				Display.getDefault().asyncExec(() -> refreshAndPack());
 			}
 
 		};
 		_modelProvider.addListener(modelListener);
 		_modelProvider.addLoadListener(loadListener);
-		_viewer.getControl().addDisposeListener(new DisposeListener() {
-
-			/**
-			 * {@inheritDoc}
-			 */
-			@Override
-			public void widgetDisposed(DisposeEvent aE) {
-				_modelProvider.removeLoadListener(loadListener);
-				_modelProvider.removeListener(modelListener);
-			}
+		_viewer.getControl().addDisposeListener(aE -> {
+			_modelProvider.removeLoadListener(loadListener);
+			_modelProvider.removeListener(modelListener);
 		});
 	}
 

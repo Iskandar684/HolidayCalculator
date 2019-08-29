@@ -4,6 +4,32 @@
 	<groupId>ru.iskandar.holiday.calculator</groupId>
 	<artifactId>holiday.calculator.product.server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<deployments.dir>${project.basedir}/src/main/resources/standalone/deployments/</deployments.dir>
+		<ear.dir>${deployments.dir}/holiday.ear/</ear.dir>
+		<ear.lib.dir>${deployments.dir}/holiday.ear/lib/</ear.lib.dir>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>ru.iskandar.holiday.calculator</groupId>
+			<artifactId>report.service</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>ru.iskandar.holiday.calculator</groupId>
+			<artifactId>holiday.calculator.service</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>holiday.calculator.web.service</groupId>
+			<artifactId>holiday-calculator-web-service</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<type>war</type>
+		</dependency>
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
@@ -19,6 +45,51 @@
 						<goals>
 							<goal>single</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.1</version>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>ru.iskandar.holiday.calculator</groupId>
+									<artifactId>holiday.calculator.service</artifactId>
+									<version>0.0.1-SNAPSHOT</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${ear.dir}</outputDirectory>
+									<destFileName>holiday.calculator.service.jar</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>ru.iskandar.holiday.calculator</groupId>
+									<artifactId>report.service</artifactId>
+									<version>0.0.1-SNAPSHOT</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${ear.dir}</outputDirectory>
+									<destFileName>holiday.calculator.report.service.jar</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>holiday.calculator.web.service</groupId>
+									<artifactId>holiday-calculator-web-service</artifactId>
+									<version>0.0.1-SNAPSHOT</version>
+									<type>war</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${deployments.dir}</outputDirectory>
+									<destFileName>holiday-calculator-web-service.war</destFileName>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

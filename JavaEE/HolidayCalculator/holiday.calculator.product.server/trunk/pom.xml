@@ -11,6 +11,7 @@
 		<deployments.dir>${project.basedir}/src/main/resources/standalone/deployments/</deployments.dir>
 		<ear.dir>${deployments.dir}/holiday.ear/</ear.dir>
 		<ear.lib.dir>${deployments.dir}/holiday.ear/lib/</ear.lib.dir>
+		<modules.dir>${project.basedir}/src/main/resources/modules/</modules.dir>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -131,7 +132,12 @@
 			<artifactId>lucene-queries</artifactId>
 			<version>8.0.0</version>
 		</dependency>
-
+		<!-- драйвер для postgresql 9.6 (PostgreSQL JDBC Driver - JDBC 4.2) -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.2.6</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -372,6 +378,16 @@
 									<overWrite>true</overWrite>
 									<outputDirectory>${ear.lib.dir}</outputDirectory>
 									<destFileName>lucene-queries.jar</destFileName>
+								</artifactItem>
+								<!-- драйвер для postgresql 9.6 (PostgreSQL JDBC Driver - JDBC 4.2) -->
+								<artifactItem>
+									<groupId>org.postgresql</groupId>
+									<artifactId>postgresql</artifactId>
+									<version>42.2.6</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${modules.dir}/org/postgres/main/</outputDirectory>
+									<destFileName>postgresql-42.2.6.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
 						</configuration>

@@ -46,6 +46,8 @@
 		<module>holiday.calculator.product/trunk</module>
 		<!-- Веб -->
 		<module>holiday.calculator.web.service/trunk</module>
+		<!-- СБОРКА СЕРВЕРА -->
+		<module>holiday.calculator.product.server/trunk</module>
 	</modules>
 
 	<build>

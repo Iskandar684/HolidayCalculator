@@ -1,0 +1,14 @@
+<application xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/application_6.xsd"
+	version="6">
+	<!-- <display-name>ear</display-name> -->
+	<module>
+		<ejb>holiday.calculator.report.service.jar</ejb>
+	</module>
+
+	<module>
+		<ejb>holiday.calculator.service.jar</ejb>
+	</module>
+	<library-directory>lib</library-directory>
+</application>

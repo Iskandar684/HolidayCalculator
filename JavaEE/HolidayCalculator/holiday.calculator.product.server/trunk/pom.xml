@@ -29,6 +29,18 @@
 			<version>0.0.1-SNAPSHOT</version>
 			<type>war</type>
 		</dependency>
+		<!-- зависимости отчета -->
+		<dependency>
+			<groupId>org.eclipse.birt.runtime</groupId>
+			<artifactId>org.eclipse.birt.runtime</artifactId>
+			<version>4.6.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.birt.runtime.3_7_1</groupId>
+			<artifactId>Tidy</artifactId>
+			<version>1</version>
+		</dependency>
+		<!-- зависимости elastic search -->
 	</dependencies>
 	<build>
 		<plugins>
@@ -88,6 +100,26 @@
 									<outputDirectory>${deployments.dir}</outputDirectory>
 									<destFileName>holiday-calculator-web-service.war</destFileName>
 								</artifactItem>
+								<!-- зависимости отчета -->
+								<artifactItem>
+									<groupId>org.eclipse.birt.runtime</groupId>
+									<artifactId>org.eclipse.birt.runtime</artifactId>
+									<version>4.6.0-SNAPSHOT</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${ear.lib.dir}</outputDirectory>
+									<destFileName>org.eclipse.birt.runtime-4.6.0-SNAPSHOT.jar</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.eclipse.birt.runtime.3_7_1</groupId>
+									<artifactId>Tidy</artifactId>
+									<version>1</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${ear.lib.dir}</outputDirectory>
+									<destFileName>Tidy-1.jar</destFileName>
+								</artifactItem>
+								<!-- зависимости elastic search -->
 							</artifactItems>
 						</configuration>
 					</execution>

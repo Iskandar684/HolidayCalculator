@@ -1,7 +1,9 @@
 package ru.iskandar.holiday.calculator.ui.user;
 
 import java.util.Objects;
+import java.util.Optional;
 
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.nebula.jface.gridviewer.GridTableViewer;
 import org.eclipse.nebula.jface.gridviewer.GridViewerColumn;
@@ -17,6 +19,8 @@ import org.eclipse.swt.widgets.Display;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorListenerAdapter;
 import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorModelListener;
 import ru.iskandar.holiday.calculator.service.model.UserCreatedEvent;
+import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.service.model.user.UserId;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
@@ -118,6 +122,12 @@ public class UsersTableCreator {
 			}
 		});
 		return _viewer;
+	}
+
+	public void setSelection(UserId aUserId) {
+		Optional<User> userOpt = _modelProvider.getModel().getAllUsers().stream()
+				.filter(user -> user.getId().equals(aUserId)).findAny();
+		userOpt.ifPresent(user -> _viewer.setSelection(new StructuredSelection(user), true));
 	}
 
 	private void updateLinesVisible() {

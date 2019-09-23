@@ -19,6 +19,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 
 import ru.iskandar.holiday.calculator.service.model.search.ISearchResult;
+import ru.iskandar.holiday.calculator.service.model.search.SearchConstants;
 import ru.iskandar.holiday.calculator.service.model.search.SearchResultFactory;
 import ru.iskandar.holiday.calculator.service.model.user.User;
 
@@ -47,6 +48,7 @@ public class SearchBean implements ISearchServiceLocal {
 			// fields.put("employmentDate", aUser.getEmploymentDate());
 			fields.put("note", aUser.getNote());
 			String id = aUser.getId().getUUID().toString();
+			fields.put(SearchConstants.USER_ID_KEY, id);
 			IndexRequest indexRequest = new IndexRequest("user_index").id(id).source(fields);
 			IndexResponse indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
 			System.out.println("indexResponse " + indexResponse);

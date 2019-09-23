@@ -117,9 +117,16 @@ public class SearchResultTableLabelProvider extends StyledCellLabelProvider impl
 	public void update(ViewerCell aCell) {
 		Object element = aCell.getElement();
 		StyledString styledText = getStyledText(element);
-		aCell.setText(styledText.getString());
+		aCell.setText(appendSeparator(styledText.getString()));
 		aCell.setStyleRanges(styledText.getStyleRanges());
 		super.update(aCell);
+	}
+
+	private String appendSeparator(String aText) {
+		StringBuilder builder = new StringBuilder(aText);
+		builder.append(System.lineSeparator());
+		builder.append("____________________________________________________________________________________");
+		return builder.toString();
 	}
 
 	@Override

@@ -1,7 +1,9 @@
 package ru.iskandar.holiday.calculator.ui.statement;
 
 import java.util.Objects;
+import java.util.Optional;
 
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.nebula.jface.gridviewer.GridTableViewer;
 import org.eclipse.nebula.widgets.grid.GridColumn;
@@ -11,6 +13,8 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
+import ru.iskandar.holiday.calculator.service.model.statement.Statement;
+import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
 import ru.iskandar.holiday.calculator.ui.Messages;
@@ -110,6 +114,12 @@ public class StatementsTableCreator {
 
 		refreshAndPack();
 		return _viewer;
+	}
+
+	public void showStatement(StatementId aStatementId) {
+		Optional<Statement<?>> statementOpt = _modelProvider.getStatements().stream()
+				.filter(statement -> statement.getId().equals(aStatementId)).findAny();
+		statementOpt.ifPresent(statement -> _viewer.setSelection(new StructuredSelection(statement), true));
 	}
 
 	private void updateLinesVisible() {

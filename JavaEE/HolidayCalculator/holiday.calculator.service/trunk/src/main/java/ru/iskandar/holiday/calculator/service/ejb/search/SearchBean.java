@@ -21,6 +21,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import ru.iskandar.holiday.calculator.service.model.search.ISearchResult;
 import ru.iskandar.holiday.calculator.service.model.search.SearchConstants;
 import ru.iskandar.holiday.calculator.service.model.search.SearchResultFactory;
+import ru.iskandar.holiday.calculator.service.model.statement.Statement;
 import ru.iskandar.holiday.calculator.service.model.user.User;
 
 /**
@@ -51,10 +52,39 @@ public class SearchBean implements ISearchServiceLocal {
 			fields.put(SearchConstants.USER_ID_KEY, id);
 			IndexRequest indexRequest = new IndexRequest("user_index").id(id).source(fields);
 			IndexResponse indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
-			System.out.println("indexResponse " + indexResponse);
+			/// XXX System.out.println
+			System.out.println("addOrUpdateUser indexResponse " + indexResponse);
 		} catch (IOException e) {
 			throw new SearchServiceException(
 					String.format("Ошибка добавления/обновления пользователя %s в elasticsearch.", aUser), e);
+		}
+	}
+
+	@Override
+	public void addOrUpdate(Statement<?> aStatement) throws SearchServiceException {
+		try (RestHighLevelClient client = createClient()) {
+			Map<String, Object> fields = new HashMap<>();
+			User author = aStatement.getAuthor();
+			String authorFIO = String.format("%s %s %s", author.getLastName(), author.getFirstName(),
+					author.getPatronymic());
+			fields.put("authorFIO", authorFIO);
+			User consider = aStatement.getConsider();
+			if (consider != null) {
+				String considerFIO = String.format("%s %s %s", consider.getLastName(), consider.getFirstName(),
+						consider.getPatronymic());
+				fields.put("considerFIO", considerFIO);
+			}
+			fields.put("statementStatus", aStatement.getEntry().getStatus());
+
+			String id = aStatement.getId().getUUID().toString();
+			fields.put(SearchConstants.STATEMENT_ID_KEY, id);
+			IndexRequest indexRequest = new IndexRequest("statement_index").id(id).source(fields);
+			IndexResponse indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
+			/// XXX System.out.println
+			System.out.println("addOrUpdateStatement indexResponse " + indexResponse);
+		} catch (IOException e) {
+			throw new SearchServiceException(
+					String.format("Ошибка добавления/обновления заявления %s в elasticsearch.", aStatement), e);
 		}
 	}
 
@@ -63,7 +93,7 @@ public class SearchBean implements ISearchServiceLocal {
 		RestHighLevelClient client = createClient();
 		SearchRequest searchRequest = new SearchRequest();
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-		searchSourceBuilder.query(QueryBuilders.matchQuery("note", aSearchText));
+		searchSourceBuilder.query(QueryBuilders.multiMatchQuery(aSearchText, "note", "authorFIO", "considerFIO"));
 		searchRequest.source(searchSourceBuilder);
 		SearchResponse response;
 		try {

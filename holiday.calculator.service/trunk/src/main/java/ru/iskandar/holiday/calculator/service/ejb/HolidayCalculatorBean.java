@@ -92,6 +92,10 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
 	@EJB
 	private ISearchServiceLocal _searchService;
 
+	/** Сервис поиска */
+	@EJB
+	private ISearchServiceLocal _searchServiceLocal;
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -138,6 +142,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
 		} catch (JMSException e) {
 			LOG.error(String.format("Ошибка оповещения о рассмотрении заявления %s на отгул", statement), e);
 		}
+		addStatementToSearchService(statement);
 		return statement;
 	}
 
@@ -166,6 +171,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
 		} catch (JMSException e) {
 			LOG.error(String.format("Ошибка оповещения о рассмотрении заявления %s на отгул", statement), e);
 		}
+		addStatementToSearchService(statement);
 		return statement;
 	}
 
@@ -196,6 +202,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
 		} catch (JMSException e) {
 			LOG.error(String.format("Ошибка оповещения об отправки заявления %s на отгул", aStatement), e);
 		}
+		addStatementToSearchService(statement);
 		return statement;
 	}
 
@@ -236,6 +243,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
 		} catch (JMSException e) {
 			LOG.error(String.format("Ошибка оповещения об отправки заявления %s на отпуск", st), e);
 		}
+		addStatementToSearchService(st);
 		return st;
 	}
 
@@ -445,6 +453,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
 		} catch (JMSException e) {
 			LOG.error(String.format("Ошибка оповещения об отправки заявления %s на отзыв", statement), e);
 		}
+		addStatementToSearchService(statement);
 		return statement;
 	}
 
@@ -593,6 +602,20 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
 	@Override
 	public ISearchResult search(String aSearchText) throws SearchServiceException {
 		return _searchService.search(aSearchText);
+	}
+
+	/**
+	 * Добавляет заявление в систему поиска.
+	 *
+	 * @param aStatement
+	 *            заявление
+	 */
+	private void addStatementToSearchService(Statement<?> aStatement) {
+		try {
+			_searchService.addOrUpdate(aStatement);
+		} catch (SearchServiceException e) {
+			LOG.error(e.getMessage(), e);
+		}
 	}
 
 }

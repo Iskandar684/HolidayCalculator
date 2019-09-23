@@ -13,6 +13,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.EditorPart;
 
+import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.statement.StatementsTableCreator;
 
@@ -23,6 +24,8 @@ public class OutgoingStatementsEditor extends EditorPart {
 	private HolidayCalculatorModelProvider _holidayModelProvider;
 
 	private StructuredViewer _statementsViewer;
+
+	private StatementsTableCreator _statementsTable;
 
 	/**
 	 * Конструктор
@@ -82,10 +85,13 @@ public class OutgoingStatementsEditor extends EditorPart {
 		main.setLayout(mainLayout);
 		main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		StatementsTableCreator creator = new StatementsTableCreator(
-				new CurrentUserStatementsProvider(_holidayModelProvider));
-		_statementsViewer = creator.create(main);
+		_statementsTable = new StatementsTableCreator(new CurrentUserStatementsProvider(_holidayModelProvider));
+		_statementsViewer = _statementsTable.create(main);
 		_statementsViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+	}
+
+	public void showStatement(StatementId aStatementId) {
+		_statementsTable.showStatement(aStatementId);
 	}
 
 	/**

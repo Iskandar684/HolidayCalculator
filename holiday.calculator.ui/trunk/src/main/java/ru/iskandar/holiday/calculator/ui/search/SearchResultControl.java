@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
 import ru.iskandar.holiday.calculator.service.model.search.ISearchResult;
+import ru.iskandar.holiday.calculator.ui.statement.StatementSearchHitViewer;
 import ru.iskandar.holiday.calculator.ui.user.UserSearchHitViewer;
 
 /**
@@ -35,6 +36,7 @@ public class SearchResultControl {
 		_searchResultTable.create(_control);
 		_searchResultTable.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		_searchResultTable.addSearchHitViewer(new UserSearchHitViewer());
+		_searchResultTable.addSearchHitViewer(new StatementSearchHitViewer());
 		return _control;
 	}
 

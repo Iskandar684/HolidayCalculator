@@ -1,5 +1,7 @@
 package ru.iskandar.holiday.calculator.ui.user;
 
+import java.util.Optional;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
@@ -14,6 +16,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.EditorPart;
 
+import ru.iskandar.holiday.calculator.service.model.user.UserId;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 
 public class UsersEditor extends EditorPart {
@@ -23,6 +26,8 @@ public class UsersEditor extends EditorPart {
 	private HolidayCalculatorModelProvider _modelProvider;
 
 	private StructuredViewer _usersViewer;
+
+	private UsersTableCreator _usersTable;
 
 	public UsersEditor() {
 	}
@@ -63,14 +68,20 @@ public class UsersEditor extends EditorPart {
 		SashForm sash = new SashForm(main, SWT.HORIZONTAL);
 		sash.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		UsersTableCreator creator = new UsersTableCreator(_modelProvider);
-		_usersViewer = creator.create(sash);
+		_usersTable = new UsersTableCreator(_modelProvider);
+		_usersViewer = _usersTable.create(sash);
 		_usersViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		Optional<UserId> userId = ((ViewUsersEditorInput) getEditorInput()).getUserToSelect();
+		userId.ifPresent(_usersTable::setSelection);
 	}
 
 	@Override
 	public void setFocus() {
 		_usersViewer.getControl().setFocus();
+	}
+
+	public void setSelection(UserId aUserId) {
+		_usersTable.setSelection(aUserId);
 	}
 
 }

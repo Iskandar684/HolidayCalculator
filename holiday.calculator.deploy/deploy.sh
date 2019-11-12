@@ -4,8 +4,10 @@
 source ./deploy.conf;
 source ./functions.conf;
 
+#установка пакетов
+installPackages;
 #загрузка файлов
-#download;
+download;
 #сборка
 build;
 #удаление предыдущей версии

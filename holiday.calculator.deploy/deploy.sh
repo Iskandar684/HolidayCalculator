@@ -5,13 +5,13 @@ source ./deploy.conf;
 source ./functions.conf;
 
 #установка пакетов
-installPackages;
+#installPackages;
 #загрузка файлов
 download;
 #сборка
-build;
+#build;
 #удаление предыдущей версии
-#clean;
+cleanJBOSS_HOME;
 #копирование файлов
 #copyFiles;
 #запуск

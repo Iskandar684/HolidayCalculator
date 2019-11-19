@@ -655,7 +655,7 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
 					<descriptor>src/main/assembly/bin.xml</descriptor>
-					<finalName>HolidayCalculator</finalName>
+					<finalName>HolidayCalculator-server</finalName>
 				</configuration>
 				<executions>
 					<execution>

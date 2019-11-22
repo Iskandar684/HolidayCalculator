@@ -52,12 +52,12 @@
 			<artifactId>holiday.calculator.service</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>holiday.calculator.web.service</groupId>
 			<artifactId>holiday-calculator-web-service</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<type>war</type>
-		</dependency>
+		</dependency>-->
 		<!-- зависимости отчета -->
 		<dependency>
 			<groupId>org.eclipse.birt.runtime</groupId>
@@ -697,7 +697,7 @@
 									<outputDirectory>${ear.dir}</outputDirectory>
 									<destFileName>holiday.calculator.report.service.jar</destFileName>
 								</artifactItem>
-								<artifactItem>
+								<!--<artifactItem>
 									<groupId>holiday.calculator.web.service</groupId>
 									<artifactId>holiday-calculator-web-service</artifactId>
 									<version>0.0.1-SNAPSHOT</version>
@@ -705,7 +705,7 @@
 									<overWrite>true</overWrite>
 									<outputDirectory>${deployments.dir}</outputDirectory>
 									<destFileName>holiday-calculator-web-service.war</destFileName>
-								</artifactItem>
+								</artifactItem>-->
 								<!-- зависимости отчета -->
 								<artifactItem>
 									<groupId>org.eclipse.birt.runtime</groupId>

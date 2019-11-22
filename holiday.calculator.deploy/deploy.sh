@@ -4,6 +4,8 @@
 source ./deploy.conf;
 source ./functions.conf;
 
+#подготовка
+init;
 #установка пакетов
 installPackages;
 #загрузка файлов

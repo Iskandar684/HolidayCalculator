@@ -7,13 +7,13 @@ source ./functions.conf;
 #установка пакетов
 #installPackages;
 #загрузка файлов
-download;
+#download;
 #сборка
 #build;
 #удаление предыдущей версии
-cleanJBOSS_HOME;
+#cleanJBOSS_HOME;
 #копирование файлов
 #copyFiles;
 #запуск
-#start;
+start;
 

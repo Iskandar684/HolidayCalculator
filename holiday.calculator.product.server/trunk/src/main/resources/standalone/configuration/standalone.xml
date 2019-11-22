@@ -447,7 +447,7 @@
             <inet-address value="${jboss.bind.address.management:127.0.0.1}"/>
         </interface>
         <interface name="public">
-            <inet-address value="${jboss.bind.address:192.168.196.129}"/>
+            <inet-address value="${jboss.bind.address:127.0.0.1}"/> <!-- IP сервера -->
         </interface>
         <interface name="unsecure">
             <inet-address value="${jboss.bind.address.unsecure:127.0.0.1}"/>

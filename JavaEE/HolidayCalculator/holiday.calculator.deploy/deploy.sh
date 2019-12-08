@@ -16,6 +16,8 @@ build;
 cleanJBOSS_HOME;
 #копирование файлов
 copyFiles;
+#настройка БД
+initDB;
 #запуск
 start;
 

@@ -20,4 +20,5 @@ copyFiles;
 initDB;
 #запуск
 start;
-
+#добавление пользователей
+addUsers;

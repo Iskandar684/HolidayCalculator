@@ -18,7 +18,8 @@ cleanJBOSS_HOME;
 copyFiles;
 #настройка БД
 initDB;
-#запуск
-start;
 #добавление пользователей
 addUsers;
+#запуск
+start;
+

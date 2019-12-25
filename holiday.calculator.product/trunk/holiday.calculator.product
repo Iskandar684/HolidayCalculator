@@ -12,8 +12,8 @@ osgi.nl=ru
       </programArgs>
       <vmArgs>-Dfile.encoding=UTF-8
 -Dserver=127.0.0.1
--Duser=testuser
--Dpassword=testpassword
+-Duser=admin
+-Dpassword=admin
       </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
       </vmArgsMac>

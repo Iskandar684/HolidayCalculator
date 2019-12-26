@@ -30,7 +30,7 @@
 		<repository>
 			<id>nebula-latest</id>
 			<layout>p2</layout>
-			<url>https://download.eclipse.org/nebula/releases/latest/</url>
+			<url>https://download.eclipse.org/nebula/releases/2.2.0/</url>
 		</repository>
 	</repositories>
 

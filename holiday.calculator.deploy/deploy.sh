@@ -5,22 +5,22 @@ source ./deploy.conf;
 source ./functions.conf;
 
 #подготовка
-#prepare;
+prepare;
 #установка пакетов
-#installPackages;
+installPackages;
 #загрузка файлов
-#download;
+download;
 #сборка
-#build;
+build;
 #удаление предыдущей версии
-#cleanJBOSS_HOME;
+cleanJBOSS_HOME;
 #копирование файлов
-#copyFiles;
+copyFiles;
 #настройка БД
-#initDB;
+initDB;
 #добавление пользователей
-#addUsers;
+addUsers;
+#открытие веб страницы (должно быть после запуска)
+openSite;
 #запуск
 start;
-#открытие веб страницы
-openSite;

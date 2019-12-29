@@ -304,10 +304,32 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	StatementDocument preview(HolidayStatementEntry aEntry) throws DocumentPreviewException;
 
 	/**
-	 * Формирует документ заявления на отгул
+	 * Формирует документ заявления на отпуск
 	 *
 	 * @param aEntry
-	 *            содержание заявления на отгул
+	 *            содержание заявления на отпуск
+	 * @return документ заявления
+	 * @throws DocumentPreviewException
+	 *             если не удалось сформировать документ
+	 */
+	StatementDocument preview(LeaveStatementEntry aEntry) throws DocumentPreviewException;
+
+	/**
+	 * Формирует документ заявления на отзыв.
+	 *
+	 * @param aEntry
+	 *            содержание заявления на отзыв
+	 * @return документ заявления
+	 * @throws DocumentPreviewException
+	 *             если не удалось сформировать документ
+	 */
+	StatementDocument preview(RecallStatementEntry aEntry) throws DocumentPreviewException;
+
+	/**
+	 * Формирует документ заявления.
+	 *
+	 * @param aEntry
+	 *            содержание заявления
 	 * @return документ заявления
 	 * @throws DocumentPreviewException
 	 *             если не удалось сформировать документ

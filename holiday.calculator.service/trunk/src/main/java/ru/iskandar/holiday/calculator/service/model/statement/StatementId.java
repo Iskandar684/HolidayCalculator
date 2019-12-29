@@ -81,4 +81,9 @@ public class StatementId implements Serializable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return _uuid.toString();
+	}
+
 }

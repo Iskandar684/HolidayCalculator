@@ -566,9 +566,6 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
 		return canView;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public StatementDocument preview(HolidayStatementEntry aEntry) throws DocumentPreviewException {
 		Objects.requireNonNull(aEntry, "Не указано содержание заявления на отгул");
@@ -584,14 +581,51 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
 	}
 
 	@Override
+	public StatementDocument preview(LeaveStatementEntry aEntry) throws DocumentPreviewException {
+		Objects.requireNonNull(aEntry, "Не указано содержание заявления на отпуск");
+		IReport report;
+		try {
+			report = _reportService.generate(aEntry);
+		} catch (HolidayCalculatorException e) {
+			String err = String.format("Ошибка генерациии документа для заявления %s", aEntry);
+			LOG.error(err, e);
+			throw new DocumentPreviewException(err, e);
+		}
+		return new StatementDocument(report.getContent());
+	}
+
+	@Override
+	public StatementDocument preview(RecallStatementEntry aEntry) throws DocumentPreviewException {
+		Objects.requireNonNull(aEntry, "Не указано содержание заявления на отзыв");
+		IReport report;
+		try {
+			report = _reportService.generate(aEntry);
+		} catch (HolidayCalculatorException e) {
+			String err = String.format("Ошибка генерациии документа для заявления %s", aEntry);
+			LOG.error(err, e);
+			throw new DocumentPreviewException(err, e);
+		}
+		return new StatementDocument(report.getContent());
+	}
+
+	@Override
 	public StatementDocument getStatementDocument(StatementId aStatementID) throws DocumentPreviewException {
 		HolidayStatement holidayStatement = _statementRepo.getHolidayStatement(aStatementID);
-		if (holidayStatement == null) {
-			throw new IllegalArgumentException(
-					String.format("Заявление на отгул по идентификатору %s на найдено.", aStatementID));
+		if (holidayStatement != null) {
+			// отгул
+			return preview(holidayStatement.getEntry());
 		}
-		HolidayStatementEntry entry = holidayStatement.getEntry();
-		return preview(entry);
+		LeaveStatement leaveStatement = _statementRepo.getLeaveStatement(aStatementID);
+		if (leaveStatement != null) {
+			// отпуск
+			return preview(leaveStatement.getEntry());
+		}
+		RecallStatement recallStatement = _statementRepo.getRecallStatement(aStatementID);
+		if (recallStatement != null) {
+			// отзыв
+			return preview(recallStatement.getEntry());
+		}
+		throw new DocumentPreviewException(String.format("Заявление по идентификатору %s на найдено.", aStatementID));
 	}
 
 	@Override

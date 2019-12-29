@@ -2,6 +2,7 @@ package ru.iskandar.holiday.calculator.service.ejb;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -26,6 +27,7 @@ import org.jboss.logging.Logger;
 
 import ru.iskandar.holiday.calculator.service.ejb.search.ISearchServiceLocal;
 import ru.iskandar.holiday.calculator.service.ejb.search.SearchServiceException;
+import ru.iskandar.holiday.calculator.service.model.permissions.Permission;
 import ru.iskandar.holiday.calculator.service.model.user.EntityBasedUserFactory;
 import ru.iskandar.holiday.calculator.service.model.user.NewUserEntityFactory;
 import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
@@ -55,6 +57,9 @@ public class UserServiceBean implements IUserServiceLocal, IUserServiceRemote {
 	/** Сервис поиска */
 	@EJB
 	private ISearchServiceLocal _searchServiceLocal;
+
+	/** Менеджер управления ролями пользователей */
+	private final UserPermissionsManager _userPermissionsManager = new UserPermissionsManager();
 
 	/**
 	 * Конструктор
@@ -131,6 +136,14 @@ public class UserServiceBean implements IUserServiceLocal, IUserServiceRemote {
 		Objects.requireNonNull(aNewUserEntry);
 		UserEntity entity = new NewUserEntityFactory(aNewUserEntry).create();
 		_em.persist(entity);
+		// FIXME брать полномочия от клиента
+		List<String> permissions = Arrays.asList(Permission.USER_VIEWER, Permission.USER_CREATOR, Permission.CONSIDER);
+		try {
+			_userPermissionsManager.addOrChangePermissions(aNewUserEntry.getLogin(), aNewUserEntry.getPassword(),
+					permissions);
+		} catch (HolidayCalculatorException e) {
+			LOG.error(e.getMessage(), e);
+		}
 		User user = new EntityBasedUserFactory(entity).create();
 		try {
 			_searchServiceLocal.addOrUpdate(user);

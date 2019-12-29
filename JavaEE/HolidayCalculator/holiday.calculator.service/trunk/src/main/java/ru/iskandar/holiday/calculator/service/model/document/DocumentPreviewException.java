@@ -14,7 +14,7 @@ public class DocumentPreviewException extends HolidayCalculatorException {
 
 	/**
 	 * Конструктор
-	 * 
+	 *
 	 * @param aMessage
 	 *            сообщение
 	 * @param aCause
@@ -22,6 +22,16 @@ public class DocumentPreviewException extends HolidayCalculatorException {
 	 */
 	public DocumentPreviewException(String aMessage, Throwable aCause) {
 		super(aMessage, aCause);
+	}
+
+	/**
+	 * Конструктор
+	 *
+	 * @param aMessage
+	 *            сообщение
+	 */
+	public DocumentPreviewException(String aMessage) {
+		super(aMessage);
 	}
 
 }

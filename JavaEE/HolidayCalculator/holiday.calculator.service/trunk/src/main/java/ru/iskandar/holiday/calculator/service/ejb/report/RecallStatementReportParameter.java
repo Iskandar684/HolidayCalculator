@@ -10,14 +10,14 @@ import ru.iskandar.holiday.calculator.service.model.user.User;
 import ru.iskandar.holiday.calculator.service.utils.DateUtils;
 
 /**
- * Контейнер-параметр для формирования документа "Заявления на отгул"
+ * Контейнер-параметр для формирования документа "Заявления на отзыв"
  */
-public class HolidayStatementReportParameter implements Serializable {
+public class RecallStatementReportParameter implements Serializable {
 
 	/**
 	 * Идентификатор для сериализации
 	 */
-	private static final long serialVersionUID = -2496695956098513022L;
+	private static final long serialVersionUID = 1000779820921427593L;
 
 	/** Автор */
 	private final User _author;
@@ -27,7 +27,7 @@ public class HolidayStatementReportParameter implements Serializable {
 	/**
 	 *
 	 */
-	HolidayStatementReportParameter(User aAuthor, Set<Date> aDates) {
+	RecallStatementReportParameter(User aAuthor, Set<Date> aDates) {
 		Objects.requireNonNull(aAuthor);
 		Objects.requireNonNull(aDates);
 		_author = aAuthor;

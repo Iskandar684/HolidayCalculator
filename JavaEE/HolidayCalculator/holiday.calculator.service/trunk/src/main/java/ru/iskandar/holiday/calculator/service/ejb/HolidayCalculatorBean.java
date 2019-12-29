@@ -501,8 +501,6 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
 		} catch (JMSException e) {
 			LOG.error(String.format("Ошибка оповещения о создании пользователя %s", newUser), e);
 		}
-
-		// FIXME назначить роли
 		return newUser;
 	}
 

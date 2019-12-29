@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import ru.iskandar.holiday.calculator.service.model.document.DocumentPreviewException;
+import ru.iskandar.holiday.calculator.service.model.document.StatementDocument;
 import ru.iskandar.holiday.calculator.service.model.statement.LeaveStatement;
 import ru.iskandar.holiday.calculator.service.model.statement.RecallStatementEntry;
 
@@ -93,6 +95,29 @@ public class MakeRecallStatementBuilder implements Serializable {
 		}
 		_days.clear();
 		_days.addAll(aDates);
+	}
+
+	/**
+	 * Формирует документ заявления на отзыв.
+	 *
+	 * @param aEntry
+	 *            содержание заявления на отзыв
+	 * @return документ заявления
+	 * @throws DocumentPreviewException
+	 *             если не удалось сформировать документ
+	 */
+	public StatementDocument preview() throws DocumentPreviewException {
+		return _model.preview(build());
+	}
+
+	/**
+	 * Возвращает описание заявления на отзыв.
+	 *
+	 * @return описание заявления
+	 */
+	private RecallStatementEntry build() {
+		RecallStatementEntry statement = new RecallStatementEntry(_days, _model.getCurrentUser());
+		return statement;
 	}
 
 }

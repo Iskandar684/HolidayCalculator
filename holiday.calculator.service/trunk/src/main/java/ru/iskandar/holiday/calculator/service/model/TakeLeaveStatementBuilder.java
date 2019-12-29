@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import ru.iskandar.holiday.calculator.service.model.document.DocumentPreviewException;
+import ru.iskandar.holiday.calculator.service.model.document.StatementDocument;
 import ru.iskandar.holiday.calculator.service.model.statement.LeaveStatementEntry;
 
 /**
@@ -83,6 +85,29 @@ public class TakeLeaveStatementBuilder implements Serializable {
 	 */
 	public Set<Date> getDays() {
 		return Collections.unmodifiableSet(_days);
+	}
+
+	/**
+	 * Формирует документ заявления на отпуск.
+	 *
+	 * @param aEntry
+	 *            содержание заявления на отпуск
+	 * @return документ заявления
+	 * @throws DocumentPreviewException
+	 *             если не удалось сформировать документ
+	 */
+	public StatementDocument preview() throws DocumentPreviewException {
+		return _model.preview(build());
+	}
+
+	/**
+	 * Возвращает описание заявления на отпуск.
+	 *
+	 * @return описание заявления
+	 */
+	private LeaveStatementEntry build() {
+		LeaveStatementEntry statement = new LeaveStatementEntry(_model.getCurrentUser(), _days);
+		return statement;
 	}
 
 }

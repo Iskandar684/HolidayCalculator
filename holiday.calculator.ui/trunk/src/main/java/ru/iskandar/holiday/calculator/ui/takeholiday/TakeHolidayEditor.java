@@ -6,8 +6,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.nebula.widgets.datechooser.DateChooser;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -98,17 +96,7 @@ public class TakeHolidayEditor extends EditorPart {
 			ClientId currentClientId = _modelProvider.getModel().getClientId();
 			ClientId eventClientId = aEvent.getInitiator() != null ? aEvent.getInitiator().getClientId() : null;
 			if (currentClientId.equals(eventClientId)) {
-				Display.getDefault().asyncExec(new Runnable() {
-
-					/**
-					 * {@inheritDoc}
-					 */
-					@Override
-					public void run() {
-						TakeHolidayEditor.this.close();
-					}
-
-				});
+				Display.getDefault().asyncExec(() -> TakeHolidayEditor.this.close());
 			}
 		}
 
@@ -176,20 +164,11 @@ public class TakeHolidayEditor extends EditorPart {
 
 		final HolidayCalculatorModelListener modelListener = new HolidayCalculatorModelListener();
 		_modelProvider.addListener(modelListener);
-		main.addDisposeListener(new DisposeListener() {
-
-			/**
-			 * {@inheritDoc}
-			 */
-			@Override
-			public void widgetDisposed(DisposeEvent aE) {
-				_modelProvider.removeListener(modelListener);
-			}
-		});
+		main.addDisposeListener(aE -> _modelProvider.removeListener(modelListener));
 	}
 
 	/**
-	 * Создает Панель просмотра печатной формы заявления
+	 * Создает панель просмотра печатной формы заявления.
 	 *
 	 * @param aParent
 	 *            родитель
@@ -209,17 +188,7 @@ public class TakeHolidayEditor extends EditorPart {
 
 		StatementContentChangedHandler contentChangedListener = new StatementContentChangedHandler();
 		_modelProvider.addListener(contentChangedListener);
-		control.addDisposeListener(new DisposeListener() {
-
-			/**
-			 * {@inheritDoc}
-			 */
-			@Override
-			public void widgetDisposed(DisposeEvent aE) {
-				_modelProvider.removeListener(contentChangedListener);
-			}
-
-		});
+		control.addDisposeListener(aE -> _modelProvider.removeListener(contentChangedListener));
 		return main;
 	}
 

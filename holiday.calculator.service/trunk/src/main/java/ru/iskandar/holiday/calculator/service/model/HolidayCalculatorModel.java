@@ -582,7 +582,37 @@ public class HolidayCalculatorModel implements Serializable {
 	 *             если не удалось сформировать документ
 	 */
 	StatementDocument preview(HolidayStatementEntry aEntry) throws DocumentPreviewException {
-		Objects.requireNonNull(aEntry, "Не указано содержимое заявления");
+		Objects.requireNonNull(aEntry, "Не указано содержимое заявления отгул.");
+		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
+		return service.preview(aEntry);
+	}
+
+	/**
+	 * Формирует документ заявления на отгул
+	 *
+	 * @param aEntry
+	 *            содержание заявления на отгул
+	 * @return документ заявления
+	 * @throws DocumentPreviewException
+	 *             если не удалось сформировать документ
+	 */
+	StatementDocument preview(LeaveStatementEntry aEntry) throws DocumentPreviewException {
+		Objects.requireNonNull(aEntry, "Не указано содержимое заявления на отпуск.");
+		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
+		return service.preview(aEntry);
+	}
+
+	/**
+	 * Формирует документ заявления на отгул
+	 *
+	 * @param aEntry
+	 *            содержание заявления на отгул
+	 * @return документ заявления
+	 * @throws DocumentPreviewException
+	 *             если не удалось сформировать документ
+	 */
+	StatementDocument preview(RecallStatementEntry aEntry) throws DocumentPreviewException {
+		Objects.requireNonNull(aEntry, "Не указано содержимое заявления на отзыв.");
 		IHolidayCalculatorService service = _servicesProvider.getHolidayCalculatorService();
 		return service.preview(aEntry);
 	}

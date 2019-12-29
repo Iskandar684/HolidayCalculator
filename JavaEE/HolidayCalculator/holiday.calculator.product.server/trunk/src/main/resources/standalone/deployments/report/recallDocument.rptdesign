@@ -204,7 +204,7 @@ fio="________________ "+lastname+" "+name+" "+patronymic;</expression>
             <expression name="value" type="javascript">statement=params["statement"].value;&#13;
 dates=statement.getDates();&#13;
 datesAsStr=statement.format(dates);&#13;
-content="Прошу Вас предоставить мне оплачиваемый отгул "+datesAsStr+".";</expression>
+content="Прошу Вас сделать отзыв "+datesAsStr+".";</expression>
             <property name="type">report</property>
         </variable-element>
         <variable-element name="currentDate">

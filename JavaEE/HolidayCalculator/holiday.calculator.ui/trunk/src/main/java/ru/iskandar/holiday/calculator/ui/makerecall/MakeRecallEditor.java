@@ -7,12 +7,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.nebula.widgets.datechooser.DateChooser;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IEditorInput;
@@ -24,10 +23,13 @@ import org.eclipse.ui.part.EditorPart;
 import ru.iskandar.holiday.calculator.service.model.ClientId;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorListenerAdapter;
 import ru.iskandar.holiday.calculator.service.model.MakeRecallStatementBuilder;
+import ru.iskandar.holiday.calculator.service.model.StatementContentChangedEvent;
 import ru.iskandar.holiday.calculator.service.model.StatementSendedEvent;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.Messages;
 import ru.iskandar.holiday.calculator.ui.Utils;
+import ru.iskandar.holiday.calculator.ui.takeholiday.HTMLContentProvider;
+import ru.iskandar.holiday.calculator.ui.takeholiday.HTMLDocumentViewer;
 
 /**
  * Редактор подачи заявления на отпуск
@@ -42,6 +44,18 @@ public class MakeRecallEditor extends EditorPart {
 
 	/** Поставщик модели */
 	private HolidayCalculatorModelProvider _modelProvider;
+
+	/** Поставщик содержимого документа заявления */
+	private HTMLContentProvider _statementDocumentContentProvider;
+
+	private class StatementContentChangedHandler extends HolidayCalculatorListenerAdapter {
+
+		@Override
+		protected void statementContentChangedEvent(StatementContentChangedEvent aEvent) {
+			_statementDocumentContentProvider.asynReload();
+		}
+
+	}
 
 	/**
 	 * Конструктор
@@ -72,6 +86,8 @@ public class MakeRecallEditor extends EditorPart {
 		setInput(aInput);
 		_modelProvider = ((MakeRecallEditorInput) aInput).getModelProvider();
 		Objects.requireNonNull(_modelProvider);
+		_statementDocumentContentProvider = new HTMLContentProvider(
+				new RecallStatementDocumentContentLoader(_modelProvider));
 	}
 
 	/**
@@ -87,17 +103,7 @@ public class MakeRecallEditor extends EditorPart {
 			ClientId currentClientId = _modelProvider.getModel().getClientId();
 			ClientId eventClientId = aEvent.getInitiator() != null ? aEvent.getInitiator().getClientId() : null;
 			if (currentClientId.equals(eventClientId)) {
-				Display.getDefault().asyncExec(new Runnable() {
-
-					/**
-					 * {@inheritDoc}
-					 */
-					@Override
-					public void run() {
-						MakeRecallEditor.this.close();
-					}
-
-				});
+				Display.getDefault().asyncExec(() -> MakeRecallEditor.this.close());
 			}
 		}
 
@@ -145,20 +151,11 @@ public class MakeRecallEditor extends EditorPart {
 
 		final HolidayCalculatorModelListener modelListener = new HolidayCalculatorModelListener();
 		_modelProvider.addListener(modelListener);
-		main.addDisposeListener(new DisposeListener() {
-
-			/**
-			 * {@inheritDoc}
-			 */
-			@Override
-			public void widgetDisposed(DisposeEvent aE) {
-				_modelProvider.removeListener(modelListener);
-			}
-		});
+		main.addDisposeListener(aE -> _modelProvider.removeListener(modelListener));
 	}
 
 	/**
-	 * Создает Панель просмотра печатной формы заявления
+	 * Создает панель просмотра печатной формы заявления.
 	 *
 	 * @param aParent
 	 *            родитель
@@ -170,6 +167,15 @@ public class MakeRecallEditor extends EditorPart {
 		leftLayout.marginWidth = 0;
 		leftLayout.marginHeight = 0;
 		main.setLayout(leftLayout);
+		main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		HTMLDocumentViewer viewer = new HTMLDocumentViewer(_statementDocumentContentProvider);
+		Control control = viewer.create(main, _toolkit);
+		control.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		StatementContentChangedHandler contentChangedListener = new StatementContentChangedHandler();
+		_modelProvider.addListener(contentChangedListener);
+		control.addDisposeListener(aE -> _modelProvider.removeListener(contentChangedListener));
 		return main;
 	}
 

@@ -67,6 +67,12 @@
             id="ru.iskandar.holiday.calculator.ui.search.SearchView"
             name="%search.view.name">
       </editor>
+      <editor
+            class="ru.iskandar.holiday.calculator.ui.document.DocumentEditor"
+            default="false"
+            id="ru.iskandar.holiday.calculator.ui.DocumentEditor"
+            name="%document.editor.name">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.menus">

@@ -1,6 +1,3 @@
-/**
- *
- */
 package ru.iskandar.holiday.calculator.ui.takeholiday;
 
 import java.util.Objects;
@@ -77,6 +74,10 @@ public class HTMLDocumentViewer {
 			String text = new String(content.getContent());
 			_browser.setText(text);
 		}
+	}
+
+	public void setFocus() {
+		_browser.setFocus();
 	}
 
 }

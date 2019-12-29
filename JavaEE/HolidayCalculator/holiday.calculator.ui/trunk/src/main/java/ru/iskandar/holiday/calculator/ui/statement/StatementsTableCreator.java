@@ -3,6 +3,10 @@ package ru.iskandar.holiday.calculator.ui.statement;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.nebula.jface.gridviewer.GridTableViewer;
@@ -12,13 +16,24 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.statushandlers.StatusManager;
 
+import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
+import ru.iskandar.holiday.calculator.service.model.document.StatementDocument;
 import ru.iskandar.holiday.calculator.service.model.statement.Statement;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
 import ru.iskandar.holiday.calculator.ui.Messages;
+import ru.iskandar.holiday.calculator.ui.ModelProviderHolder;
+import ru.iskandar.holiday.calculator.ui.document.DocumentEditor;
+import ru.iskandar.holiday.calculator.ui.document.DocumentEditorInput;
+import ru.iskandar.holiday.calculator.ui.document.HTMLContent;
 import ru.iskandar.holiday.calculator.ui.statement.IStatementsProvider.IStatementsChangedListener;
+import ru.iskandar.holiday.calculator.ui.takeholiday.HTMLContentProvider;
 
 /**
  * Создаватель таблицы просмотра заявлений
@@ -174,6 +189,29 @@ public class StatementsTableCreator {
 			_modelProvider.removeLoadListener(loadListener);
 			_modelProvider.removeStatementsChangedListener(modelListener);
 		});
+		_viewer.addOpenListener(aEvent -> openStatementDocument(aEvent.getSelection()));
+	}
+
+	private void openStatementDocument(ISelection aSelection) {
+		if (aSelection.isEmpty()) {
+			return;
+		}
+		Statement<?> statement = (Statement<?>) ((IStructuredSelection) aSelection).getFirstElement();
+		StatementId statementId = statement.getId();
+		HTMLContentProvider docContentProvider = new HTMLContentProvider(() -> {
+			HolidayCalculatorModel model = ModelProviderHolder.getInstance().getModelProvider().getModel();
+			StatementDocument doc = model.getStatementDocument(statementId);
+			return new HTMLContent(doc.getContent());
+
+		});
+		try {
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(
+					new DocumentEditorInput(docContentProvider), DocumentEditor.EDITOR_ID, true,
+					IWorkbenchPage.MATCH_INPUT);
+		} catch (PartInitException e) {
+			StatusManager.getManager().handle(new Status(IStatus.ERROR, getClass().getName(), e.getMessage(), e),
+					StatusManager.LOG | StatusManager.SHOW);
+		}
 	}
 
 	private void refreshAndPack() {

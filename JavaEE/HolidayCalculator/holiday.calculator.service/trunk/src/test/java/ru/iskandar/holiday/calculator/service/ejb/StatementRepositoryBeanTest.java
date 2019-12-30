@@ -48,7 +48,7 @@ public class StatementRepositoryBeanTest extends JPAHibernateTest {
 		String patronymic = "Владимирович";
 		String login = "user" + UUID.randomUUID().toString();
 		NewUserEntry entry = new NewUserEntry(lastName, firstName, patronymic, new Date(), login);
-		user = _userService.createUser(entry);
+		user = _userService.createUser(entry, Collections.emptySet());
 	}
 
 	/**

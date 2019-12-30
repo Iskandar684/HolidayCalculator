@@ -495,7 +495,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
 					String.format("Пользователь с указанным логином '%s' уже существует", aNewUserEntry.getLogin()));
 		}
 
-		User newUser = _userService.createUser(aNewUserEntry);
+		User newUser = _userService.createUser(aNewUserEntry, aNewUserPermissions);
 		try {
 			_messageSender.send(new UserCreatedEvent(newUser));
 		} catch (JMSException e) {

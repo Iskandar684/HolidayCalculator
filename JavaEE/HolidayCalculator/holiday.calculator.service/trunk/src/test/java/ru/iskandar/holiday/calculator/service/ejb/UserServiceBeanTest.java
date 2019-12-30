@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 
 import javax.persistence.EntityManager;
@@ -52,7 +53,7 @@ public class UserServiceBeanTest extends JPAHibernateTest {
 		String patronymic = "Юлианович";
 		String login = "user1";
 		NewUserEntry entry = new NewUserEntry(lastName, firstName, patronymic, new Date(), login);
-		User user = _service.createUser(entry);
+		User user = _service.createUser(entry, Collections.emptySet());
 		assertNotNull(user);
 		assertEquals(firstName, user.getFirstName());
 		assertEquals(lastName, user.getLastName());
@@ -71,7 +72,7 @@ public class UserServiceBeanTest extends JPAHibernateTest {
 		String patronymic = "Юлианович";
 		String login = "user3";
 		NewUserEntry entry = new NewUserEntry(lastName, firstName, patronymic, new Date(), login);
-		User userByLogin = _service.createUser(entry);
+		User userByLogin = _service.createUser(entry, Collections.emptySet());
 		User findedUser = _service.findUserByLogin(login);
 		assertEquals(userByLogin, findedUser);
 	}
@@ -86,7 +87,7 @@ public class UserServiceBeanTest extends JPAHibernateTest {
 		String patronymic = "Юлианович";
 		String login = "user2";
 		NewUserEntry entry = new NewUserEntry(lastName, firstName, patronymic, new Date(), login);
-		User user = _service.createUser(entry);
+		User user = _service.createUser(entry, Collections.emptySet());
 
 		Collection<User> users = _service.getAllUsers();
 		assertNotNull(users);

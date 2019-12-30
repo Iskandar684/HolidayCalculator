@@ -1,6 +1,7 @@
 package ru.iskandar.holiday.calculator.service.ejb;
 
 import java.util.Collection;
+import java.util.Set;
 
 import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
 import ru.iskandar.holiday.calculator.service.model.user.User;
@@ -33,9 +34,11 @@ public interface IUserService {
 	 *
 	 * @param aNewUserEntry
 	 *            описание создаваемого пользователя
+	 * @param aPermissions
+	 *            полномочия
 	 * @return созданный пользователь
 	 */
-	public User createUser(NewUserEntry aNewUserEntry);
+	public User createUser(NewUserEntry aNewUserEntry, Set<PermissionId> aPermissions);
 
 	/**
 	 * Ищет пользователя с указанным логином

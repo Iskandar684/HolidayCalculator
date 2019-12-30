@@ -19,25 +19,25 @@ public class PermissionId implements Serializable {
 	/**
 	 * Конструктор
 	 *
-	 * @param aUserUUID
+	 * @param aPermissionId
 	 *            идентификатор полномочия
 	 */
-	private PermissionId(String aUserUUID) {
-		_id = aUserUUID;
+	private PermissionId(String aPermissionId) {
+		_id = aPermissionId;
 	}
 
 	/**
 	 * Создает идентификатор полномочия по UUID
 	 *
-	 * @param aUserUUID
-	 *            UUID полномочия
+	 * @param aPermissionId
+	 *            строковый идентификатор полномочия
 	 * @return идентификатор полномочия
 	 * @throws NullPointerException
-	 *             если {@code aUserUUID} {@code null}
+	 *             если aPermissionId == {@code null}
 	 */
-	public static PermissionId from(String aUserUUID) {
-		Objects.requireNonNull(aUserUUID, "Не указан UUID полномочия");
-		return new PermissionId(aUserUUID);
+	public static PermissionId from(String aPermissionId) {
+		Objects.requireNonNull(aPermissionId, "Идентификатор полномочия");
+		return new PermissionId(aPermissionId);
 	}
 
 	/**

@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
 import org.jboss.logging.Logger;
 
@@ -16,7 +16,7 @@ public class UserPermissionsManager {
 	/** Логгер */
 	private static final Logger LOG = Logger.getLogger(UserPermissionsManager.class.getName());
 
-	public void addOrChangePermissions(String aUser, String aPassword, List<String> aPermissions)
+	public void addOrChangePermissions(String aUser, String aPassword, Set<PermissionId> aPermissions)
 			throws HolidayCalculatorException {
 		LOG.info("Назначение полномочий " + aPermissions + " пользователю " + aUser);
 		String jbossHome = System.getProperty("jboss.home.dir");
@@ -29,10 +29,10 @@ public class UserPermissionsManager {
 		builder.append(aPassword);
 		builder.append(" -g ");
 		builder.append("guest");
-		Iterator<String> it = aPermissions.iterator();
+		Iterator<PermissionId> it = aPermissions.iterator();
 		while (it.hasNext()) {
 			builder.append(",");
-			builder.append(it.next());
+			builder.append(it.next().getId());
 		}
 		try {
 			Process process = Runtime.getRuntime().exec(builder.toString());

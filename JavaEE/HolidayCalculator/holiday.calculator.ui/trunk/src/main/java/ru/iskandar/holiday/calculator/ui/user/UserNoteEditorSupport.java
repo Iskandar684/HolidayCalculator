@@ -37,8 +37,7 @@ public class UserNoteEditorSupport extends EditingSupport {
 
 	@Override
 	protected boolean canEdit(Object aElement) {
-		// XXX добавить проверку
-		return true;
+		return _modelProvider.getModel().canCreateUser();
 	}
 
 	@Override

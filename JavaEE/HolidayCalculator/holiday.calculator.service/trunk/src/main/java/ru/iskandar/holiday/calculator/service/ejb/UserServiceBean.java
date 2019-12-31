@@ -57,30 +57,30 @@ public class UserServiceBean implements IUserServiceLocal, IUserServiceRemote {
 	@EJB
 	private ISearchServiceLocal _searchServiceLocal;
 
-	/** Менеджер управления ролями пользователей */
-	private final UserPermissionsManager _userPermissionsManager = new UserPermissionsManager();
-
-	/**
-	 * Конструктор
-	 */
-	public UserServiceBean() {
-	}
-
-	/**
-	 * Конструктор
-	 */
-	UserServiceBean(EntityManager aEntityManager, ISearchServiceLocal aSearchServiceLocal) {
-		_em = Objects.requireNonNull(aEntityManager);
-		_searchServiceLocal = Objects.requireNonNull(aSearchServiceLocal);
-	}
+	/** Менеджер управления полномочиями пользователей */
+	private final IUserPermissionsManager _userPermissionsManager;
 
 	/** Контекст сессии */
 	@Resource
 	private SessionContext _context;
 
 	/**
-	 * {@inheritDoc}
+	 * Конструктор
 	 */
+	public UserServiceBean() {
+		_userPermissionsManager = new UserPermissionsManager();
+	}
+
+	/**
+	 * Конструктор
+	 */
+	UserServiceBean(EntityManager aEntityManager, ISearchServiceLocal aSearchServiceLocal,
+			IUserPermissionsManager aUserPermissionsManager) {
+		_em = Objects.requireNonNull(aEntityManager);
+		_searchServiceLocal = Objects.requireNonNull(aSearchServiceLocal);
+		_userPermissionsManager = Objects.requireNonNull(aUserPermissionsManager);
+	}
+
 	@Override
 	@PermitAll
 	public User getCurrentUser() {

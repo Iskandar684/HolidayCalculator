@@ -68,7 +68,7 @@
 		</dependency>
 		<dependency>
 			<groupId>ru.iskandar.holiday.calculator</groupId>
-			<artifactId>report.service</artifactId>
+			<artifactId>holiday.calculator.report.service</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>

@@ -35,11 +35,15 @@ public class StatementRepositoryBeanTest extends JPAHibernateTest {
 
 	private User user;
 
+	/** Менеджер управления полномочиями пользователей */
+	private IUserPermissionsManager _userPermissionsManager;
+
 	@Before
 	public void setUp() {
 		_searchServiceLocal = mock(ISearchServiceLocal.class);
+		_userPermissionsManager = mock(IUserPermissionsManager.class);
 		EntityManager em = getEntityManager();
-		_userService = new UserServiceBean(em, _searchServiceLocal);
+		_userService = new UserServiceBean(em, _searchServiceLocal, _userPermissionsManager);
 		EntityManagerInjector.inject(_service, em);
 		EntityManagerInjector.inject(_userService, em);
 		em.getTransaction().begin();

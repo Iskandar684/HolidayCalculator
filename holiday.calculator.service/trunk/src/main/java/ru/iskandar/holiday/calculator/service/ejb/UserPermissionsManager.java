@@ -9,13 +9,14 @@ import java.util.Set;
 import org.jboss.logging.Logger;
 
 /**
- * Менеджер управления ролями пользователей.
+ * Менеджер управления полномочиями пользователей.
  */
-public class UserPermissionsManager {
+public class UserPermissionsManager implements IUserPermissionsManager {
 
 	/** Логгер */
 	private static final Logger LOG = Logger.getLogger(UserPermissionsManager.class.getName());
 
+	@Override
 	public void addOrChangePermissions(String aUser, String aPassword, Set<PermissionId> aPermissions)
 			throws HolidayCalculatorException {
 		LOG.info("Назначение полномочий " + aPermissions + " пользователю " + aUser);

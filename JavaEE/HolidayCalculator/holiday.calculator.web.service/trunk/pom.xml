@@ -34,33 +34,6 @@
 	</dependencyManagement>
 
 	<dependencies>
-	    <dependency>
-			<groupId>org.wildfly</groupId>
-			<artifactId>wildfly-ejb3</artifactId>
-			<version>10.1.0.Final</version>
-			<scope>provided</scope>
-		</dependency>
-		<!-- Import the CDI API, we use provided scope as the API is included in 
-			JBoss AS 7 -->
-		<dependency>
-			<groupId>javax.enterprise</groupId>
-			<artifactId>cdi-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- Import the Common Annotations API (JSR-250), we use provided scope 
-			as the API is included in JBoss AS 7 -->
-		<dependency>
-			<groupId>org.jboss.spec.javax.annotation</groupId>
-			<artifactId>jboss-annotations-api_1.1_spec</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<!-- Import the JAX-RS API, we use provided scope as the API is included 
-			in JBoss AS 7 -->
-		<dependency>
-			<groupId>org.jboss.spec.javax.ws.rs</groupId>
-			<artifactId>jboss-jaxrs-api_1.1_spec</artifactId>
-			<scope>provided</scope>
-		</dependency>
 		<dependency>
 			<groupId>ru.iskandar.holiday.calculator</groupId>
 			<artifactId>holiday.calculator.service</artifactId>

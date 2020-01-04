@@ -166,6 +166,8 @@ public class Messages extends NLS {
 
 	public static String passwordLabel;
 
+	public static String permissionsLabel;
+
 	public static String userByLoginAlreadyExistError;
 
 	public static String creatingUserIsEmpty;

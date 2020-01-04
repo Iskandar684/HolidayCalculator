@@ -1,6 +1,7 @@
 package ru.iskandar.holiday.calculator.service.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
@@ -18,6 +19,7 @@ import ru.iskandar.holiday.calculator.service.ejb.PermissionId;
 import ru.iskandar.holiday.calculator.service.ejb.search.SearchServiceException;
 import ru.iskandar.holiday.calculator.service.model.document.DocumentPreviewException;
 import ru.iskandar.holiday.calculator.service.model.document.StatementDocument;
+import ru.iskandar.holiday.calculator.service.model.permissions.Permission;
 import ru.iskandar.holiday.calculator.service.model.permissions.PermissionDeniedException;
 import ru.iskandar.holiday.calculator.service.model.search.ISearchResult;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatement;
@@ -560,6 +562,16 @@ public class HolidayCalculatorModel implements Serializable {
 			throw new PermissionDeniedException("Нет прав на рассмотрение заявлений", e);
 		}
 		return users;
+	}
+
+	/**
+	 * Возвращает все полномочия.
+	 * 
+	 * @return коллекция всех полномочий
+	 */
+	public Collection<PermissionId> getAllPermissions() {
+		return Arrays.asList(PermissionId.from(Permission.CONSIDER), PermissionId.from(Permission.USER_CREATOR),
+				PermissionId.from(Permission.USER_VIEWER));
 	}
 
 	/**

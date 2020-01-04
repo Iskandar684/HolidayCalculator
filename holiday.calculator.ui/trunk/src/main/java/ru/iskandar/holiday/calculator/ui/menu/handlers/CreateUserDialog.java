@@ -1,8 +1,8 @@
 package ru.iskandar.holiday.calculator.ui.menu.handlers;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -19,19 +19,22 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import ru.iskandar.holiday.calculator.service.ejb.PermissionId;
 import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
 import ru.iskandar.holiday.calculator.service.model.user.UserByLoginAlreadyExistException;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.Messages;
 
 /**
- * Диалог аутентификации
+ * Диалог создания пользователя.
  */
 public class CreateUserDialog extends TitleAreaDialog {
 
 	private final HolidayCalculatorModelProvider _modelProvider;
 
 	private NewUserEntry _newUserEntry;
+
+	private PermissionsSelectControl _permissionsSelectControl;
 
 	/**
 	 * Конструктор
@@ -42,9 +45,6 @@ public class CreateUserDialog extends TitleAreaDialog {
 		_modelProvider = aConnectionParams;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected Control createDialogArea(Composite aParent) {
 		getShell().setText(Messages.createUserDialogTitle);
@@ -59,16 +59,14 @@ public class CreateUserDialog extends TitleAreaDialog {
 
 		Label firstNameLabel = new Label(main, SWT.NONE);
 		firstNameLabel.setText(Messages.firstNameLabel);
-		final Text firstNameText = new Text(main, SWT.NONE);
+		firstNameLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+		final Text firstNameText = new Text(main, SWT.BORDER);
 		firstNameText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 		String firstName = getNewUserEntry().getFirstName();
 		firstName = firstName != null ? firstName : "";
 		firstNameText.setText(firstName);
 		firstNameText.addModifyListener(new ModifyListener() {
 
-			/**
-			 * {@inheritDoc}
-			 */
 			@Override
 			public void modifyText(ModifyEvent aE) {
 				getNewUserEntry().setFirstName(firstNameText.getText());
@@ -78,16 +76,14 @@ public class CreateUserDialog extends TitleAreaDialog {
 
 		Label lastNameLabel = new Label(main, SWT.NONE);
 		lastNameLabel.setText(Messages.lastNameLabel);
-		final Text lastNameText = new Text(main, SWT.NONE);
+		lastNameLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+		final Text lastNameText = new Text(main, SWT.BORDER);
 		lastNameText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 		String lastName = getNewUserEntry().getLastName();
 		lastName = lastName != null ? lastName : "";
 		lastNameText.setText(lastName);
 		lastNameText.addModifyListener(new ModifyListener() {
 
-			/**
-			 * {@inheritDoc}
-			 */
 			@Override
 			public void modifyText(ModifyEvent aE) {
 				getNewUserEntry().setLastName(lastNameText.getText());
@@ -97,16 +93,14 @@ public class CreateUserDialog extends TitleAreaDialog {
 
 		Label patronymicLabel = new Label(main, SWT.NONE);
 		patronymicLabel.setText(Messages.patronymicLabel);
-		final Text patronymicText = new Text(main, SWT.NONE);
+		patronymicLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+		final Text patronymicText = new Text(main, SWT.BORDER);
 		patronymicText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 		String patronymic = getNewUserEntry().getPatronymic();
 		patronymic = patronymic != null ? patronymic : "";
 		patronymicText.setText(patronymic);
 		patronymicText.addModifyListener(new ModifyListener() {
 
-			/**
-			 * {@inheritDoc}
-			 */
 			@Override
 			public void modifyText(ModifyEvent aE) {
 				getNewUserEntry().setPatronymic(patronymicText.getText());
@@ -116,16 +110,14 @@ public class CreateUserDialog extends TitleAreaDialog {
 
 		Label loginLabel = new Label(main, SWT.NONE);
 		loginLabel.setText(Messages.loginLabel);
-		final Text loginText = new Text(main, SWT.NONE);
+		loginLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+		final Text loginText = new Text(main, SWT.BORDER);
 		loginText.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 		String login = getNewUserEntry().getLogin();
 		login = login != null ? login : "";
 		loginText.setText(login);
 		loginText.addModifyListener(new ModifyListener() {
 
-			/**
-			 * {@inheritDoc}
-			 */
 			@Override
 			public void modifyText(ModifyEvent aE) {
 				getNewUserEntry().setLogin(loginText.getText());
@@ -135,7 +127,8 @@ public class CreateUserDialog extends TitleAreaDialog {
 
 		Label passwordLabel = new Label(main, SWT.NONE);
 		passwordLabel.setText(Messages.passwordLabel);
-		final Text passwordText = new Text(main, SWT.PASSWORD);
+		passwordLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+		final Text passwordText = new Text(main, SWT.PASSWORD | SWT.BORDER);
 		String password = getNewUserEntry().getPassword();
 		password = password != null ? password : "";
 		passwordText.setText(password);
@@ -144,15 +137,19 @@ public class CreateUserDialog extends TitleAreaDialog {
 
 		passwordText.addModifyListener(new ModifyListener() {
 
-			/**
-			 * {@inheritDoc}
-			 */
 			@Override
 			public void modifyText(ModifyEvent aE) {
 				getNewUserEntry().setPassword(passwordText.getText());
 				updateOkButton();
 			}
 		});
+
+		Label permissionsLb = new Label(main, SWT.NONE);
+		permissionsLb.setText(Messages.permissionsLabel);
+		_permissionsSelectControl = new PermissionsSelectControl(_modelProvider);
+		Control permCtrl = _permissionsSelectControl.create(main);
+		permCtrl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
 		updateOkButton();
 		return main;
 	}
@@ -168,18 +165,12 @@ public class CreateUserDialog extends TitleAreaDialog {
 		return _newUserEntry;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void createButtonsForButtonBar(Composite aParent) {
 		super.createButtonsForButtonBar(aParent);
 		updateOkButton();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void okPressed() {
 		NewUserEntry entry = getNewUserEntry();
@@ -187,8 +178,9 @@ public class CreateUserDialog extends TitleAreaDialog {
 			MessageDialog.openWarning(getShell(), getShell().getText(), Messages.creatingUserIsEmpty);
 			return;
 		}
+		Set<PermissionId> permissions = _permissionsSelectControl.getSelectedPermissions();
 		try {
-			_modelProvider.getModel().createUser(entry, new HashSet<>());
+			_modelProvider.getModel().createUser(entry, permissions);
 		} catch (UserByLoginAlreadyExistException e) {
 			MessageDialog.openError(getShell(), getShell().getText(),
 					NLS.bind(Messages.userByLoginAlreadyExistError, entry.getLogin()));

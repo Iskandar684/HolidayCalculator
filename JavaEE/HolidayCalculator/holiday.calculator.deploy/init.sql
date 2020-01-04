@@ -14,7 +14,7 @@ BEGIN
       FROM   pg_catalog.pg_roles
       WHERE  rolname = 'holiday_calculator_user') THEN
 
-      CREATE ROLE my_user LOGIN PASSWORD 'qwerty';
+      CREATE ROLE holiday_calculator_user LOGIN PASSWORD 'qwerty';
    END IF;
 END
 $do$;

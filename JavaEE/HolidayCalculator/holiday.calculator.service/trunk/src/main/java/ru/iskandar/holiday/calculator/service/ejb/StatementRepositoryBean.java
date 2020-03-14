@@ -97,7 +97,7 @@ public class StatementRepositoryBean implements IStatementRepository {
 		CriteriaBuilder cb = _em.getCriteriaBuilder();
 		CriteriaQuery<HolidayStatementEntity> query = cb.createQuery(HolidayStatementEntity.class);
 		Root<HolidayStatementEntity> root = query.from(HolidayStatementEntity.class);
-		query.where(cb.equal(root.get(HolidayStatementEntity_.author), userEntity));
+		query.where(cb.equal(root.get(HolidayStatementEntity_._author), userEntity));
 		Collection<HolidayStatementEntity> result = _em.createQuery(query).getResultList();
 
 		List<HolidayStatement> statementsByAuthor = new ArrayList<>();
@@ -122,7 +122,7 @@ public class StatementRepositoryBean implements IStatementRepository {
 		CriteriaBuilder cb = _em.getCriteriaBuilder();
 		CriteriaQuery<RecallStatementEntity> query = cb.createQuery(RecallStatementEntity.class);
 		Root<RecallStatementEntity> root = query.from(RecallStatementEntity.class);
-		query.where(cb.equal(root.get(RecallStatementEntity_.author), userEntity));
+		query.where(cb.equal(root.get(RecallStatementEntity_._author), userEntity));
 		Collection<RecallStatementEntity> result = _em.createQuery(query).getResultList();
 
 		List<RecallStatement> statementsByAuthor = new ArrayList<>();
@@ -147,7 +147,7 @@ public class StatementRepositoryBean implements IStatementRepository {
 		CriteriaBuilder cb = _em.getCriteriaBuilder();
 		CriteriaQuery<LeaveStatementEntity> query = cb.createQuery(LeaveStatementEntity.class);
 		Root<LeaveStatementEntity> root = query.from(LeaveStatementEntity.class);
-		query.where(cb.equal(root.get(LeaveStatementEntity_.author), userEntity));
+		query.where(cb.equal(root.get(LeaveStatementEntity_._author), userEntity));
 		Collection<LeaveStatementEntity> result = _em.createQuery(query).getResultList();
 
 		List<LeaveStatement> statementsByAuthor = new ArrayList<>();
@@ -313,7 +313,7 @@ public class StatementRepositoryBean implements IStatementRepository {
 		CriteriaQuery<HolidayStatementEntity> query = cb.createQuery(HolidayStatementEntity.class);
 		Root<HolidayStatementEntity> root = query.from(HolidayStatementEntity.class);
 
-		query.where(root.get(HolidayStatementEntity_.status).in(aStatuses));
+		query.where(root.get(HolidayStatementEntity_._status).in(aStatuses));
 		Collection<HolidayStatementEntity> result = _em.createQuery(query).getResultList();
 
 		List<HolidayStatement> statementsByStatuses = new ArrayList<>();
@@ -335,7 +335,7 @@ public class StatementRepositoryBean implements IStatementRepository {
 		CriteriaQuery<LeaveStatementEntity> query = cb.createQuery(LeaveStatementEntity.class);
 		Root<LeaveStatementEntity> root = query.from(LeaveStatementEntity.class);
 
-		query.where(root.get(LeaveStatementEntity_.status).in(aStatuses));
+		query.where(root.get(LeaveStatementEntity_._status).in(aStatuses));
 		Collection<LeaveStatementEntity> result = _em.createQuery(query).getResultList();
 
 		List<LeaveStatement> statementsByStatuses = new ArrayList<>();
@@ -357,7 +357,7 @@ public class StatementRepositoryBean implements IStatementRepository {
 		CriteriaQuery<RecallStatementEntity> query = cb.createQuery(RecallStatementEntity.class);
 		Root<RecallStatementEntity> root = query.from(RecallStatementEntity.class);
 
-		query.where(root.get(RecallStatementEntity_.status).in(aStatuses));
+		query.where(root.get(RecallStatementEntity_._status).in(aStatuses));
 		Collection<RecallStatementEntity> result = _em.createQuery(query).getResultList();
 
 		List<RecallStatement> statementsByStatuses = new ArrayList<>();

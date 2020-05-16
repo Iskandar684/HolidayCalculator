@@ -1,0 +1,7 @@
+<jboss-deployment-structure>
+   <sub-deployment name="holiday-calculator-web-service.war">
+    <dependencies>
+       <module name="org.apache.commons.io" />
+    </dependencies>
+  </sub-deployment> 
+</jboss-deployment-structure>

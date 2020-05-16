@@ -1,5 +1,13 @@
 package ru.iskandar.holiday.calculator.web.service;
 
+import java.nio.charset.Charset;
+import java.security.Principal;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -12,20 +20,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
 import org.jboss.logging.Logger;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+
 import ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorLocal;
 import ru.iskandar.holiday.calculator.service.ejb.IUserServiceLocal;
-import ru.iskandar.holiday.calculator.service.model.user.UserByLoginNotFoundException;
-import javax.ws.rs.core.Response.Status;
-import java.nio.charset.Charset;
-import java.security.Principal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
 import ru.iskandar.holiday.calculator.service.model.StatementAlreadySendedException;
 import ru.iskandar.holiday.calculator.service.model.document.DocumentPreviewException;
 import ru.iskandar.holiday.calculator.service.model.document.StatementDocument;
@@ -33,13 +33,13 @@ import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEn
 import ru.iskandar.holiday.calculator.service.model.statement.Statement;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
 import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.service.model.user.UserByLoginNotFoundException;
 
 /**
  * Веб-сервис учета отгулов
  *
  * @author Искандар
  */
-@Api
 @Path("/")
 @Stateless
 public class HolidayCalculatorWebService {
@@ -266,14 +266,6 @@ public class HolidayCalculatorWebService {
                     e);
         }
         return new HTMLDocument(new String(document.getContent(), Charset.forName("utf-8")));
-    }
-
-    @ApiOperation(value = "Echoes message back from Holiday Calculator")
-    @GET
-    @Path("/print/{param}")
-    public Response printMessage(@PathParam("param") String msg) {
-        String result = "Echoing: " + msg;
-        return Response.status(200).entity(result).build();
     }
 
 }

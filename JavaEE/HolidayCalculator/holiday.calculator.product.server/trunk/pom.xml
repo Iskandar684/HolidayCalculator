@@ -647,6 +647,12 @@
 			<artifactId>commons-logging</artifactId>
 			<version>1.1.1</version>
 		</dependency>
+		<!-- swagger2 (openAPI) -->
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.10.1</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -1762,6 +1768,16 @@
 									<overWrite>true</overWrite>
 									<outputDirectory>${ear.lib.dir}</outputDirectory>
 									<destFileName>org.apache.commons.logging_1.1.1.jar</destFileName>
+								</artifactItem>
+						        <!-- библиотека для swagger2 (Open API)-->
+								<artifactItem>
+								    <groupId>com.fasterxml.jackson.core</groupId>
+                                    <artifactId>jackson-annotations</artifactId>
+                                    <version>2.10.1</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${modules.dir}/system/layers/base/com/fasterxml/jackson/core/jackson-annotations/main/</outputDirectory>
+									<destFileName>jackson-annotations-2.10.1.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
 						</configuration>

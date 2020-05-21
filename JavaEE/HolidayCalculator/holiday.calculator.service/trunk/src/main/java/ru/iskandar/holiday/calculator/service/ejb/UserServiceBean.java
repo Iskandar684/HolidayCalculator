@@ -39,174 +39,182 @@ import ru.iskandar.holiday.calculator.service.model.user.UserId;
 
 /**
  * Сервис работы с пользователями
- *
  */
 @Stateless
 @Local(IUserServiceLocal.class)
 @Remote(IUserServiceRemote.class)
 public class UserServiceBean implements IUserServiceLocal, IUserServiceRemote {
 
-	/** Логгер */
-	private static final Logger LOG = Logger.getLogger(UserServiceBean.class.getName());
+    /** Логгер */
+    private static final Logger LOG = Logger.getLogger(UserServiceBean.class.getName());
 
-	/** Менеджер сущностей */
-	@PersistenceContext
-	private EntityManager _em;
+    /** Менеджер сущностей */
+    @PersistenceContext
+    private EntityManager _em;
 
-	/** Сервис поиска */
-	@EJB
-	private ISearchServiceLocal _searchServiceLocal;
+    /** Сервис поиска */
+    @EJB
+    private ISearchServiceLocal _searchServiceLocal;
 
-	/** Менеджер управления полномочиями пользователей */
-	private final IUserPermissionsManager _userPermissionsManager;
+    /** Менеджер управления полномочиями пользователей */
+    private final IUserPermissionsManager _userPermissionsManager;
 
-	/** Контекст сессии */
-	@Resource
-	private SessionContext _context;
+    /** Контекст сессии */
+    @Resource
+    private SessionContext _context;
 
-	/**
-	 * Конструктор
-	 */
-	public UserServiceBean() {
-		_userPermissionsManager = new UserPermissionsManager();
-	}
+    /**
+     * Конструктор
+     */
+    public UserServiceBean() {
+        _userPermissionsManager = new UserPermissionsManager();
+    }
 
-	/**
-	 * Конструктор
-	 */
-	UserServiceBean(EntityManager aEntityManager, ISearchServiceLocal aSearchServiceLocal,
-			IUserPermissionsManager aUserPermissionsManager) {
-		_em = Objects.requireNonNull(aEntityManager);
-		_searchServiceLocal = Objects.requireNonNull(aSearchServiceLocal);
-		_userPermissionsManager = Objects.requireNonNull(aUserPermissionsManager);
-	}
+    /**
+     * Конструктор
+     */
+    UserServiceBean(EntityManager aEntityManager, ISearchServiceLocal aSearchServiceLocal,
+            IUserPermissionsManager aUserPermissionsManager) {
+        _em = Objects.requireNonNull(aEntityManager);
+        _searchServiceLocal = Objects.requireNonNull(aSearchServiceLocal);
+        _userPermissionsManager = Objects.requireNonNull(aUserPermissionsManager);
+    }
 
-	@Override
-	@PermitAll
-	public User getCurrentUser() {
+    @Override
+    @PermitAll
+    public User getCurrentUser() {
 
-		Principal principal = _context.getCallerPrincipal();
-		String login = principal.getName();
+        Principal principal = _context.getCallerPrincipal();
+        String login = principal.getName();
 
-		CriteriaBuilder cb = _em.getCriteriaBuilder();
-		CriteriaQuery<UserEntity> cq = cb.createQuery(UserEntity.class);
-		Root<UserEntity> from = cq.from(UserEntity.class);
+        CriteriaBuilder cb = _em.getCriteriaBuilder();
+        CriteriaQuery<UserEntity> cq = cb.createQuery(UserEntity.class);
+        Root<UserEntity> from = cq.from(UserEntity.class);
 
-		Predicate predicate = cb.equal(from.get(UserEntity_.login), login);
+        Predicate predicate = cb.equal(from.get(UserEntity_.login), login);
 
-		cq.where(predicate);
-		cq.select(from);
-		TypedQuery<UserEntity> q = _em.createQuery(cq);
-		UserEntity entity;
-		try {
-			entity = q.getSingleResult();
-		} catch (NoResultException e) {
-			throw new UserByLoginNotFoundException(String.format("Пользователь с логином %s не найден", login));
-		}
-		User user = new EntityBasedUserFactory(entity).create();
+        cq.where(predicate);
+        cq.select(from);
+        TypedQuery<UserEntity> q = _em.createQuery(cq);
+        UserEntity entity;
+        try {
+            entity = q.getSingleResult();
+        } catch (NoResultException e) {
+            throw new UserByLoginNotFoundException(
+                    String.format("Пользователь с логином %s не найден", login));
+        }
+        User user = new EntityBasedUserFactory(entity).create();
 
-		return user;
-	}
+        return user;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Collection<User> getAllUsers() {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Collection<User> getAllUsers() {
 
-		CriteriaBuilder cb = _em.getCriteriaBuilder();
-		CriteriaQuery<UserEntity> cq = cb.createQuery(UserEntity.class);
-		Root<UserEntity> from = cq.from(UserEntity.class);
-		cq.select(from);
-		TypedQuery<UserEntity> q = _em.createQuery(cq);
-		List<UserEntity> result = q.getResultList();
+        CriteriaBuilder cb = _em.getCriteriaBuilder();
+        CriteriaQuery<UserEntity> cq = cb.createQuery(UserEntity.class);
+        Root<UserEntity> from = cq.from(UserEntity.class);
+        cq.select(from);
+        TypedQuery<UserEntity> q = _em.createQuery(cq);
+        List<UserEntity> result = q.getResultList();
 
-		List<User> allUsers = new ArrayList<>();
-		for (UserEntity entity : result) {
-			User user = new EntityBasedUserFactory(entity).create();
-			allUsers.add(user);
-		}
+        List<User> allUsers = new ArrayList<>();
+        for (UserEntity entity : result) {
+            User user = new EntityBasedUserFactory(entity).create();
+            allUsers.add(user);
+        }
 
-		return allUsers;
-	}
+        return allUsers;
+    }
 
-	@Override
-	public User createUser(NewUserEntry aNewUserEntry, Set<PermissionId> aPermissions) {
-		Objects.requireNonNull(aNewUserEntry);
-		UserEntity entity = new NewUserEntityFactory(aNewUserEntry).create();
-		_em.persist(entity);
-		try {
-			_userPermissionsManager.addOrChangePermissions(aNewUserEntry.getLogin(), aNewUserEntry.getPassword(),
-					aPermissions);
-		} catch (HolidayCalculatorException e) {
-			LOG.error(e.getMessage(), e);
-		}
-		User user = new EntityBasedUserFactory(entity).create();
-		try {
-			_searchServiceLocal.addOrUpdate(user);
-		} catch (SearchServiceException e) {
-			LOG.error(e.getMessage(), e);
-		}
-		return user;
-	}
+    @Override
+    public User createUser(NewUserEntry aNewUserEntry, Set<PermissionId> aPermissions) {
+        Objects.requireNonNull(aNewUserEntry);
+        UserEntity entity = new NewUserEntityFactory(aNewUserEntry).create();
+        _em.persist(entity);
+        try {
+            _userPermissionsManager.addOrChangePermissions(aNewUserEntry.getLogin(),
+                    aNewUserEntry.getPassword(), aPermissions);
+        } catch (HolidayCalculatorException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        User user = new EntityBasedUserFactory(entity).create();
+        try {
+            _searchServiceLocal.addOrUpdate(user);
+        } catch (SearchServiceException e) {
+            String mess =
+                    String.format("Ошибка добавления созданного пользователя [%s] в Elastic Search",
+                            aNewUserEntry);
+            LOG.debug(mess, e);
+            LOG.warn(mess + ": " + e.getLocalizedMessage());
+        }
+        return user;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public User findUserByLogin(String aLogin) {
-		Objects.requireNonNull(aLogin);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public User findUserByLogin(String aLogin) {
+        Objects.requireNonNull(aLogin);
 
-		CriteriaBuilder cb = _em.getCriteriaBuilder();
-		CriteriaQuery<UserEntity> cq = cb.createQuery(UserEntity.class);
-		Root<UserEntity> from = cq.from(UserEntity.class);
-		cq.select(from);
+        CriteriaBuilder cb = _em.getCriteriaBuilder();
+        CriteriaQuery<UserEntity> cq = cb.createQuery(UserEntity.class);
+        Root<UserEntity> from = cq.from(UserEntity.class);
+        cq.select(from);
 
-		Predicate loginEqual = cb.equal(from.get(UserEntity_.login), aLogin);
-		cq.where(loginEqual);
+        Predicate loginEqual = cb.equal(from.get(UserEntity_.login), aLogin);
+        cq.where(loginEqual);
 
-		TypedQuery<UserEntity> q = _em.createQuery(cq);
-		UserEntity entity;
-		try {
-			entity = q.getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
-		User user = new EntityBasedUserFactory(entity).create();
-		return user;
-	}
+        TypedQuery<UserEntity> q = _em.createQuery(cq);
+        UserEntity entity;
+        try {
+            entity = q.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+        User user = new EntityBasedUserFactory(entity).create();
+        return user;
+    }
 
-	private UserEntity findUser(UserId aId) {
-		Objects.requireNonNull(aId);
+    private UserEntity findUser(UserId aId) {
+        Objects.requireNonNull(aId);
 
-		CriteriaBuilder cb = _em.getCriteriaBuilder();
-		CriteriaQuery<UserEntity> cq = cb.createQuery(UserEntity.class);
-		Root<UserEntity> from = cq.from(UserEntity.class);
-		cq.select(from);
+        CriteriaBuilder cb = _em.getCriteriaBuilder();
+        CriteriaQuery<UserEntity> cq = cb.createQuery(UserEntity.class);
+        Root<UserEntity> from = cq.from(UserEntity.class);
+        cq.select(from);
 
-		Predicate loginEqual = cb.equal(from.get(UserEntity_.uuid), aId.getUUID());
-		cq.where(loginEqual);
+        Predicate loginEqual = cb.equal(from.get(UserEntity_.uuid), aId.getUUID());
+        cq.where(loginEqual);
 
-		TypedQuery<UserEntity> q = _em.createQuery(cq);
-		UserEntity entity;
-		try {
-			entity = q.getSingleResult();
-		} catch (NoResultException e) {
-			throw new UserByIdNotFoundException(String.format("Пользователь с id=%s не найден.", aId), e);
-		}
-		return entity;
-	}
+        TypedQuery<UserEntity> q = _em.createQuery(cq);
+        UserEntity entity;
+        try {
+            entity = q.getSingleResult();
+        } catch (NoResultException e) {
+            throw new UserByIdNotFoundException(
+                    String.format("Пользователь с id=%s не найден.", aId), e);
+        }
+        return entity;
+    }
 
-	@Override
-	public void changeNote(UserId aUserId, String aNewNote) {
-		UserEntity userEntity = findUser(aUserId);
-		userEntity.setNote(aNewNote);
-		User user = new EntityBasedUserFactory(userEntity).create();
-		try {
-			_searchServiceLocal.addOrUpdate(user);
-		} catch (SearchServiceException e) {
-			LOG.error(e.getMessage(), e);
-		}
-	}
+    @Override
+    public void changeNote(UserId aUserId, String aNewNote) {
+        UserEntity userEntity = findUser(aUserId);
+        userEntity.setNote(aNewNote);
+        User user = new EntityBasedUserFactory(userEntity).create();
+        try {
+            _searchServiceLocal.addOrUpdate(user);
+        } catch (SearchServiceException e) {
+            String mess = String.format(
+                    "Ошибка добавления примечания пользователя [%s] в Elastic Search", aUserId);
+            LOG.debug(mess, e);
+            LOG.warn(mess + ": " + e.getLocalizedMessage());
+        }
+    }
 
 }

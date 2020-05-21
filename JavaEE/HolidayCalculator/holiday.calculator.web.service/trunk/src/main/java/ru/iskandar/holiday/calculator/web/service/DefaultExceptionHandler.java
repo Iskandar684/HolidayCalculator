@@ -17,16 +17,7 @@ public class DefaultExceptionHandler implements ExceptionMapper<Exception> {
 
     @Override
     public Response toResponse(Exception e) {
-        StringBuilder response = new StringBuilder("<response>");
-        response.append("<status>ERROR</status>");
-        response.append("<message>" + e.getMessage() + "</message>");
-        response.append("</response>");
-        return Response.status(toStatus(e)).entity(response.toString())
-                .type(MediaType.APPLICATION_XML).build();
-    }
-
-    private Response.Status toStatus(Exception aException) {
-        Throwable cause = getFirstCause(aException);
+        Throwable cause = getFirstCause(e);
         Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
         if (cause instanceof EJBAccessException) {
             status = Response.Status.FORBIDDEN;
@@ -39,7 +30,9 @@ public class DefaultExceptionHandler implements ExceptionMapper<Exception> {
         } else if (cause instanceof UserByLoginNotFoundException) {
             status = Response.Status.UNAUTHORIZED;
         }
-        return status;
+        ErrorResponse errResp = ErrorResponse.builder().message("Ошибка")
+                .code(status.getStatusCode()).description(cause.getMessage()).build();
+        return Response.status(status).entity(errResp).type(MediaType.APPLICATION_JSON).build();
     }
 
     private Throwable getFirstCause(Exception aException) {

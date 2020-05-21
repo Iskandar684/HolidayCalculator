@@ -37,6 +37,7 @@
 
 
 	<modules>
+	    <module>holiday.calculator.building.bom</module>
 		<module>org.eclipse.birt.runtime/trunk</module>
 		<module>holiday.calculator.report.service/trunk</module>
 		<module>holiday.calculator.service/trunk</module>

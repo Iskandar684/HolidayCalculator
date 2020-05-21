@@ -10,7 +10,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.forms;bundle-version="3.6.200",
  ru.iskandar.holiday.calculator.client-libraries;bundle-version="[1.0.0,1.0.1)",
- org.eclipse.core.expressions;bundle-version="[3.4.300,3.6.100)",
+ org.eclipse.core.expressions;bundle-version="[3.4.300,3.8.100)",
  org.eclipse.nebula.widgets.datechooser;bundle-version="[1.0.0,1.1.0)",
  org.eclipse.core.resources,
  org.eclipse.nebula.widgets.grid;bundle-version="1.1.0"

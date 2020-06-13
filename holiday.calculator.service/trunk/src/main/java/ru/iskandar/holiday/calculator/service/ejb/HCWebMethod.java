@@ -1,4 +1,4 @@
-package ru.iskandar.holiday.calculator.web.service;
+package ru.iskandar.holiday.calculator.service.ejb;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

@@ -106,19 +106,6 @@ public class HolidayCalculatorWebService {
         return logged;
     }
 
-    @GET
-    @Path("/user")
-    @Produces({MediaType.APPLICATION_JSON})
-    @PermitAll
-    @HCWebMethod(errMess = "Ошибка получения текущего пользователя.")
-    public User getUser() {
-        User user = _userService.getCurrentUser();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getUser UserPrincipal " + _request.getUserPrincipal());
-        }
-        return user;
-    }
-
     /**
      * Возвращает количество отгулов у текущего пользователя
      *

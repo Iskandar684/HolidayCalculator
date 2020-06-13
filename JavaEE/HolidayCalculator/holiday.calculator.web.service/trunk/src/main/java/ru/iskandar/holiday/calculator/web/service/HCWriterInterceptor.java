@@ -11,6 +11,7 @@ import javax.ws.rs.ext.WriterInterceptorContext;
 import org.jboss.resteasy.core.ResourceInvoker;
 
 import lombok.extern.jbosslog.JBossLog;
+import ru.iskandar.holiday.calculator.service.ejb.HCWebMethod;
 
 @Provider
 @JBossLog

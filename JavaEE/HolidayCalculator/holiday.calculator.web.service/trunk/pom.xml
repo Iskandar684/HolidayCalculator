@@ -60,7 +60,6 @@
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxrs</artifactId>
-			<version>3.12.1.Final</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- Тестирование -->

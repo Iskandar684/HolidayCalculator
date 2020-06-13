@@ -4,176 +4,93 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+import javax.ws.rs.FormParam;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 /**
  * Описание для создания нового пользователя
  */
+@Getter
+@Setter
+@Accessors(prefix = "_")
+@NoArgsConstructor
 public class NewUserEntry implements Serializable {
 
-	/**
-	 * Идентификатор для сериализации
-	 */
-	private static final long serialVersionUID = 7550226147547113824L;
+    /**
+     * Идентификатор для сериализации
+     */
+    private static final long serialVersionUID = 7550226147547113824L;
 
-	/** Имя */
-	private String _firstName;
-	/** Фамилия */
-	private String _lastName;
-	/** Отчество */
-	private String _patronymic;
+    /** Имя */
+    @FormParam("firstName")
+    private String _firstName;
 
-	/** Дата приема на работу */
-	private Date _employmentDate = new Date();
+    /** Фамилия */
+    @FormParam("lastName")
+    private String _lastName;
 
-	/** Логин */
-	private String _login;
+    /** Отчество */
+    @FormParam("patronymic")
+    private String _patronymic;
 
-	/** Пароль */
-	private String _password;
+    /** Дата приема на работу */
+   // @FormParam("employmentDate")
+    private Date _employmentDate = new Date();
 
-	/** Примечание */
-	private String _note;
+    /** Логин */
+    @FormParam("login")
+    private String _login;
 
-	/**
-	 * Конструктор
-	 */
-	public NewUserEntry(String aLastName, String aFirstName, String aPatronymic, Date aEmploymentDate, String aLogin) {
-		Objects.requireNonNull(aLastName);
-		Objects.requireNonNull(aFirstName);
-		Objects.requireNonNull(aPatronymic);
-		Objects.requireNonNull(aEmploymentDate);
-		Objects.requireNonNull(aLogin);
-		_firstName = aFirstName;
-		_lastName = aLastName;
-		_patronymic = aPatronymic;
-		_employmentDate = aEmploymentDate;
-		_login = aLogin;
-	}
+    /** Пароль */
+    @FormParam("password")
+    private String _password;
 
-	/**
-	 * Конструктор
-	 */
-	public NewUserEntry() {
-	}
+    /** Примечание */
+    @FormParam("note")
+    private String _note;
 
-	/**
-	 * @return the firstName
-	 */
-	public String getFirstName() {
-		return _firstName;
-	}
+    /**
+     * Конструктор
+     */
+    public NewUserEntry(String aLastName, String aFirstName, String aPatronymic,
+            Date aEmploymentDate, String aLogin) {
+        Objects.requireNonNull(aLastName);
+        Objects.requireNonNull(aFirstName);
+        Objects.requireNonNull(aPatronymic);
+        Objects.requireNonNull(aEmploymentDate);
+        Objects.requireNonNull(aLogin);
+        _firstName = aFirstName;
+        _lastName = aLastName;
+        _patronymic = aPatronymic;
+        _employmentDate = aEmploymentDate;
+        _login = aLogin;
+    }
 
-	/**
-	 * @return the lastName
-	 */
-	public String getLastName() {
-		return _lastName;
-	}
+    public boolean isEmpty() {
+        if ((getLogin() == null) || getLogin().isEmpty()) {
+                return true;
+        }
+        if ((getFirstName() == null) || getFirstName().isEmpty()) {
+                return true;
+        }
+        if ((getLastName() == null) || getLastName().isEmpty()) {
+                return true;
+        }
+        if ((getPatronymic() == null) || getPatronymic().isEmpty()) {
+                return true;
+        }
+        if (getEmploymentDate() == null) {
+                return true;
+        }
 
-	/**
-	 * @return the patronymic
-	 */
-	public String getPatronymic() {
-		return _patronymic;
-	}
-
-	/**
-	 * @return the employmentDate
-	 */
-	public Date getEmploymentDate() {
-		return _employmentDate;
-	}
-
-	/**
-	 * @return the login
-	 */
-	public String getLogin() {
-		return _login;
-	}
-
-	/**
-	 * @param aFirstName
-	 *            the firstName to set
-	 */
-	public void setFirstName(String aFirstName) {
-		_firstName = aFirstName;
-	}
-
-	/**
-	 * @param aLastName
-	 *            the lastName to set
-	 */
-	public void setLastName(String aLastName) {
-		_lastName = aLastName;
-	}
-
-	/**
-	 * @param aPatronymic
-	 *            the patronymic to set
-	 */
-	public void setPatronymic(String aPatronymic) {
-		_patronymic = aPatronymic;
-	}
-
-	/**
-	 * @param aEmploymentDate
-	 *            the employmentDate to set
-	 */
-	public void setEmploymentDate(Date aEmploymentDate) {
-		_employmentDate = aEmploymentDate;
-	}
-
-	/**
-	 * @param aLogin
-	 *            the login to set
-	 */
-	public void setLogin(String aLogin) {
-		_login = aLogin;
-	}
-
-	/**
-	 * @return the password
-	 */
-	public String getPassword() {
-		return _password;
-	}
-
-	/**
-	 * @param aPassword
-	 *            the password to set
-	 */
-	public void setPassword(String aPassword) {
-		_password = aPassword;
-	}
-
-	public String getNote() {
-		return _note;
-	}
-
-	public void setNote(String aNote) {
-		_note = aNote;
-	}
-
-	public boolean isEmpty() {
-		if ((getLogin() == null) || getLogin().isEmpty()) {
-			return true;
-		}
-		if ((getFirstName() == null) || getFirstName().isEmpty()) {
-			return true;
-		}
-		if ((getLastName() == null) || getLastName().isEmpty()) {
-			return true;
-		}
-		if ((getPatronymic() == null) || getPatronymic().isEmpty()) {
-			return true;
-		}
-		if (getEmploymentDate() == null) {
-			return true;
-		}
-
-		if ((getPassword() == null) || getPassword().isEmpty()) {
-			return true;
-		}
-		return false;
-	}
+        if ((getPassword() == null) || getPassword().isEmpty()) {
+                return true;
+        }
+        return false;
+}
 
 }

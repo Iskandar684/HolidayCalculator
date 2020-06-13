@@ -6,6 +6,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import lombok.extern.jbosslog.JBossLog;
 import ru.iskandar.holiday.calculator.service.model.StatementAlreadyConsideredException;
 import ru.iskandar.holiday.calculator.service.model.StatementAlreadySendedException;
 import ru.iskandar.holiday.calculator.service.model.StatementNotFoundException;
@@ -13,10 +14,12 @@ import ru.iskandar.holiday.calculator.service.model.user.UserByIdNotFoundExcepti
 import ru.iskandar.holiday.calculator.service.model.user.UserByLoginNotFoundException;
 
 @Provider
+@JBossLog
 public class DefaultExceptionHandler implements ExceptionMapper<Exception> {
 
     @Override
     public Response toResponse(Exception e) {
+        log.error(e.getMessage(), e);
         Throwable cause = getFirstCause(e);
         Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
         if (cause instanceof EJBAccessException) {

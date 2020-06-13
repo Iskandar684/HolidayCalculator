@@ -531,6 +531,12 @@
 				<version>2.1</version>
 				<scope>provided</scope>
 			</dependency>
+			<dependency>
+			    <groupId>org.jboss.resteasy</groupId>
+			    <artifactId>resteasy-jaxrs</artifactId>
+			    <version>3.12.1.Final</version>
+			    <scope>provided</scope>
+		    </dependency>
 			<!-- Open API (Swagger 2) -->
 			<dependency>
 				<groupId>io.swagger.core.v3</groupId>

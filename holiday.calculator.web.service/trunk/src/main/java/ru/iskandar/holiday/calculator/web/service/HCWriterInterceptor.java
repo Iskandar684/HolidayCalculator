@@ -25,11 +25,13 @@ public class HCWriterInterceptor implements WriterInterceptor {
         if (entity instanceof ErrorResponse) {
             ResourceInvoker invoker = (ResourceInvoker) ctx
                     .getProperty("org.jboss.resteasy.core.ResourceMethodInvoker");
-            Method m = invoker.getMethod();
-            HCWebMethod webMethodAnnotation = m.getAnnotation(HCWebMethod.class);
-            if (webMethodAnnotation != null) {
-                ((ErrorResponse) entity).setMessage(webMethodAnnotation.errMess());
-                ctx.setEntity(entity);
+            if (invoker != null) {
+                Method m = invoker.getMethod();
+                HCWebMethod webMethodAnnotation = m.getAnnotation(HCWebMethod.class);
+                if (webMethodAnnotation != null) {
+                    ((ErrorResponse) entity).setMessage(webMethodAnnotation.errMess());
+                    ctx.setEntity(entity);
+                }
             }
         }
         ctx.proceed();

@@ -29,9 +29,6 @@ public class UserCreatedEvent extends HolidayCalculatorEvent {
     @XmlElement(name = "id")
     private final String _id = "UserCreatedEvent";
 
-    @XmlElement(name = "name")
-    private final String _name = "новый сотрудник";
-
     /** Созданный пользователь */
     @NonNull
     private final User _createdUser;

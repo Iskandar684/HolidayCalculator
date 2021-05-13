@@ -29,9 +29,6 @@ public class StatementContentChangedEvent extends HolidayCalculatorEvent {
     @XmlElement(name = "id")
     private final String _id = "StatementContentChangedEvent";
 
-    @XmlElement(name = "name")
-    private final String _name = "изменение содержания заявления";
-
     @NonNull
     private final StatementEntry _statementEntry;
 

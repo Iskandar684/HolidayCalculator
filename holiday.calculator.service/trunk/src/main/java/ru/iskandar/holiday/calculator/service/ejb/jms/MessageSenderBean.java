@@ -26,7 +26,6 @@ import javax.ws.rs.sse.SseEventSink;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 
@@ -65,7 +64,6 @@ public class MessageSenderBean {
         _objectMapper.registerModule(new JaxbAnnotationModule());
         _objectMapper.setConfig(_objectMapper.getSerializationConfig()
                 .with(new SimpleDateFormat(DateUtils.DATE_TIME_FORMAT)));
-        _objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         _sseBroadcaster = _sse.newBroadcaster();
     }
 
@@ -103,10 +101,8 @@ public class MessageSenderBean {
                 .mediaType(
                         MediaType.APPLICATION_JSON_TYPE.withCharset(StandardCharsets.UTF_8.name()))
                 .id(aEvent.getId())//
-                .name(aEvent.getName())//
                 .data(eventData)//
                 .reconnectDelay(10000)//
-                .comment(aEvent.getDescription())//
                 .build();
         _sseBroadcaster.broadcast(event);
     }

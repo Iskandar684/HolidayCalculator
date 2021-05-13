@@ -29,9 +29,6 @@ public class StatementSendedEvent extends HolidayCalculatorEvent {
     @XmlElement(name = "id")
     private final String _id = "StatementSendedEvent";
 
-    @XmlElement(name = "name")
-    private final String _name = "новое заявление";
-
     /** Заявление, связанное с событием */
     @NonNull
     private final Statement<?> _affectedStatement;

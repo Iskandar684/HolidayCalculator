@@ -524,6 +524,21 @@
 				<artifactId>commons-logging</artifactId>
 				<version>1.1.1</version>
 			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>2.11.1</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.module</groupId>
+				<artifactId>jackson-module-jaxb-annotations</artifactId>
+				<version>2.10.1</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.datatype</groupId>
+				<artifactId>jackson-datatype-jsr310</artifactId>
+				<version>2.10.1</version>
+			</dependency>
 			<!-- REST -->
 			<dependency>
 				<groupId>javax.ws.rs</groupId>
@@ -532,11 +547,11 @@
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-			    <groupId>org.jboss.resteasy</groupId>
-			    <artifactId>resteasy-jaxrs</artifactId>
-			    <version>3.12.1.Final</version>
-			    <scope>provided</scope>
-		    </dependency>
+				<groupId>org.jboss.resteasy</groupId>
+				<artifactId>resteasy-jaxrs</artifactId>
+				<version>3.12.1.Final</version>
+				<scope>provided</scope>
+			</dependency>
 			<!-- Open API (Swagger 2) -->
 			<dependency>
 				<groupId>io.swagger.core.v3</groupId>

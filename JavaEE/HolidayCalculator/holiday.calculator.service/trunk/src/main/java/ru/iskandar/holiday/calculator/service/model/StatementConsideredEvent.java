@@ -29,9 +29,6 @@ public class StatementConsideredEvent extends HolidayCalculatorEvent {
     @XmlElement(name = "id")
     private final String _id = "StatementConsideredEvent";
 
-    @XmlElement(name = "name")
-    private final String _name = "рассмотрение заявления";
-
     /** Заявление, связанное с событием */
     @NonNull
     private final Statement<?> _affectedStatement;
@@ -42,7 +39,7 @@ public class StatementConsideredEvent extends HolidayCalculatorEvent {
         StatementType type = _affectedStatement.getStatementType();
         String createDate = DateUtils.format(_affectedStatement.getCreateDate());
         return String.format("%s от %s было рассмотрено начальником %s.", type.getDescription(),
-                createDate, _affectedStatement.getConsider());
+                createDate, _affectedStatement.getConsider().getFIO());
     }
 
 }

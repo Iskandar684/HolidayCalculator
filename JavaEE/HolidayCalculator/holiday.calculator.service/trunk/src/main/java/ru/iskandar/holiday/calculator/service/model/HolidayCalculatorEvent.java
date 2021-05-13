@@ -31,8 +31,6 @@ public abstract class HolidayCalculatorEvent implements Serializable {
 
     public abstract String getId();
 
-    public abstract String getName();
-
     public abstract String getDescription();
 
 }

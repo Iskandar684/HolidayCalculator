@@ -1,20 +1,39 @@
 var url = "http://127.0.0.1:8080/holiday-calculator-web-service/";
 
-$(document).ready(function () {
-    $('#loginBt').click(function () {
-        openAuthorizationDialog();
-    });
-    $('#logoutBt').click(function () {
-        logout();
-    });
-    $('#takeHolidayBt').click(function () {
-        openTakeHolidayDialog();
-    });
-    $('#myStatementsBt').click(function () {
-        openMyStatements();
-    });
-    checkAndReload();
+$(document).ready(function() {
+	$('#loginBt').click(function() {
+		openAuthorizationDialog();
+	});
+	$('#logoutBt').click(function() {
+		logout();
+	});
+	$('#takeHolidayBt').click(function() {
+		openTakeHolidayDialog();
+	});
+	$('#myStatementsBt').click(function() {
+		openMyStatements();
+	});
+	subscribeToServerEvents();
+	checkAndReload();
 });
+
+function subscribeToServerEvents() {
+	console.log("subscribeToServerEvents");
+	if (!window.EventSource) {
+		// Internet Explorer или устаревшие браузеры
+		alert("Ваш браузер не поддерживает EventSource.");
+		return;
+	}
+	let eventSource = new EventSource(
+			"/holiday-calculator-web-service/subscribeToAllEvents");
+
+	eventSource.onmessage = function(event) {
+		console.log("Новое сообщение: " + event.data);
+		var obj = $.parseJSON(event.data);
+		alert(obj["description"]);
+	};
+
+}
 
 function clearStatements() {
     jQuery('#myStatements div').html('');

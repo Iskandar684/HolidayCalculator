@@ -131,7 +131,7 @@ public class DateUtilsTest {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2021);
         cal.set(Calendar.MONTH, Calendar.MAY);
-        cal.set(Calendar.DAY_OF_WEEK, 13);
+        cal.set(Calendar.DAY_OF_MONTH, 14);
         cal.set(Calendar.HOUR_OF_DAY, 15);
         cal.set(Calendar.MINUTE, 20);
         cal.set(Calendar.SECOND, 30);

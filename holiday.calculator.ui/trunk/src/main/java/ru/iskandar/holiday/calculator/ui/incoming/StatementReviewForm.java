@@ -52,304 +52,317 @@ import ru.iskandar.holiday.calculator.ui.takeholiday.HTMLDocumentViewer;
  */
 public class StatementReviewForm {
 
-	/** Инструментарий для создания пользовательского интерфейса */
-	private FormToolkit _toolkit;
+    /** Инструментарий для создания пользовательского интерфейса */
+    private FormToolkit _toolkit;
 
-	/** Поставщик модели */
-	private final HolidayCalculatorModelProvider _modelProvider;
+    /** Поставщик модели */
+    private final HolidayCalculatorModelProvider _modelProvider;
 
-	private final IStatementProvider _statementProvider;
+    private final IStatementProvider _statementProvider;
 
-	private Button _approveBt;
-	private Button _rejectBt;
+    private Button _approveBt;
 
-	DateChooser _dateChooser;
+    private Button _rejectBt;
 
-	/** Поставщик содержимого документа заявления на отгул */
-	private final HTMLContentProvider _statementDocumentContentProvider;
+    DateChooser _dateChooser;
 
-	private class DocContentLoader implements Callable<HTMLContent> {
+    /** Поставщик содержимого документа заявления на отгул */
+    private final HTMLContentProvider _statementDocumentContentProvider;
 
-		@Override
-		public HTMLContent call() throws Exception {
-			Statement<?> statement = _statementProvider.getStatement();
-			if (statement == null) {
-				return HTMLContent.EMPTY;
-			}
-			HolidayCalculatorModel model = _modelProvider.getModel();
-			StatementDocument doc = model.getStatementDocument(statement.getId());
-			return new HTMLContent(doc.getContent());
-		}
-	}
+    private class DocContentLoader implements Callable<HTMLContent> {
 
-	/**
-	 * Конструктор
-	 */
-	public StatementReviewForm(HolidayCalculatorModelProvider aModelProvider, IStatementProvider aStatementProvider) {
-		_modelProvider = Objects.requireNonNull(aModelProvider);
-		_statementProvider = Objects.requireNonNull(aStatementProvider);
-		_statementDocumentContentProvider = new HTMLContentProvider(new DocContentLoader());
-	}
+        @Override
+        public HTMLContent call() throws Exception {
+            Statement<?> statement = _statementProvider.getStatement();
+            if (statement == null) {
+                return HTMLContent.EMPTY;
+            }
+            HolidayCalculatorModel model = _modelProvider.getModel();
+            StatementDocument doc = model.getStatementDocument(statement.getId());
+            return new HTMLContent(doc.getContent());
+        }
+    }
 
-	public Control create(Composite aParent) {
-		_toolkit = new FormToolkit(aParent.getDisplay());
-		Composite main = _toolkit.createComposite(aParent, SWT.BORDER);
-		GridLayout mainLauout = new GridLayout();
-		mainLauout.marginWidth = 0;
-		mainLauout.marginHeight = 0;
-		main.setLayout(mainLauout);
-		SashForm sash = new SashForm(main, SWT.HORIZONTAL);
-		sash.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+    /**
+     * Конструктор
+     */
+    public StatementReviewForm(HolidayCalculatorModelProvider aModelProvider,
+            IStatementProvider aStatementProvider) {
+        _modelProvider = Objects.requireNonNull(aModelProvider);
+        _statementProvider = Objects.requireNonNull(aStatementProvider);
+        _statementDocumentContentProvider = new HTMLContentProvider(new DocContentLoader());
+    }
 
-		createLeft(sash);
-		createRight(sash);
+    public Control create(Composite aParent) {
+        _toolkit = new FormToolkit(aParent.getDisplay());
+        Composite main = _toolkit.createComposite(aParent, SWT.BORDER);
+        GridLayout mainLauout = new GridLayout();
+        mainLauout.marginWidth = 0;
+        mainLauout.marginHeight = 0;
+        main.setLayout(mainLauout);
+        SashForm sash = new SashForm(main, SWT.HORIZONTAL);
+        sash.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		initListeners(main);
-		refresh();
-		return main;
-	}
+        createRight(sash);
+        createLeft(sash);
+        sash.setWeights(new int[] {3, 1});
 
-	private void initListeners(Control aControl) {
-		StatementChangedListener listener = new StatementChangedListener();
-		_statementProvider.addStatementChangedListener(listener);
-		LoadListener loadListener = new LoadListener();
-		_modelProvider.addLoadListener(loadListener);
-		aControl.addDisposeListener(aE -> {
-			_statementProvider.removeStatementChangedListener(listener);
-			_modelProvider.removeLoadListener(loadListener);
-		});
-	}
+        initListeners(main);
+        refresh();
+        return main;
+    }
 
-	private class LoadListener implements ILoadListener {
+    private void initListeners(Control aControl) {
+        StatementChangedListener listener = new StatementChangedListener();
+        _statementProvider.addStatementChangedListener(listener);
+        LoadListener loadListener = new LoadListener();
+        _modelProvider.addLoadListener(loadListener);
+        aControl.addDisposeListener(aE -> {
+            _statementProvider.removeStatementChangedListener(listener);
+            _modelProvider.removeLoadListener(loadListener);
+        });
+    }
 
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void loadStatusChanged() {
-			Display.getDefault().asyncExec(() -> refresh());
+    private class LoadListener implements ILoadListener {
 
-		}
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void loadStatusChanged() {
+            Display.getDefault().asyncExec(() -> refresh());
 
-	}
+        }
 
-	/**
-	 * Создает Панель просмотра печатной формы заявления
-	 *
-	 * @param aParent
-	 *            родитель
-	 * @return корневой элемент управления
-	 */
-	private Composite createRight(Composite aParent) {
-		Composite main = _toolkit.createComposite(aParent, SWT.BORDER);
-		GridLayout leftLayout = new GridLayout();
-		leftLayout.marginWidth = 0;
-		leftLayout.marginHeight = 0;
-		main.setLayout(leftLayout);
-		main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+    }
 
-		HTMLDocumentViewer viewer = new HTMLDocumentViewer(_statementDocumentContentProvider);
-		Control control = viewer.create(main, _toolkit);
-		control.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+    /**
+     * Создает Панель просмотра печатной формы заявления
+     *
+     * @param aParent родитель
+     * @return корневой элемент управления
+     */
+    private Composite createRight(Composite aParent) {
+        Composite main = _toolkit.createComposite(aParent, SWT.BORDER);
+        GridLayout leftLayout = new GridLayout();
+        leftLayout.marginWidth = 0;
+        leftLayout.marginHeight = 0;
+        main.setLayout(leftLayout);
+        main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		StatementContentChangedHandler contentChangedListener = new StatementContentChangedHandler();
-		_modelProvider.addListener(contentChangedListener);
-		control.addDisposeListener(aE -> _modelProvider.removeListener(contentChangedListener));
-		return main;
-	}
+        HTMLDocumentViewer viewer = new HTMLDocumentViewer(_statementDocumentContentProvider);
+        Control control = viewer.create(main, _toolkit);
+        control.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-	private class StatementContentChangedHandler extends HolidayCalculatorListenerAdapter {
+        StatementContentChangedHandler contentChangedListener =
+                new StatementContentChangedHandler();
+        _modelProvider.addListener(contentChangedListener);
+        control.addDisposeListener(aE -> _modelProvider.removeListener(contentChangedListener));
+        return main;
+    }
 
-		@Override
-		protected void statementContentChangedEvent(StatementContentChangedEvent aEvent) {
-			_statementDocumentContentProvider.asynReload();
-		}
+    private class StatementContentChangedHandler extends HolidayCalculatorListenerAdapter {
 
-	}
+        @Override
+        protected void statementContentChangedEvent(StatementContentChangedEvent aEvent) {
+            _statementDocumentContentProvider.asynReload();
+        }
 
-	/**
-	 * Создает элементы управления подачи заявления на отгул
-	 *
-	 * @param aParent
-	 *            родитель
-	 * @return корневой элемент управления
-	 */
-	private Composite createLeft(Composite aParent) {
+    }
 
-		final Composite main = _toolkit.createComposite(aParent);
-		final int columns = 2;
-		GridLayout leftLayout = new GridLayout(columns, false);
-		leftLayout.marginHeight = 0;
-		main.setLayout(leftLayout);
-		_toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
-				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
+    /**
+     * Создает элементы управления подачи заявления на отгул
+     *
+     * @param aParent родитель
+     * @return корневой элемент управления
+     */
+    private Composite createLeft(Composite aParent) {
 
-		Label header = _toolkit.createLabel(main, Messages.reviewHolidayStatementHeader);
-		header.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false, false, columns, 1));
-		_toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
-				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
+        final Composite main = _toolkit.createComposite(aParent);
+        final int columns = 2;
+        GridLayout leftLayout = new GridLayout(columns, false);
+        leftLayout.marginHeight = 0;
+        main.setLayout(leftLayout);
+        _toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
+                .setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
 
-		_dateChooser = Utils.createDateChooser(main, SWT.MULTI);
-		_dateChooser.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, columns, 1));
-		_toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
-				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
-		_dateChooser.setEnabled(false);
+        Label header = _toolkit.createLabel(main, Messages.reviewHolidayStatementHeader);
+        header.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false, false, columns, 1));
+        _toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
+                .setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
 
-		_approveBt = _toolkit.createButton(main, Messages.approveBt, SWT.NONE);
-		_approveBt.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, true));
-		_approveBt.addSelectionListener(new SelectionAdapter() {
-			/**
-			 * {@inheritDoc}
-			 */
-			@Override
-			public void widgetSelected(SelectionEvent aE) {
-				Statement<?> statement = getStatement();
-				if (statement == null) {
-					MessageDialog.openWarning(main.getShell(), Messages.statementForConsiderNotSelectedDialogTitle,
-							Messages.statementForConsiderNotSelectedDialogText);
-					return;
-				}
-				try {
-					_modelProvider.getModel().approve(statement);
-				} catch (StatementAlreadyConsideredException e) {
-					Statement<?> st = e.getStatement();
-					SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-					Date considerDate = st.getConsiderDate();
-					String text = NLS.bind(Messages.statementAlreadyConsideredByOtherDialogText,
-							formatter.format(considerDate));
-					if (_modelProvider.getModel().getCurrentUser().equals(st.getConsider())) {
-						text = NLS.bind(Messages.statementAlreadyConsideredByYouDialogText,
-								formatter.format(considerDate));
-					}
-					MessageDialog.openWarning(main.getShell(), Messages.statementAlreadyConsideredDialogTitle, text);
-				} catch (PermissionDeniedException e) {
-					StatusManager.getManager().handle(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-							Messages.permissionDeniedWhenConsideringDialogText, e));
-					MessageDialog.openError(main.getShell(), Messages.permissionDeniedWhenConsideringDialogTitle,
-							Messages.permissionDeniedWhenConsideringDialogText);
-				} catch (ServiceLookupException e) {
-					StatusManager.getManager().handle(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-							Messages.lookupExceptionWhenConsideringDialogText, e));
-					MessageDialog.openError(main.getShell(), Messages.lookupExceptionWhenConsideringDialogTitle,
-							Messages.lookupExceptionWhenConsideringDialogText);
-				}
-			}
-		});
+        _dateChooser = Utils.createDateChooser(main, SWT.MULTI);
+        _dateChooser.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, columns, 1));
+        _toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
+                .setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
+        _dateChooser.setEnabled(false);
 
-		_rejectBt = _toolkit.createButton(main, Messages.rejectBt, SWT.NONE);
-		_rejectBt.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, false, true));
-		_rejectBt.addSelectionListener(new SelectionAdapter() {
-			/**
-			 * {@inheritDoc}
-			 */
-			@Override
-			public void widgetSelected(SelectionEvent aE) {
-				Statement<?> statement = getStatement();
-				if (statement == null) {
-					MessageDialog.openWarning(main.getShell(), Messages.statementForConsiderNotSelectedDialogTitle,
-							Messages.statementForConsiderNotSelectedDialogText);
-					return;
-				}
-				try {
-					_modelProvider.getModel().reject(statement);
-				} catch (StatementAlreadyConsideredException e) {
-					Statement<?> st = e.getStatement();
-					SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-					Date considerDate = st.getConsiderDate();
-					String text = NLS.bind(Messages.statementAlreadyConsideredByOtherDialogText,
-							formatter.format(considerDate));
-					if (_modelProvider.getModel().getCurrentUser().equals(st.getConsider())) {
-						text = NLS.bind(Messages.statementAlreadyConsideredByYouDialogText,
-								formatter.format(considerDate));
-					}
-					MessageDialog.openWarning(main.getShell(), Messages.statementAlreadyConsideredDialogTitle, text);
-				} catch (PermissionDeniedException e) {
-					StatusManager.getManager().handle(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-							Messages.permissionDeniedWhenConsideringDialogText, e));
-					MessageDialog.openError(main.getShell(), Messages.permissionDeniedWhenConsideringDialogTitle,
-							Messages.permissionDeniedWhenConsideringDialogText);
-				} catch (ServiceLookupException e) {
-					StatusManager.getManager().handle(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-							Messages.lookupExceptionWhenConsideringDialogText, e));
-					MessageDialog.openError(main.getShell(), Messages.lookupExceptionWhenConsideringDialogTitle,
-							Messages.lookupExceptionWhenConsideringDialogText);
-				}
-			}
-		});
-		return main;
-	}
+        _approveBt = _toolkit.createButton(main, Messages.approveBt, SWT.NONE);
+        _approveBt.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, true));
+        _approveBt.addSelectionListener(new SelectionAdapter() {
 
-	private Statement<?> getStatement() {
-		return _statementProvider.getStatement();
-	}
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public void widgetSelected(SelectionEvent aE) {
+                Statement<?> statement = getStatement();
+                if (statement == null) {
+                    MessageDialog.openWarning(main.getShell(),
+                            Messages.statementForConsiderNotSelectedDialogTitle,
+                            Messages.statementForConsiderNotSelectedDialogText);
+                    return;
+                }
+                try {
+                    _modelProvider.getModel().approve(statement);
+                } catch (StatementAlreadyConsideredException e) {
+                    Statement<?> st = e.getStatement();
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+                    Date considerDate = st.getConsiderDate();
+                    String text = NLS.bind(Messages.statementAlreadyConsideredByOtherDialogText,
+                            formatter.format(considerDate));
+                    if (_modelProvider.getModel().getCurrentUser().equals(st.getConsider())) {
+                        text = NLS.bind(Messages.statementAlreadyConsideredByYouDialogText,
+                                formatter.format(considerDate));
+                    }
+                    MessageDialog.openWarning(main.getShell(),
+                            Messages.statementAlreadyConsideredDialogTitle, text);
+                } catch (PermissionDeniedException e) {
+                    StatusManager.getManager().handle(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+                            Messages.permissionDeniedWhenConsideringDialogText, e));
+                    MessageDialog.openError(main.getShell(),
+                            Messages.permissionDeniedWhenConsideringDialogTitle,
+                            Messages.permissionDeniedWhenConsideringDialogText);
+                } catch (ServiceLookupException e) {
+                    StatusManager.getManager().handle(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+                            Messages.lookupExceptionWhenConsideringDialogText, e));
+                    MessageDialog.openError(main.getShell(),
+                            Messages.lookupExceptionWhenConsideringDialogTitle,
+                            Messages.lookupExceptionWhenConsideringDialogText);
+                }
+            }
+        });
 
-	/**
-	 * Поставщик заявления
-	 */
-	public static interface IStatementProvider {
+        _rejectBt = _toolkit.createButton(main, Messages.rejectBt, SWT.NONE);
+        _rejectBt.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, false, true));
+        _rejectBt.addSelectionListener(new SelectionAdapter() {
 
-		/**
-		 * Возвращает заявление
-		 *
-		 * @return заявление или {@code null}
-		 */
-		public Statement<?> getStatement();
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public void widgetSelected(SelectionEvent aE) {
+                Statement<?> statement = getStatement();
+                if (statement == null) {
+                    MessageDialog.openWarning(main.getShell(),
+                            Messages.statementForConsiderNotSelectedDialogTitle,
+                            Messages.statementForConsiderNotSelectedDialogText);
+                    return;
+                }
+                try {
+                    _modelProvider.getModel().reject(statement);
+                } catch (StatementAlreadyConsideredException e) {
+                    Statement<?> st = e.getStatement();
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+                    Date considerDate = st.getConsiderDate();
+                    String text = NLS.bind(Messages.statementAlreadyConsideredByOtherDialogText,
+                            formatter.format(considerDate));
+                    if (_modelProvider.getModel().getCurrentUser().equals(st.getConsider())) {
+                        text = NLS.bind(Messages.statementAlreadyConsideredByYouDialogText,
+                                formatter.format(considerDate));
+                    }
+                    MessageDialog.openWarning(main.getShell(),
+                            Messages.statementAlreadyConsideredDialogTitle, text);
+                } catch (PermissionDeniedException e) {
+                    StatusManager.getManager().handle(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+                            Messages.permissionDeniedWhenConsideringDialogText, e));
+                    MessageDialog.openError(main.getShell(),
+                            Messages.permissionDeniedWhenConsideringDialogTitle,
+                            Messages.permissionDeniedWhenConsideringDialogText);
+                } catch (ServiceLookupException e) {
+                    StatusManager.getManager().handle(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+                            Messages.lookupExceptionWhenConsideringDialogText, e));
+                    MessageDialog.openError(main.getShell(),
+                            Messages.lookupExceptionWhenConsideringDialogTitle,
+                            Messages.lookupExceptionWhenConsideringDialogText);
+                }
+            }
+        });
+        return main;
+    }
 
-		public void addStatementChangedListener(IStatementChangedListener aListener);
+    private Statement<?> getStatement() {
+        return _statementProvider.getStatement();
+    }
 
-		public void removeStatementChangedListener(IStatementChangedListener aListener);
-	}
+    /**
+     * Поставщик заявления
+     */
+    public static interface IStatementProvider {
 
-	public static interface IStatementChangedListener {
-		public void statementChanged();
-	}
+        /**
+         * Возвращает заявление
+         *
+         * @return заявление или {@code null}
+         */
+        public Statement<?> getStatement();
 
-	private class StatementChangedListener implements IStatementChangedListener {
+        public void addStatementChangedListener(IStatementChangedListener aListener);
 
-		@Override
-		public void statementChanged() {
-			_statementDocumentContentProvider.asynReload();
-			refresh();
-		}
+        public void removeStatementChangedListener(IStatementChangedListener aListener);
+    }
 
-	}
+    public static interface IStatementChangedListener {
 
-	/**
-	 * Обновляет UI
-	 */
-	private void refresh() {
-		boolean canApprove = false;
-		boolean canReject = false;
-		LoadStatus status = _modelProvider.getLoadStatus();
-		_dateChooser.clearSelection();
-		if (LoadStatus.LOADED.equals(status)) {
-			Statement<?> statement = getStatement();
-			if (statement != null) {
-				HolidayCalculatorModel model = _modelProvider.getModel();
-				canApprove = model.canApprove(statement);
-				canReject = model.canReject(statement);
-				Collection<Date> toSelect = new ArrayList<>();
-				switch (statement.getStatementType()) {
-				case HOLIDAY_STATEMENT:
-					toSelect = ((HolidayStatement) statement).getDays();
-					break;
+        public void statementChanged();
+    }
 
-				case LEAVE_STATEMENT:
-					toSelect = ((LeaveStatement) statement).getLeaveDates();
-					break;
+    private class StatementChangedListener implements IStatementChangedListener {
 
-				case RECALL_STATEMENT:
-					toSelect = ((RecallStatement) statement).getRecallDates();
-					break;
-				}
+        @Override
+        public void statementChanged() {
+            _statementDocumentContentProvider.asynReload();
+            refresh();
+        }
 
-				for (Date date : toSelect) {
-					_dateChooser.setSelectedDate(date);
-				}
-			}
-		}
-		_approveBt.setEnabled(canApprove);
-		_rejectBt.setEnabled(canReject);
-	}
+    }
+
+    /**
+     * Обновляет UI
+     */
+    private void refresh() {
+        boolean canApprove = false;
+        boolean canReject = false;
+        LoadStatus status = _modelProvider.getLoadStatus();
+        _dateChooser.clearSelection();
+        if (LoadStatus.LOADED.equals(status)) {
+            Statement<?> statement = getStatement();
+            if (statement != null) {
+                HolidayCalculatorModel model = _modelProvider.getModel();
+                canApprove = model.canApprove(statement);
+                canReject = model.canReject(statement);
+                Collection<Date> toSelect = new ArrayList<>();
+                switch (statement.getStatementType()) {
+                case HOLIDAY_STATEMENT:
+                    toSelect = ((HolidayStatement) statement).getDays();
+                    break;
+
+                case LEAVE_STATEMENT:
+                    toSelect = ((LeaveStatement) statement).getLeaveDates();
+                    break;
+
+                case RECALL_STATEMENT:
+                    toSelect = ((RecallStatement) statement).getRecallDates();
+                    break;
+                }
+
+                for (Date date : toSelect) {
+                    _dateChooser.setSelectedDate(date);
+                }
+            }
+        }
+        _approveBt.setEnabled(canApprove);
+        _rejectBt.setEnabled(canReject);
+    }
 
 }

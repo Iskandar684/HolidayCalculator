@@ -23,6 +23,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.statushandlers.StatusManager;
 
@@ -180,8 +182,10 @@ public class StatementReviewForm {
 
         final Composite main = _toolkit.createComposite(aParent);
         final int columns = 2;
-        GridLayout leftLayout = new GridLayout(columns, false);
+        final int approveRejectButtonsH = 50;
+        GridLayout leftLayout = new GridLayout(columns, true);
         leftLayout.marginHeight = 0;
+        ISharedImages images = PlatformUI.getWorkbench().getSharedImages();
         main.setLayout(leftLayout);
         _toolkit.createLabel(main, Messages.EMPTY, SWT.NONE)
                 .setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
@@ -198,7 +202,9 @@ public class StatementReviewForm {
         _dateChooser.setEnabled(false);
 
         _approveBt = _toolkit.createButton(main, Messages.approveBt, SWT.NONE);
-        _approveBt.setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, true));
+        GridData approveBtData = new GridData(SWT.FILL, SWT.BOTTOM, true, true);
+        approveBtData.heightHint = approveRejectButtonsH;
+        _approveBt.setLayoutData(approveBtData);
         _approveBt.addSelectionListener(new SelectionAdapter() {
 
             /**
@@ -244,7 +250,9 @@ public class StatementReviewForm {
         });
 
         _rejectBt = _toolkit.createButton(main, Messages.rejectBt, SWT.NONE);
-        _rejectBt.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, false, true));
+        GridData rejectBtData = new GridData(SWT.FILL, SWT.BOTTOM, true, true);
+        rejectBtData.heightHint = approveRejectButtonsH;
+        _rejectBt.setLayoutData(rejectBtData);
         _rejectBt.addSelectionListener(new SelectionAdapter() {
 
             /**

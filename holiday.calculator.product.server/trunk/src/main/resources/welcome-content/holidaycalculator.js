@@ -1,4 +1,4 @@
-var url = "http://127.0.0.1:8080/holiday-calculator-web-service/";
+var url = "http://"+window.location.host+"/holiday-calculator-web-service/";
 
 $(document).ready(function() {
 	$('#loginBt').click(function() {

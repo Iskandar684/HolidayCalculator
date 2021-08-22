@@ -1,7 +1,6 @@
-package ru.iskandar.holiday.calculator.service.event.sse;
+package ru.iskandar.holiday.calculator.web.service.sse;
 
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.LocalBean;
@@ -18,13 +17,12 @@ import javax.ws.rs.sse.SseEventSink;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 
 import ru.iskandar.holiday.calculator.service.ejb.HolidayCalculatorException;
+import ru.iskandar.holiday.calculator.service.event.EventSendersProvider;
 import ru.iskandar.holiday.calculator.service.event.IHolidayCalculatorEventSender;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorEvent;
-import ru.iskandar.holiday.calculator.service.utils.DateUtils;
+import ru.iskandar.holiday.calculator.service.utils.ObjectMapperConfigurator;
 
 /**
  *
@@ -43,12 +41,9 @@ public class SSEHolidayCalculatorEventSender implements IHolidayCalculatorEventS
 
 	@PostConstruct
 	public void init() {
-		_objectMapper = new ObjectMapper();
-		_objectMapper.registerModule(new JavaTimeModule());
-		_objectMapper.registerModule(new JaxbAnnotationModule());
-		_objectMapper.setConfig(
-				_objectMapper.getSerializationConfig().with(new SimpleDateFormat(DateUtils.DATE_TIME_FORMAT)));
+		_objectMapper = ObjectMapperConfigurator.createObjectMapper();
 		_sseBroadcaster = _sse.newBroadcaster();
+		EventSendersProvider.register(this);
 	}
 
 	@Override

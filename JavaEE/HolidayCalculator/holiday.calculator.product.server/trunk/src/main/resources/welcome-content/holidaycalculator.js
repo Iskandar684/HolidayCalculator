@@ -1,5 +1,7 @@
 var url = "http://"+window.location.host+"/holiday-calculator-web-service/";
 
+   var websocket = null;
+
 $(document).ready(function() {
 	$('#loginBt').click(function() {
 		openAuthorizationDialog();
@@ -14,6 +16,7 @@ $(document).ready(function() {
 		openMyStatements();
 	});
 	subscribeToServerEvents();
+	subscribeToWebSocket();
 	checkAndReload();
 });
 
@@ -30,10 +33,32 @@ function subscribeToServerEvents() {
 	eventSource.onmessage = function(event) {
 		console.log("Новое сообщение: " + event.data);
 		var obj = $.parseJSON(event.data);
-		alert(obj["description"]);
+		alert(obj["description"]+" (SSE)");
 	};
 
 }
+
+            function subscribeToWebSocket() {
+                var wsProtocol = window.location.protocol == "https:" ? "wss" : "ws";
+                var wsURI = wsProtocol + '://' + window.location.host + window.location.pathname + 'holiday-calculator-web-service/websocket';
+                console.log("subscribeToWebSocket wsURI= "+wsURI);
+                websocket = new WebSocket(wsURI);
+
+                websocket.onopen = function() {
+                   console.log("websocket open");
+                };
+                websocket.onmessage = function(event) {
+                    console.log("Пришло событие по WebSocket "+event.data);
+     		        var obj = $.parseJSON(event.data);
+		            alert(obj["description"]+" (WebSocket)");
+                };
+                websocket.onerror = function(event) {
+                     console.log("websocket onerror "+event);
+                };
+                websocket.onclose = function() {
+                    console.log("websocket onclose");
+                };
+            }
 
 function clearStatements() {
     jQuery('#myStatements div').html('');

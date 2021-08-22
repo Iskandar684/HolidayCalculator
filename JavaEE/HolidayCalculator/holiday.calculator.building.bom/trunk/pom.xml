@@ -552,6 +552,12 @@
 				<version>3.12.1.Final</version>
 				<scope>provided</scope>
 			</dependency>
+			<dependency>
+			    <groupId>org.jboss.spec.javax.websocket</groupId>
+			    <artifactId>jboss-websocket-api_1.1_spec</artifactId>
+			    <version>2.0.0.Final</version>
+			    <scope>provided</scope>
+		    </dependency>
 			<!-- Open API (Swagger 2) -->
 			<dependency>
 				<groupId>io.swagger.core.v3</groupId>

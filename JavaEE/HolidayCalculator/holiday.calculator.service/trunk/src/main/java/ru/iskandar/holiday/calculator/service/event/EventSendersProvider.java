@@ -1,23 +1,22 @@
 package ru.iskandar.holiday.calculator.service.event;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.ejb.Singleton;
 
-import ru.iskandar.holiday.calculator.service.event.sse.SSEHolidayCalculatorEventSender;
+import lombok.NonNull;
 
 /**
  * Поставщик отправителей событий.
  *
  */
-@Stateless
+@Singleton
 public class EventSendersProvider {
 
-	/** Отправить событий Server Sent Events (SSE) */
-	@EJB
-	private SSEHolidayCalculatorEventSender _sseSender;
+	/** Отправители событий */
+	private final static List<IHolidayCalculatorEventSender> _senders = new CopyOnWriteArrayList<>();
 
 	/**
 	 * Возвращает список отправителей событий.
@@ -25,9 +24,18 @@ public class EventSendersProvider {
 	 * @return отправителей событий
 	 */
 	public List<IHolidayCalculatorEventSender> getSenders() {
-		List<IHolidayCalculatorEventSender> senders = new ArrayList<>();
-		senders.add(_sseSender);
-		return senders;
+		return Collections.unmodifiableList(_senders);
+	}
+
+	/**
+	 * Регистрирует отправителя событий.
+	 *
+	 * @param aSender отправитель событий
+	 *
+	 */
+	// TODO Реализовать регистрацию через точку расширения.
+	public static void register(@NonNull IHolidayCalculatorEventSender aSender) {
+		_senders.add(aSender);
 	}
 
 }

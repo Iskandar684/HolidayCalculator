@@ -176,10 +176,8 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	int getIncomingHolidaysQuantity(User aUser);
 
 	/**
-	 * Возвращает входящие заявления
+	 * Возвращает входящие заявления.
 	 *
-	 * @throws NullPointerException
-	 *             если aUser {@code null}
 	 * @return входящие заявления
 	 */
 	Collection<Statement<?>> getIncomingStatements();

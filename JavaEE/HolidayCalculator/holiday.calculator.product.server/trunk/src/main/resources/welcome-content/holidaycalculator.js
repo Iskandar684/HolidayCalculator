@@ -13,7 +13,10 @@ $(document).ready(function() {
 		openTakeHolidayDialog();
 	});
 	$('#myStatementsBt').click(function() {
-		openMyStatements();
+		showStatements("currentUserStatements");
+	});
+	$('#incomingStatementsBt').click(function() {
+		showStatements("incomingStatements");
 	});
 	subscribeToServerEvents();
 	subscribeToWebSocket();
@@ -64,8 +67,8 @@ function clearStatements() {
     jQuery('#myStatements div').html('');
 }
 
-function openMyStatements() {
-    $.getJSON(url + "currentUserStatements").done(function (aStatements) {
+function showStatements(statementType) {
+    $.getJSON(url + statementType).done(function (aStatements) {
         clearStatements () ;
         for (var i = 0; i < aStatements.length; i++) {
             var statement = aStatements[i];
@@ -73,7 +76,7 @@ function openMyStatements() {
         }
     }).fail(function (details, textStatus, error) {
         var err = textStatus + ", " + error;
-        console.log("getCurrentUserStatementsFailed: " + err + "  " + details);
+        console.log("getStatementsFailed: type "+statementType+ "  " + err + "  " + details);
     });
 }
 

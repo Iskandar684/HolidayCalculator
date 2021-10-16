@@ -75,6 +75,26 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 *             если нет прав на рассмотрение заявлений
 	 */
 	Statement<?> approve(Statement<?> aStatement) throws StatementAlreadyConsideredException;
+	
+	
+	/**
+	 * Одобряет заявление.
+	 *
+	 * @param aStatementID идентификатор заявления
+	 * @return заявление
+	 * @throws StatementAlreadyConsideredException
+	 *             если заявление уже было рассмотрено
+	 * @throws NullPointerException
+	 *             если aStatementID {@code null}
+	 * @throws InvalidStatementException
+	 *             если заявление заполнено некорректно
+	 * @throws StatementNotFoundException
+	 *             если заявление с указанным UUID не найдено
+	 * @throws EJBAccessException
+	 *             если нет прав на рассмотрение заявлений
+	 */
+	Statement<?> approve(StatementId aStatementID) throws StatementAlreadyConsideredException;
+	
 
 	/**
 	 * Отклоняет заявление
@@ -94,6 +114,25 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 *             если нет прав на рассмотрение заявлений
 	 */
 	Statement<?> reject(Statement<?> aStatement) throws StatementAlreadyConsideredException;
+	
+	/**
+	 * Отклоняет заявление
+	 *
+	 * @param aStatementID
+	 *            заявление
+	 * @return заявление
+	 * @throws StatementAlreadyConsideredException
+	 *             если заявление уже было рассмотрено
+	 * @throws NullPointerException
+	 *             если aStatementID {@code null}
+	 * @throws InvalidStatementException
+	 *             если заявление заполнено некорректно
+	 * @throws StatementNotFoundException
+	 *             если заявление с указанным UUID не найдено
+	 * @throws EJBAccessException
+	 *             если нет прав на рассмотрение заявлений
+	 */
+	Statement<?> reject(StatementId aStatementID) throws StatementAlreadyConsideredException;
 
 	/**
 	 * Создает и подает заявление на отгул на рассмотрение

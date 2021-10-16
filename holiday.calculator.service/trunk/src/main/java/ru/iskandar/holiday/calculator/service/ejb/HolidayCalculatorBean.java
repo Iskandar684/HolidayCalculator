@@ -147,10 +147,19 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
         addStatementToSearchService(statement);
         return statement;
     }
+    
 
-    /**
-     * {@inheritDoc}
-     */
+	@Override
+	public Statement<?> approve(StatementId aStatementID) throws StatementAlreadyConsideredException {
+		return approve(getStatement(aStatementID));
+	}
+
+
+	@Override
+	public Statement<?> reject(StatementId aStatementID) throws StatementAlreadyConsideredException {
+		return reject(getStatement(aStatementID));
+	}
+	
     @RolesAllowed(Permission.CONSIDER)
     @Override
     public Statement<?> reject(Statement<?> aStatement) throws StatementAlreadyConsideredException {
@@ -640,6 +649,26 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
         }
         throw new DocumentPreviewException(
                 String.format("Заявление по идентификатору %s на найдено.", aStatementID));
+    }
+    
+    private Statement<?> getStatement(StatementId aStatementID){
+        HolidayStatement holidayStatement = _statementRepo.getHolidayStatement(aStatementID);
+        if (holidayStatement != null) {
+            // отгул
+            return holidayStatement ;
+        }
+        LeaveStatement leaveStatement = _statementRepo.getLeaveStatement(aStatementID);
+        if (leaveStatement != null) {
+            // отпуск
+            return leaveStatement;
+        }
+        RecallStatement recallStatement = _statementRepo.getRecallStatement(aStatementID);
+        if (recallStatement != null) {
+            // отзыв
+            return recallStatement;
+        }
+        throw new StatementNotFoundException(
+                String.format("Заявление [%s] не найдено", aStatementID));
     }
 
     @Override

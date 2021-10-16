@@ -15,6 +15,7 @@ import javax.ejb.Stateless;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -27,6 +28,7 @@ import org.jboss.logging.Logger;
 
 import ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorLocal;
 import ru.iskandar.holiday.calculator.service.ejb.IUserServiceLocal;
+import ru.iskandar.holiday.calculator.service.model.StatementAlreadyConsideredException;
 import ru.iskandar.holiday.calculator.service.model.StatementAlreadySendedException;
 import ru.iskandar.holiday.calculator.service.model.document.DocumentPreviewException;
 import ru.iskandar.holiday.calculator.service.model.document.StatementDocument;
@@ -273,5 +275,27 @@ public class HolidayCalculatorWebService {
         }
         return new HTMLDocument(new String(document.getContent(), Charset.forName("utf-8")));
     }
+    
+	@POST
+	@Path("/approve/{statementUUID}")
+	@PermitAll
+	public Statement<?> approve(@PathParam("statementUUID") String statementUUID) throws StatementAlreadyConsideredException {
+		StatementId statementID = StatementId.from(UUID.fromString(statementUUID));
+		return _holidayService.approve(statementID);
+	}
+	
+	@POST
+	@Path("/reject/{statementUUID}")
+	@PermitAll
+	public Statement<?> reject(@PathParam("statementUUID") String statementUUID) throws StatementAlreadyConsideredException {
+		StatementId statementID = StatementId.from(UUID.fromString(statementUUID));
+		return _holidayService.reject(statementID);
+	}
+	
+	@GET
+	@Path("/canConsider")
+	public boolean canConsider() {
+		return _holidayService.canConsider();
+	}
 
 }

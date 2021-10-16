@@ -1,6 +1,7 @@
 var url = "http://"+window.location.host+"/holiday-calculator-web-service/";
 
-   var websocket = null;
+var websocket = null;
+var canConsider = true;   
 
 $(document).ready(function() {
 	$('#loginBt').click(function() {
@@ -99,14 +100,14 @@ function addStatement(aStatement) {
 
 function openStatementDocument(aStatementID) {
     $.getJSON(url + "getStatementDocument/" + aStatementID).done(function (aDocument) {
-        openDocumentDialog(aDocument);
+        openDocumentDialog(aDocument, aStatementID);
     }).fail(function (details, textStatus, error) {
         var err = textStatus + ", " + error;
         console.log("getStatementDocument: " + err + "  " + details);
     });
 }
 
-function openDocumentDialog(aDocument) {
+function openDocumentDialog(aDocument, statementUUID) {
     var dialogParent = $("#dialogParent");
 
     dialogParent.load("document.html", function (responseTxt, statusTxt, xhr) {
@@ -120,10 +121,48 @@ function openDocumentDialog(aDocument) {
             console.log("Загрузка формы документа: " + xhr.status + ": " + xhr.statusText);
         }
     });
-    //не обязательно, что на отгул. Надо смотреть по типу
-    dialogParent.prop('title', 'Заявление на отгул');
+    
+    dialogParent.prop('title', 'Заявление');
+    if (canConsider){
+      showConsiderStatementDialog (dialogParent, statementUUID);
+    }else{
+      showReadOnlyStatementDialog (dialogParent);
+    }
 
-    dialogParent.dialog({
+}
+
+function showConsiderStatementDialog(dialogParent, statementUUID) {
+      dialogParent.dialog({
+        resizable: true,
+        modal: true,
+        width: 'auto',
+        height: 550,
+        buttons: [{
+            text: "Принять",
+            click: function () {
+                approve (statementUUID)
+                dialogParent.dialog("close");
+            }
+        },
+        {
+            text: "Отклонить",
+            click: function () {
+                reject (statementUUID)
+                dialogParent.dialog("close");
+            }
+        },
+        {
+            text: "Закрыть",
+            click: function () {
+                dialogParent.dialog("close");
+            }
+        }
+        ],
+    });
+}
+
+function showReadOnlyStatementDialog(dialogParent) {
+      dialogParent.dialog({
         resizable: true,
         modal: true,
         width: 'auto',
@@ -136,6 +175,29 @@ function openDocumentDialog(aDocument) {
         }
         ],
     });
+}
+
+function approve (statementUUID){
+    $.post(url + "approve/"+statementUUID).done(function (aUser) {
+       	updateAfterConsider();
+    }).fail(function (jqxhr, textStatus, error) {
+        var err = textStatus + ", " + error;
+        console.log("approve Failed: " + err + "  " + jqxhr);
+    });
+}
+
+function reject (statementUUID){
+    $.post(url + "reject/"+statementUUID).done(function (aUser) {
+       	updateAfterConsider();
+    }).fail(function (jqxhr, textStatus, error) {
+        var err = textStatus + ", " + error;
+        console.log("reject Failed: " + err + "  " + jqxhr);
+    });
+}
+
+function updateAfterConsider(){   
+   checkAndReload();
+   showStatements("incomingStatements");
 }
 
 function updateFIO() {

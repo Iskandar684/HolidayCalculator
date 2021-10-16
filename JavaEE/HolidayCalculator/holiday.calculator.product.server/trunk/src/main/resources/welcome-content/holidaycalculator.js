@@ -365,6 +365,7 @@ function updateLoginControls(aIsLogged) {
 }
 
 function loadContentByLoggedUser() {
+    updateConsiderButton();
     updateFIO();
     updateHolidayCount();
     updateOutgoingHolidaysQuantity();
@@ -372,6 +373,22 @@ function loadContentByLoggedUser() {
     updateLeaveCount();
     updateOutgoingLeaveCount();
     updateNextLeaveStartDate();
+}
+
+function updateConsiderButton() {
+    console.log("call canConsider");
+    $.getJSON(url + "canConsider").done(function (aCanConsider) {
+        console.log("canConsider: " + aCanConsider);
+        canConsider = aCanConsider;
+        if (aCanConsider){
+           document.getElementById('incomingStatementsBt').style.visibility = 'visible';
+        }else{
+           document.getElementById('incomingStatementsBt').style.visibility = 'hidden';
+        }
+    }).fail(function (jqxhr, textStatus, error) {
+        var err = textStatus + ", " + error;
+        console.log("canConsider Failed: " + err + "  " + jqxhr);
+    });
 }
 
 function openTakeHolidayDialog() {

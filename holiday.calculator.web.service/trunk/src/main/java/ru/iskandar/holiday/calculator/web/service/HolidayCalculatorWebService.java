@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
+import javax.ejb.EJBAccessException;
 import javax.ejb.Stateless;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -42,6 +43,7 @@ import ru.iskandar.holiday.calculator.service.model.user.UserByLoginNotFoundExce
  */
 @Path("/")
 @Stateless
+@Produces(MediaType.APPLICATION_JSON)
 public class HolidayCalculatorWebService {
 
     /** Логгер */
@@ -150,6 +152,22 @@ public class HolidayCalculatorWebService {
         User user = _userService.getCurrentUser();
         return _holidayService.getIncomingHolidaysQuantity(user);
     }
+    
+	/**
+	 * Возвращает входящие заявления.
+	 *
+	 * @return входящие заявления
+	 */
+	@GET
+	@Path("/incomingStatements")
+	@PermitAll
+	public Statement<?>[] getIncomingStatements() {
+		if (!_holidayService.canConsider()) {
+			throw new EJBAccessException(String.format(
+					"У текущего пользователя (%s) нет прав на рассмотрение заявлений.", _request.getUserPrincipal()));
+		}
+		return _holidayService.getIncomingStatements().toArray(new Statement<?>[0]);
+	}
 
     @GET
     @Path("/takeHoliday/{dates}")

@@ -4,7 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-import javax.ws.rs.FormParam;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +21,8 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(prefix = "_")
 @NoArgsConstructor
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class NewUserEntry implements Serializable {
 
     /**
@@ -26,31 +31,31 @@ public class NewUserEntry implements Serializable {
     private static final long serialVersionUID = 7550226147547113824L;
 
     /** Имя */
-    @FormParam("firstName")
+    @XmlElement(name="firstName")
     private String _firstName;
 
     /** Фамилия */
-    @FormParam("lastName")
+    @XmlElement(name="lastName")
     private String _lastName;
 
     /** Отчество */
-    @FormParam("patronymic")
+    @XmlElement(name="patronymic")
     private String _patronymic;
 
     /** Дата приема на работу */
-   // @FormParam("employmentDate")
+   // @XmlElement("employmentDate")
     private Date _employmentDate = new Date();
 
     /** Логин */
-    @FormParam("login")
+    @XmlElement(name="login")
     private String _login;
 
     /** Пароль */
-    @FormParam("password")
+    @XmlElement(name="password")
     private String _password;
 
     /** Примечание */
-    @FormParam("note")
+    @XmlElement(name="note")
     private String _note;
 
     /**

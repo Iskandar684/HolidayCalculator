@@ -1,7 +1,8 @@
 var url = "http://"+window.location.host+"/holiday-calculator-web-service/";
 
 var websocket = null;
-var canConsider = true;   
+var canConsider = false;
+var canCreateUser = false;
 
 $(document).ready(function() {
 	$('#loginBt').click(function() {
@@ -18,6 +19,9 @@ $(document).ready(function() {
 	});
 	$('#incomingStatementsBt').click(function() {
 		showStatements("incomingStatements");
+	});
+	$('#createUserBt').click(function() {
+		showCreateUserDialog();
 	});
 	subscribeToServerEvents();
 	subscribeToWebSocket();
@@ -176,6 +180,55 @@ function showReadOnlyStatementDialog(dialogParent) {
         ],
     });
 }
+
+
+function showCreateUserDialog() {
+    var dialogParent = $("#dialogParent");
+
+    dialogParent.load("newUser.html", function (responseTxt, statusTxt, xhr) {
+        if (statusTxt == "success") {
+            console.log("Форма добавления пользователя удачно загружена!");
+            var contentLb = $('#dialogParent').find('#documentContent');
+            contentLb.append(aDocument.content);
+        } else if (statusTxt == "error") {
+            console.log("Ошибка загрузки формы добавления пользователя: " + xhr.status + ": " + xhr.statusText);
+        } else {
+            console.log("Загрузка формы добавления пользователя: " + xhr.status + ": " + xhr.statusText);
+        }
+    });
+    
+    dialogParent.prop('title', 'Добавление пользователя');
+    dialogParent.dialog({
+        resizable: true,
+        modal: true,
+        width: 'auto',
+        height: 350,
+        buttons: [{
+            text: "Добавить",
+            click: function () {
+                createUser();
+                dialogParent.dialog("close");
+            }
+        },
+        {
+            text: "Закрыть",
+            click: function () {
+                dialogParent.dialog("close");
+            }
+        }
+        ],
+    });
+}
+
+function createUser() {
+    $.post(url + "createUser/").done(function (aUser) {
+       	
+    }).fail(function (jqxhr, textStatus, error) {
+        var err = textStatus + ", " + error;
+        console.log("createUser Failed: " + err + "  " + jqxhr);
+    });
+}
+
 
 function approve (statementUUID){
     $.post(url + "approve/"+statementUUID).done(function (aUser) {
@@ -366,6 +419,7 @@ function updateLoginControls(aIsLogged) {
 
 function loadContentByLoggedUser() {
     updateConsiderButton();
+    updateCreateUserButton();
     updateFIO();
     updateHolidayCount();
     updateOutgoingHolidaysQuantity();
@@ -373,6 +427,23 @@ function loadContentByLoggedUser() {
     updateLeaveCount();
     updateOutgoingLeaveCount();
     updateNextLeaveStartDate();
+}
+
+function updateCreateUserButton() {
+    console.log("call canCreateUser");
+    $.getJSON(url + "canCreateUser").done(function (aCanCreateUser) {
+        console.log("canCreateUser: " + aCanCreateUser);
+        canCreateUser = aCanCreateUser;
+        if (aCanCreateUser){
+           document.getElementById('createUserBt').style.visibility = 'visible';
+        }else{
+           document.getElementById('createUserBt').style.visibility = 'hidden';
+        }
+    }).fail(function (jqxhr, textStatus, error) {
+        var err = textStatus + ", " + error;
+        console.log("canCreateUser Failed: " + err + "  " + jqxhr);
+        document.getElementById('createUserBt').style.visibility = 'hidden';
+    });
 }
 
 function updateConsiderButton() {
@@ -388,6 +459,7 @@ function updateConsiderButton() {
     }).fail(function (jqxhr, textStatus, error) {
         var err = textStatus + ", " + error;
         console.log("canConsider Failed: " + err + "  " + jqxhr);
+        document.getElementById('incomingStatementsBt').style.visibility = 'hidden';
     });
 }
 

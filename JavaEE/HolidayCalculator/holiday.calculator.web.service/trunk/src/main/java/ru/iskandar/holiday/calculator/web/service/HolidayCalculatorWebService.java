@@ -297,5 +297,11 @@ public class HolidayCalculatorWebService {
 	public boolean canConsider() {
 		return _holidayService.canConsider();
 	}
+	
+	@GET
+	@Path("/canCreateUser")
+	public boolean canCreateUser() {
+		return _holidayService.canCreateUser();
+	}
 
 }

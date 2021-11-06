@@ -32,6 +32,8 @@ public class DefaultExceptionHandler implements ExceptionMapper<Exception> {
             status = Response.Status.CONFLICT;
         } else if (cause instanceof UserByLoginNotFoundException) {
             status = Response.Status.UNAUTHORIZED;
+		} else if (cause instanceof IllegalArgumentException) {
+			status = Response.Status.BAD_REQUEST;
         }
         ErrorResponse errResp = ErrorResponse.builder().message("Ошибка")
                 .code(status.getStatusCode()).description(cause.getMessage()).build();

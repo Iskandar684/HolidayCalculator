@@ -25,6 +25,7 @@ import javax.persistence.criteria.Root;
 
 import org.jboss.logging.Logger;
 
+import lombok.NonNull;
 import ru.iskandar.holiday.calculator.service.ejb.search.ISearchServiceLocal;
 import ru.iskandar.holiday.calculator.service.ejb.search.SearchServiceException;
 import ru.iskandar.holiday.calculator.service.model.user.EntityBasedUserFactory;
@@ -131,8 +132,8 @@ public class UserServiceBean implements IUserServiceLocal, IUserServiceRemote {
     }
 
     @Override
-    public User createUser(NewUserEntry aNewUserEntry, Set<PermissionId> aPermissions) {
-        Objects.requireNonNull(aNewUserEntry);
+	public User createUser(@NonNull NewUserEntry aNewUserEntry, @NonNull Set<PermissionId> aPermissions) {
+		validateNewUser(aNewUserEntry);
         UserEntity entity = new NewUserEntityFactory(aNewUserEntry).create();
         _em.persist(entity);
         try {
@@ -153,6 +154,24 @@ public class UserServiceBean implements IUserServiceLocal, IUserServiceRemote {
         }
         return user;
     }
+
+	private void validateNewUser(@NonNull NewUserEntry aNewUserEntry) {
+		if (aNewUserEntry.getLogin() == null || aNewUserEntry.getLogin().isEmpty()) {
+			throw new IllegalArgumentException("Не указан логин.");
+		}
+		if (aNewUserEntry.getFirstName() == null || aNewUserEntry.getFirstName().isEmpty()) {
+			throw new IllegalArgumentException("Не указано имя.");
+		}
+		if (aNewUserEntry.getLastName() == null || aNewUserEntry.getLastName().isEmpty()) {
+			throw new IllegalArgumentException("Не указана фамилия.");
+		}
+		if (aNewUserEntry.getPatronymic() == null || aNewUserEntry.getPatronymic().isEmpty()) {
+			throw new IllegalArgumentException("Не указано отчество.");
+		}
+		if (aNewUserEntry.getPassword() == null || aNewUserEntry.getPassword().isEmpty()) {
+			throw new IllegalArgumentException("Не указан пароль.");
+		}
+	}
 
     /**
      * {@inheritDoc}

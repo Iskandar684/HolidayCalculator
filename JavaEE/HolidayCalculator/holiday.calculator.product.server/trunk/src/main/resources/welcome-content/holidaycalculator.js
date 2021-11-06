@@ -228,11 +228,15 @@ $.postJSON = function(url, data, callback) {
 		'success': callback,
 		'error': function(jqXHR, textStatus, errorThrown) {
 			console.log("postJSON error: jqXHR: " + jqXHR + " textStatus " + textStatus + " " + errorThrown);
-			var obj = $.parseJSON(jqXHR.responseText);
-			alert(obj["message"] + "\n" + obj["description"]);
+			showErr(jqXHR);
 		}
 	});
 };
+
+function showErr(aJqXHR) {
+	var obj = $.parseJSON(aJqXHR.responseText);
+	alert(obj["message"] + "\n" + obj["description"]);
+}
 
 function createUser() {
 	$.postJSON(url + "createUser/", { firstName: "", lastName: "", patronymic: "", login: "", password: "", note: "" }).done(function(aUser) {
@@ -245,20 +249,14 @@ function createUser() {
 
 
 function approve(statementUUID) {
-	$.post(url + "approve/" + statementUUID).done(function(aUser) {
+	$.postJSON(url + "approve/" + statementUUID).done(function(aUser) {
 		updateAfterConsider();
-	}).fail(function(jqxhr, textStatus, error) {
-		var err = textStatus + ", " + error;
-		console.log("approve Failed: " + err + "  " + jqxhr);
 	});
 }
 
 function reject(statementUUID) {
-	$.post(url + "reject/" + statementUUID).done(function(aUser) {
+	$.postJSON(url + "reject/" + statementUUID).done(function(aUser) {
 		updateAfterConsider();
-	}).fail(function(jqxhr, textStatus, error) {
-		var err = textStatus + ", " + error;
-		console.log("reject Failed: " + err + "  " + jqxhr);
 	});
 }
 
@@ -523,6 +521,7 @@ function openTakeHolidayDialog() {
 }
 
 function takeHoliday(aDates) {
+	// FIXME должен быть POST, а не GET
 	$.getJSON(url + "takeHoliday/" + aDates).done(function() {
 		updateHolidayCount();
 		updateOutgoingHolidaysQuantity();

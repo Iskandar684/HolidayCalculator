@@ -188,8 +188,6 @@ function showCreateUserDialog() {
 	dialogParent.load("newUser.html", function(responseTxt, statusTxt, xhr) {
 		if (statusTxt == "success") {
 			console.log("Форма добавления пользователя удачно загружена!");
-			var contentLb = $('#dialogParent').find('#documentContent');
-			contentLb.append(aDocument.content);
 		} else if (statusTxt == "error") {
 			console.log("Ошибка загрузки формы добавления пользователя: " + xhr.status + ": " + xhr.statusText);
 		} else {
@@ -220,9 +218,25 @@ function showCreateUserDialog() {
 	});
 }
 
-function createUser() {
-	$.post(url + "createUser/").done(function(aUser) {
+$.postJSON = function(url, data, callback) {
+	return jQuery.ajax({
+		'type': 'POST',
+		'url': url,
+		'contentType': 'application/json; charset=utf-8',
+		'data': JSON.stringify(data),
+		'dataType': 'json',
+		'success': callback,
+		'error': function(jqXHR, textStatus, errorThrown) {
+			console.log("postJSON error: jqXHR: " + jqXHR + " textStatus " + textStatus + " " + errorThrown);
+			var obj = $.parseJSON(jqXHR.responseText);
+			alert(obj["message"] + "\n" + obj["description"]);
+		}
+	});
+};
 
+function createUser() {
+	$.postJSON(url + "createUser/", { firstName: "", lastName: "", patronymic: "", login: "", password: "", note: "" }).done(function(aUser) {
+		console.log("User created " + aUser);
 	}).fail(function(jqxhr, textStatus, error) {
 		var err = textStatus + ", " + error;
 		console.log("createUser Failed: " + err + "  " + jqxhr);

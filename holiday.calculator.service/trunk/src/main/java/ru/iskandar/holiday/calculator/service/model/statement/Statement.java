@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.service.utils.DateUtils;
 
 /**
  * Заявление
@@ -178,6 +179,11 @@ public abstract class Statement<E extends StatementEntry> implements Serializabl
 		builder.append(" id=");
 		builder.append(_statementId);
 		return builder.toString();
+	}
+
+	public String getDescription() {
+		String createDate = DateUtils.format(getCreateDate(), DateUtils.DATE_FORMAT);
+		return String.format("%s от %s", getStatementType().getDescription(), createDate);
 	}
 
 }

@@ -1,67 +1,68 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <link type="text/css" rel="stylesheet" href="css/index.css">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link type="text/css" rel="stylesheet" href="css/index.css">
 
-    <script type="text/javascript" language="Javascript"
-            src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <link rel="stylesheet"
-          href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-    <script
-            src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <script type="text/javascript" language="Javascript"
-            src="holidaycalculator.js"></script>
+<script type="text/javascript" language="Javascript"
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<link rel="stylesheet"
+	href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script type="text/javascript" language="Javascript"
+	src="holidaycalculator.js"></script>
 
-    <title>Учет отгулов</title>
+<title>Учет отгулов</title>
 
 </head>
 <body>
-<h2>Система учета отгулов</h2>
-<div id="login_holder" class="login_holder">
-    <button id="loginBt">Войти</button>
-</div>
-<div id="logout_holder" class="logout_holder">
-    <button id="logoutBt">Выйти</button>
-</div>
+	<h2>Система учета отгулов</h2>
+	<div id="login_holder" class="login_holder">
+		<button id="loginBt">Войти</button>
+	</div>
+	<div id="logout_holder" class="logout_holder">
+		<button id="logoutBt">Выйти</button>
+	</div>
 
-<div id="dialog_auth" title="Авторизация">
-</div>
-<div id="takeHolidayParent" title="Подача заявления на отгул">
-</div>
-<div id="dialogParent" title="Система учета отгулов">
-</div>
+	<div id="dialog_auth" title="Авторизация"></div>
+	<div id="takeHolidayParent" title="Подача заявления на отгул"></div>
+	<div id="dialogParent" title="Система учета отгулов"></div>
 
-<div id="userinfo">
-    <h3>Информация о пользователе</h3>
-    <label id="fio"></label>
-    <p></p>
-    <label>Количество отгулов: </label> <label id="holidaycount"></label><span
-        style="display:inline-block; width: 10px;"></span><label id="OutgoingHolidaysQuantity"></label><span
-        style="display:inline-block; width: 10px;"></span><label id="IncomingHolidaysQuantity"></label>
-    <p></p>
-    <label>Количество дней отпуска: </label><span
-        style="display:inline-block; width: 10px;"></span><label id="LeaveCount"></label><span
-        style="display:inline-block; width: 10px;"></span><label id="OutgoingLeaveCount"></label>
-    <p></p>
-    <label>Дата начала следующего периода:</label><span
-        style="display:inline-block; width: 10px;"></span><label id="NextLeaveStartDate"></label>
-    <p></p>
-    <button id="takeHolidayBt">Взять отгул</button>
-    <span style="display:inline-block; width: 10px;"></span>
-    <button id="myStatementsBt">Мои заявления</button>
-    <button id="incomingStatementsBt">Входящие заявления</button>
-    <button id="createUserBt">Добавить пользователя</button>
-</div>
-<div id="myStatements"></div>
+	<div id="userinfo">
+		<h3>Информация о пользователе</h3>
+		<label id="fio"></label>
+		<p></p>
+		<label>Количество отгулов: </label> <label id="holidaycount"></label><span
+			style="display: inline-block; width: 10px;"></span><label
+			id="OutgoingHolidaysQuantity"></label><span
+			style="display: inline-block; width: 10px;"></span><label
+			id="IncomingHolidaysQuantity"></label>
+		<p></p>
+		<label>Количество дней отпуска: </label><span
+			style="display: inline-block; width: 10px;"></span><label
+			id="LeaveCount"></label><span
+			style="display: inline-block; width: 10px;"></span><label
+			id="OutgoingLeaveCount"></label>
+		<p></p>
+		<label>Дата начала следующего периода:</label><span
+			style="display: inline-block; width: 10px;"></span><label
+			id="NextLeaveStartDate"></label>
+		<p></p>
+		<button id="takeHolidayBt">Взять отгул</button>
+		<span style="display: inline-block; width: 10px;"></span>
+		<button id="myStatementsBt">Мои заявления</button>
+		<button id="incomingStatementsBt">Входящие заявления</button>
+		<button id="createUserBt">Добавить пользователя</button>
+	</div>
+	<div id="myStatements"></div>
 
-<noscript>
-    <div
-            style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
-        Для корректного отображения страницы в Вашем браузере должен быть
-        включен JavaScript.
-    </div>
-</noscript>
+	<noscript>
+		<div
+			style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+			Для корректного отображения страницы в Вашем браузере должен быть
+			включен JavaScript.</div>
+	</noscript>
 
 </body>
 </html>

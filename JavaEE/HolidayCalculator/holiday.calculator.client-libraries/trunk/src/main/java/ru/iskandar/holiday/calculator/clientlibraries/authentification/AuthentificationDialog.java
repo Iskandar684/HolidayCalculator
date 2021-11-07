@@ -139,7 +139,7 @@ public class AuthentificationDialog extends TitleAreaDialog {
 				if (Thread.interrupted()) {
 					return;
 				}
-				setMessage(AuthentificationDialogMessages.description, IMessageProvider.INFORMATION);
+				asyncSetMessage(AuthentificationDialogMessages.description, IMessageProvider.INFORMATION);
 			} else {
 				if (Thread.interrupted()) {
 					return;

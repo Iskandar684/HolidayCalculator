@@ -71,13 +71,15 @@ public class ClientConnector {
 		} catch (Exception e) {
 			StatusManager.getManager()
 					.handle(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Ошибка аутентификации", e));
-			AuthentificationDialog dialog = new AuthentificationDialog(Display.getDefault().getActiveShell(), params);
-			if (IDialogConstants.OK_ID == dialog.open()) {
-				authenticate();
-			} else {
-				cancelAuthenticate();
-				return;
-			}
+			Display.getDefault().asyncExec(() -> {
+				AuthentificationDialog dialog = new AuthentificationDialog(Display.getDefault().getActiveShell(),
+						params);
+				if (IDialogConstants.OK_ID == dialog.open()) {
+					authenticate();
+				} else {
+					cancelAuthenticate();
+				}
+			});
 		}
 	}
 
@@ -91,8 +93,7 @@ public class ClientConnector {
 	 * Загружает модель
 	 *
 	 * @return модель
-	 * @throws ConnectionException
-	 *             ошибка загрузки модели
+	 * @throws ConnectionException ошибка загрузки модели
 	 */
 	public HolidayCalculatorModel loadModel() throws ConnectionException {
 		ConnectionParams args = ConnectionParams.getInstance();

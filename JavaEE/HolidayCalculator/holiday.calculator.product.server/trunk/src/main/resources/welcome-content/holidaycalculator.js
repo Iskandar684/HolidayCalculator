@@ -204,7 +204,7 @@ function showCreateUserDialog() {
 		buttons: [{
 			text: "Добавить",
 			click: function() {
-				createUser();
+				createUser(buildNewUser());
 				dialogParent.dialog("close");
 			}
 		},
@@ -238,8 +238,19 @@ function showErr(aJqXHR) {
 	alert(obj["message"] + "\n" + obj["description"]);
 }
 
-function createUser() {
-	$.postJSON(url + "createUser/", { firstName: "", lastName: "", patronymic: "", login: "", password: "", note: "" }).done(function(aUser) {
+
+function buildNewUser() {
+	var firstName = document.getElementById('firstName').value;
+	var lastName = document.getElementById('lastName').value;
+	var patronymic = document.getElementById('patronymic').value;
+	var login = document.getElementById('login').value;
+	var password = document.getElementById('password').value;
+	var newUser = { firstName: firstName, lastName: lastName, patronymic: patronymic, login: login, password: password, note: "Добавлено из web-клиента." };
+	return newUser;
+}
+
+function createUser(aUser) {
+	$.postJSON(url + "createUser/", aUser).done(function(aUser) {
 		console.log("User created " + aUser);
 	}).fail(function(jqxhr, textStatus, error) {
 		var err = textStatus + ", " + error;

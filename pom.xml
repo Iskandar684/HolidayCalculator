@@ -23,16 +23,26 @@
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/releases/neon</url>
 		</repository>
-		<repository>
+		<!--<repository>
 			<id>nebula</id>
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/nebula/incubation/snapshot</url>
-		</repository>
-		<repository>
+		</repository>-->
+		<!--<repository>
 			<id>nebula-latest</id>
 			<layout>p2</layout>
 			<url>https://download.eclipse.org/nebula/releases/2.2.0/</url>
-		</repository>
+		</repository>-->
+                <repository>
+                      <id>nebula-archive</id>
+                      <layout>p2</layout>
+                      <url>https://archive.eclipse.org/nebula/Q22016/incubation/</url>
+                </repository>
+                <repository>
+                      <id>nebula-archive-2.2.0</id>
+                      <layout>p2</layout>
+                      <url>https://archive.eclipse.org/nebula/releases/2.2.0/</url>
+                </repository>
 	</repositories>
 
 

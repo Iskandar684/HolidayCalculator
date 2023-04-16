@@ -601,11 +601,10 @@
 								<artifactItem>
 									<groupId>org.eclipse.birt.runtime</groupId>
 									<artifactId>org.eclipse.birt.runtime</artifactId>
-									<version>4.6.0-SNAPSHOT</version>
 									<type>jar</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${ear.lib.dir}</outputDirectory>
-									<destFileName>org.eclipse.birt.runtime-4.6.0-SNAPSHOT.jar</destFileName>
+									<destFileName>org.eclipse.birt.runtime.jar</destFileName>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.eclipse.birt.runtime.3_7_1</groupId>
@@ -1664,6 +1663,23 @@
 									<destFileName>jackson-annotations-2.10.1.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>Remove META-INF</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>${basedir}/scripts/removeMF.sh</executable>
 						</configuration>
 					</execution>
 				</executions>

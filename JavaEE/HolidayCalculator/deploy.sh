@@ -8,6 +8,8 @@ export CLIENT_ARCHIVE_PATH="./holiday.calculator.product/trunk/target/products"
 
 
 function deployServer(){
+   rm -rf $SERVER_PATH/standalone/deployments
+   mkdir $SERVER_PATH/standalone/deployments
    unzip -o $SERVER_ARCHIVE_PATH/HolidayCalculator-server-server.zip -d $SERVER_ARCHIVE_PATH
    cp -rf $SERVER_ARCHIVE_PATH/HolidayCalculator-server/* $SERVER_PATH
 }

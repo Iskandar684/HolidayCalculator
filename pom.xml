@@ -47,7 +47,7 @@
 
 
 	<modules>
-	    <module>holiday.calculator.building.bom/trunk</module>
+                <module>holiday.calculator.building.bom/trunk</module>
 		<module>holiday.calculator.report.service/trunk</module>
 		<module>holiday.calculator.service/trunk</module>
 		<!-- Десктоп -->

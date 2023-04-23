@@ -1,10 +1,10 @@
 #!/bin/bash
 
 export SERVER_PATH="/home/iskandar/Desktop/hc-server"
-export SERVER_ARCHIVE_PATH="./holiday.calculator.product.server/trunk/target"
+export SERVER_ARCHIVE_PATH="./holiday.calculator.product.server/target"
 
 export CLIENT_PATH="/home/iskandar/Desktop/hc-client"
-export CLIENT_ARCHIVE_PATH="./holiday.calculator.product/trunk/target/products"
+export CLIENT_ARCHIVE_PATH="./holiday.calculator.product/target/products"
 
 
 function deployServer(){

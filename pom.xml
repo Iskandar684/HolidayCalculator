@@ -47,18 +47,18 @@
 
 
 	<modules>
-                <module>holiday.calculator.building.bom/trunk</module>
-		<module>holiday.calculator.report.service/trunk</module>
-		<module>holiday.calculator.service/trunk</module>
+                <module>holiday.calculator.building.bom</module>
+		<module>holiday.calculator.report.service</module>
+		<module>holiday.calculator.service</module>
 		<!-- Десктоп -->
-		<module>holiday.calculator.client-libraries/trunk</module>
-		<module>holiday.calculator.ui/trunk</module>
-		<module>holiday.calculator.branding/trunk</module>
-		<module>holiday.calculator.product/trunk</module>
+		<module>holiday.calculator.client-libraries</module>
+		<module>holiday.calculator.ui</module>
+		<module>holiday.calculator.branding</module>
+		<module>holiday.calculator.product</module>
 		<!-- Веб -->
-		<module>holiday.calculator.web.service/trunk</module>
+		<module>holiday.calculator.web.service</module>
 		<!-- СБОРКА СЕРВЕРА -->
-		<module>holiday.calculator.product.server/trunk</module>
+		<module>holiday.calculator.product.server</module>
 	</modules>
 
 	<build>

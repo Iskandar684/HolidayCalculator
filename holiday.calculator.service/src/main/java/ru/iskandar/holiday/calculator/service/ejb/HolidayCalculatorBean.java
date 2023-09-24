@@ -46,13 +46,13 @@ import ru.iskandar.holiday.calculator.service.model.statement.StatementEntry;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementValidator;
-import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
 import ru.iskandar.holiday.calculator.service.model.user.NewUserNotValidException;
-import ru.iskandar.holiday.calculator.service.model.user.User;
 import ru.iskandar.holiday.calculator.service.model.user.UserByLoginAlreadyExistException;
 import ru.iskandar.holiday.calculator.service.model.user.UserByLoginNotFoundException;
-import ru.iskandar.holiday.calculator.service.model.user.UserId;
 import ru.iskandar.holiday.calculator.service.utils.DateUtils;
+import ru.iskandar.holiday.calculator.user.service.api.NewUserEntry;
+import ru.iskandar.holiday.calculator.user.service.api.User;
+import ru.iskandar.holiday.calculator.user.service.api.UserId;
 
 /**
  * Сервис учета отгулов
@@ -85,6 +85,7 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
     @EJB
     private IStatementRepository _statementRepo;
 
+    /** Сервис печатной формы заявлений */
     @EJB
     private IHolidayCalculatorReportService _reportService;
 
@@ -147,19 +148,19 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
         addStatementToSearchService(statement);
         return statement;
     }
-    
 
-	@Override
-	public Statement<?> approve(StatementId aStatementID) throws StatementAlreadyConsideredException {
-		return approve(getStatement(aStatementID));
-	}
+    @Override
+    public Statement<?> approve(StatementId aStatementID)
+            throws StatementAlreadyConsideredException {
+        return approve(getStatement(aStatementID));
+    }
 
+    @Override
+    public Statement<?> reject(StatementId aStatementID)
+            throws StatementAlreadyConsideredException {
+        return reject(getStatement(aStatementID));
+    }
 
-	@Override
-	public Statement<?> reject(StatementId aStatementID) throws StatementAlreadyConsideredException {
-		return reject(getStatement(aStatementID));
-	}
-	
     @RolesAllowed(Permission.CONSIDER)
     @Override
     public Statement<?> reject(Statement<?> aStatement) throws StatementAlreadyConsideredException {
@@ -530,7 +531,8 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
      * Проверяет валидность заполнения описания создаваемого пользователя
      *
      * @param aNewUserEntry описание создаваемого пользователя
-     * @throws NewUserNotValidException если описание создаваемого пользователя заполнено неверно
+     * @throws NewUserNotValidException если описание создаваемого пользователя
+     *             заполнено неверно
      */
     private void checkCreatingUser(NewUserEntry aNewUserEntry) {
         Objects.requireNonNull(aNewUserEntry);
@@ -650,12 +652,12 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
         throw new DocumentPreviewException(
                 String.format("Заявление по идентификатору %s на найдено.", aStatementID));
     }
-    
-    private Statement<?> getStatement(StatementId aStatementID){
+
+    private Statement<?> getStatement(StatementId aStatementID) {
         HolidayStatement holidayStatement = _statementRepo.getHolidayStatement(aStatementID);
         if (holidayStatement != null) {
             // отгул
-            return holidayStatement ;
+            return holidayStatement;
         }
         LeaveStatement leaveStatement = _statementRepo.getLeaveStatement(aStatementID);
         if (leaveStatement != null) {

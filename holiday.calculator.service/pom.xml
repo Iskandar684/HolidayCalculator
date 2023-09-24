@@ -71,6 +71,20 @@
 			<artifactId>holiday.calculator.report.service</artifactId>
 			<scope>provided</scope>
 		</dependency>
+	    <dependency>
+			<groupId>ru.iskandar.holiday.calculator</groupId>
+			<artifactId>holiday.calculator.user.service.api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+            <groupId>org.eclipse.microprofile.rest.client</groupId>
+            <artifactId>microprofile-rest-client-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.thorntail</groupId>
+            <artifactId>microprofile-config</artifactId>
+        </dependency>
 		<!-- Зависимости elasticsearch -->
 		<dependency>
 			<groupId>org.elasticsearch.client</groupId>

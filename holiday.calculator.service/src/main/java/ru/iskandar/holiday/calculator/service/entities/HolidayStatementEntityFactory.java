@@ -6,7 +6,7 @@ import java.util.Set;
 
 import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
-import ru.iskandar.holiday.calculator.service.model.user.UserEntity;
+import ru.iskandar.holiday.calculator.user.service.api.UserId;
 
 /**
  * Фабрика создания сущности заявления на отгул
@@ -22,9 +22,9 @@ public abstract class HolidayStatementEntityFactory {
 		Set<Date> days = getDays();
 		StatementId id = getId();
 		StatementStatus status = getStatus();
-		UserEntity author = getAuthor();
+		UserId author = getAuthor();
 		Date createDate = getCreateDate();
-		UserEntity consider = getConsider();
+		UserId consider = getConsider();
 		Date considerDate = getConsiderDate();
 
 		Objects.requireNonNull(days);
@@ -41,8 +41,8 @@ public abstract class HolidayStatementEntityFactory {
 		// У несохраненных в БД сущностей первичный ключ должен быть null
 		statement.setUuid(id != null ? id.getUUID() : null);
 		statement.setDays(days);
-		statement.setAuthor(author);
-		statement.setConsider(consider);
+		statement.setAuthor(author.getUUID());
+		statement.setConsider(consider == null ? null : consider.getUUID());
 		statement.setConsiderDate(considerDate);
 		statement.setStatus(status);
 		statement.setCreateDate(createDate);
@@ -67,7 +67,7 @@ public abstract class HolidayStatementEntityFactory {
 	/**
 	 * @return the author
 	 */
-	protected abstract UserEntity getAuthor();
+	protected abstract UserId getAuthor();
 
 	/**
 	 * @return the createDate
@@ -77,7 +77,7 @@ public abstract class HolidayStatementEntityFactory {
 	/**
 	 * @return the consider
 	 */
-	protected abstract UserEntity getConsider();
+	protected abstract UserId getConsider();
 
 	/**
 	 * @return the considerDate

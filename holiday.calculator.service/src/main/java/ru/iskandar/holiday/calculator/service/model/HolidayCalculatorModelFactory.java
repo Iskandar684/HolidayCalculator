@@ -3,8 +3,7 @@ package ru.iskandar.holiday.calculator.service.model;
 import java.util.Objects;
 
 import ru.iskandar.holiday.calculator.service.ejb.IUserServiceLocal;
-import ru.iskandar.holiday.calculator.service.model.user.User;
-
+import ru.iskandar.holiday.calculator.user.service.api.User;
 /**
  * Фабрика создания модели учета отгулов
  */

@@ -1,6 +1,3 @@
-/**
- *
- */
 package ru.iskandar.holiday.calculator.ui.user;
 
 import java.util.Objects;
@@ -10,8 +7,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
-import ru.iskandar.holiday.calculator.service.model.user.UserId;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
+import ru.iskandar.holiday.calculator.user.service.api.UserId;
 
 /**
  *

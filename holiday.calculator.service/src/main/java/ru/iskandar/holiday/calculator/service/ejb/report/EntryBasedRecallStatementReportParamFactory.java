@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import ru.iskandar.holiday.calculator.service.model.statement.RecallStatementEntry;
-import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.user.service.api.User;
 
 /**
  *

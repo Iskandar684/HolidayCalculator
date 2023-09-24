@@ -558,6 +558,18 @@
 			    <version>2.0.0.Final</version>
 			    <scope>provided</scope>
 		    </dependency>
+		    <dependency>
+		        <groupId>org.jboss.spec.javax.servlet</groupId>
+                <artifactId>jboss-servlet-api_4.0_spec</artifactId>
+                <version>2.0.0.Final</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+			    <groupId>io.thorntail</groupId>
+			    <artifactId>microprofile-config</artifactId>
+			    <version>2.0.0.Final</version>
+			    <scope>provided</scope>
+		    </dependency>
 			<!-- Open API (Swagger 2) -->
 			<dependency>
 				<groupId>io.swagger.core.v3</groupId>
@@ -588,6 +600,22 @@
 			<dependency>
 				<groupId>holiday.calculator.web.service</groupId>
 				<artifactId>holiday-calculator-web-service</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+				<type>war</type>
+			</dependency>
+			<dependency>
+				<groupId>ru.iskandar.holiday.calculator</groupId>
+	            <artifactId>holiday.calculator.user.service.api</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>ru.iskandar.holiday.calculator</groupId>
+	            <artifactId>holiday.calculator.user.service</artifactId>
+	            <version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>holiday.calculator.web.service</groupId>
+				<artifactId>holiday-calculator-user-web-service</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 				<type>war</type>
 			</dependency>
@@ -681,6 +709,11 @@
 				<artifactId>lucene-queries</artifactId>
 				<version>8.0.0</version>
 			</dependency>
+			<dependency>
+                <groupId>org.eclipse.microprofile.rest.client</groupId>
+                <artifactId>microprofile-rest-client-api</artifactId>
+                <version>1.2</version>
+            </dependency>
 			<!-- драйвер для postgresql 9.6 (PostgreSQL JDBC Driver - JDBC 4.2) -->
 			<dependency>
 				<groupId>org.postgresql</groupId>

@@ -16,8 +16,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.EditorPart;
 
-import ru.iskandar.holiday.calculator.service.model.user.UserId;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
+import ru.iskandar.holiday.calculator.user.service.api.UserId;
 
 public class UsersEditor extends EditorPart {
 

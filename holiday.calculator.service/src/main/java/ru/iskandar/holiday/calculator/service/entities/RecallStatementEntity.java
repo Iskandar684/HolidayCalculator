@@ -13,9 +13,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import lombok.EqualsAndHashCode;
@@ -23,7 +22,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
-import ru.iskandar.holiday.calculator.service.model.user.UserEntity;
+import ru.iskandar.holiday.calculator.user.service.api.UserId;
 
 /**
  * Сущность заявления на отпуск
@@ -34,7 +33,7 @@ import ru.iskandar.holiday.calculator.service.model.user.UserEntity;
 @Setter
 @Accessors(prefix = "_")
 @EqualsAndHashCode(of = "_uuid")
-public class RecallStatementEntity implements Serializable {
+public class RecallStatementEntity implements Serializable, IStatementEntity {
 
 	/**
 	 * Идентификатор для сериализации
@@ -48,15 +47,13 @@ public class RecallStatementEntity implements Serializable {
 	private UUID _uuid;
 
 	/** Автор заявления */
-	@ManyToOne()
-	@JoinColumn(name = "author")
+	@Column(name = "author_uuid")
 	@NotNull(message = "Не указан автор заявления")
-	private UserEntity _author;
+	private UUID _author;
 
 	/** Пользователь, который рассмотрел заявление */
-	@ManyToOne()
-	@JoinColumn(name = "consider")
-	private UserEntity _consider;
+	@Column(name = "consider_uuid")
+	private UUID _consider;
 
 	/** Статус заявления */
 	@Column(name = "status")
@@ -77,5 +74,17 @@ public class RecallStatementEntity implements Serializable {
 	@ElementCollection(targetClass = Date.class)
 	@CollectionTable(name = "ru_iskandar_holiday_calculator_recall_statement_days")
 	private Set<Date> _days;
+
+        @Override
+        @Transient
+        public UserId getAuthorId() {
+            return _author == null ? null : UserId.fromString(_author);
+        }
+
+        @Override
+        @Transient
+        public UserId getConsiderId() {
+            return _consider == null ? null : UserId.fromString(_consider);
+        }
 
 }

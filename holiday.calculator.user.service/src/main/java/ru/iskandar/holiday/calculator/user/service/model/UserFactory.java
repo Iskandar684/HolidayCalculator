@@ -1,8 +1,10 @@
-package ru.iskandar.holiday.calculator.service.model.user;
+package ru.iskandar.holiday.calculator.user.service.model;
 
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
+
+import ru.iskandar.holiday.calculator.user.service.api.User;
 
 /**
  * Фабрика создания описания пользователя
@@ -27,8 +29,8 @@ public abstract class UserFactory {
 		Objects.requireNonNull(patronymic, "Не указано отчество создаваемого пользователя");
 		Objects.requireNonNull(empDate, "Не указана дата приема на работу создаваемого пользователя");
 		Objects.requireNonNull(login, "Не указан логин создаваемого пользователя");
-		User user = new User(uuid, lastName, firstName, patronymic, empDate, login, getNote());
-		return user;
+		return User.builder().uuid(uuid).firstName(firstName).lastName(lastName).patronymic(patronymic)
+				.employmentDate(empDate).login(login).note(getNote()).build();
 	}
 
 	/**

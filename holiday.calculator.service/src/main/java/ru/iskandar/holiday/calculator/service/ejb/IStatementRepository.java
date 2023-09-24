@@ -14,7 +14,7 @@ import ru.iskandar.holiday.calculator.service.model.statement.Statement;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementType;
-import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.user.service.api.User;
 
 /**
  * Репозиторий заявлений
@@ -28,6 +28,7 @@ public interface IStatementRepository {
 	 *            пользователь
 	 * @return заявления
 	 */
+        // FIXME в аргументе перейти на UserId
 	public Collection<Statement<?>> getStatementsByAuthor(User aAuthor);
 
 	/**
@@ -37,6 +38,7 @@ public interface IStatementRepository {
 	 *            пользователь
 	 * @return заявления
 	 */
+        // FIXME в аргументе перейти на UserId
 	public Collection<HolidayStatement> getHolidayStatementsByAuthor(User aAuthor);
 
 	/**
@@ -46,6 +48,7 @@ public interface IStatementRepository {
 	 *            пользователь
 	 * @return заявления
 	 */
+        // FIXME в аргументе перейти на UserId
 	public Collection<RecallStatement> getRecallStatementsByAuthor(User aAuthor);
 
 	/**
@@ -55,6 +58,7 @@ public interface IStatementRepository {
 	 *            пользователь
 	 * @return заявления
 	 */
+        // FIXME в аргументе перейти на UserId
 	public Collection<LeaveStatement> getLeaveStatementsByAuthor(User aAuthor);
 
 	/**

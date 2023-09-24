@@ -10,8 +10,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
-import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.user.service.api.NewUserEntry;
+import ru.iskandar.holiday.calculator.user.service.api.User;
 
 /**
  * Сервис работы с пользователями
@@ -29,15 +29,17 @@ public interface IUserServiceRemote extends IUserService {
     @HCWebMethod(errMess = "Ошибка получения текущего пользователя.")
     @Override
     User getCurrentUser();
-    
-	@POST
-	@Path("createUser")
-	@HCWebMethod(errMess = "Ошибка создания пользователя.")
-	@Consumes(MediaType.APPLICATION_JSON)
-	default User createUser(NewUserEntry aNewUserEntry) {
-		return createUser(aNewUserEntry, new HashSet<>());
-	};
 
-	User createUser(NewUserEntry aNewUserEntry, Set<PermissionId> aPermissions);
+    @POST
+    @Path("createUser")
+    @HCWebMethod(errMess = "Ошибка создания пользователя.")
+    @Consumes(MediaType.APPLICATION_JSON)
+    default User createUser(NewUserEntry aNewUserEntry) {
+        return createUser(aNewUserEntry, new HashSet<>());
+    }
+
+    @Override
+    User createUser(NewUserEntry aNewUserEntry, Set<PermissionId> aPermissions);
 
 }
+

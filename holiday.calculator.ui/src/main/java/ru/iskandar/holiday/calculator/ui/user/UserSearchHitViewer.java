@@ -8,9 +8,9 @@ import org.eclipse.ui.PlatformUI;
 
 import ru.iskandar.holiday.calculator.service.model.search.ISearchHit;
 import ru.iskandar.holiday.calculator.service.model.search.SearchConstants;
-import ru.iskandar.holiday.calculator.service.model.user.UserId;
 import ru.iskandar.holiday.calculator.ui.ModelProviderHolder;
 import ru.iskandar.holiday.calculator.ui.search.ISearchHitViewer;
+import ru.iskandar.holiday.calculator.user.service.api.UserId;
 
 /**
  * @author Искандар
@@ -26,7 +26,7 @@ public class UserSearchHitViewer implements ISearchHitViewer {
 	@Override
 	public void view(ISearchHit aSearchHit) {
 		String userIdAsStr = (String) aSearchHit.getSourceAsMap().get(SearchConstants.USER_ID_KEY);
-		UserId userId = UserId.from(UUID.fromString(userIdAsStr));
+                UserId userId = UserId.fromString(UUID.fromString(userIdAsStr));
 		ViewUsersEditorInput input = new ViewUsersEditorInput(ModelProviderHolder.getInstance().getModelProvider(),
 				userId);
 		try {

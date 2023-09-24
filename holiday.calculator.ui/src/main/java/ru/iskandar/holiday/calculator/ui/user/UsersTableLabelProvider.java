@@ -7,8 +7,8 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import ru.iskandar.holiday.calculator.service.model.user.User;
 import ru.iskandar.holiday.calculator.ui.user.UsersTableCreator.UsersTableColumn;
+import ru.iskandar.holiday.calculator.user.service.api.User;
 
 /**
  * Поставщик текста таблицы заявлений

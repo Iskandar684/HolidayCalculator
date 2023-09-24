@@ -20,10 +20,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import ru.iskandar.holiday.calculator.service.ejb.PermissionId;
-import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
 import ru.iskandar.holiday.calculator.service.model.user.UserByLoginAlreadyExistException;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.Messages;
+import ru.iskandar.holiday.calculator.user.service.api.NewUserEntry;
 
 /**
  * Диалог создания пользователя.

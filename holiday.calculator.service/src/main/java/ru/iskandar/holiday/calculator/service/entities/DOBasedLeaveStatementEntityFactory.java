@@ -7,9 +7,8 @@ import java.util.Set;
 import ru.iskandar.holiday.calculator.service.model.statement.LeaveStatement;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
-import ru.iskandar.holiday.calculator.service.model.user.DOBasedUserEntityFactory;
-import ru.iskandar.holiday.calculator.service.model.user.User;
-import ru.iskandar.holiday.calculator.service.model.user.UserEntity;
+import ru.iskandar.holiday.calculator.user.service.api.User;
+import ru.iskandar.holiday.calculator.user.service.api.UserId;
 
 /**
  *
@@ -54,9 +53,9 @@ public class DOBasedLeaveStatementEntityFactory extends LeaveStatementEntityFact
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected UserEntity getAuthor() {
+	protected UserId getAuthor() {
 		User author = _statement.getAuthor();
-		return new DOBasedUserEntityFactory(author).create();
+		return author.getId();
 	}
 
 	/**
@@ -71,12 +70,12 @@ public class DOBasedLeaveStatementEntityFactory extends LeaveStatementEntityFact
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected UserEntity getConsider() {
+	protected UserId getConsider() {
 		User consider = _statement.getConsider();
 		if (consider == null) {
 			return null;
 		}
-		return new DOBasedUserEntityFactory(consider).create();
+		return consider.getId();
 	}
 
 	/**

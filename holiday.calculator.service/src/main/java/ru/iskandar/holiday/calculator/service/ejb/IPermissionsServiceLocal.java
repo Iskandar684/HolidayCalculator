@@ -1,6 +1,6 @@
 package ru.iskandar.holiday.calculator.service.ejb;
 
-import ru.iskandar.holiday.calculator.service.model.user.UserId;
+import ru.iskandar.holiday.calculator.user.service.api.UserId;
 
 /**
  * Локальный сервис проверки полномочий у пользователя

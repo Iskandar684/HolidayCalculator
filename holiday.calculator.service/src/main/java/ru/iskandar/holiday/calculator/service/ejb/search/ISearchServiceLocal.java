@@ -2,8 +2,7 @@ package ru.iskandar.holiday.calculator.service.ejb.search;
 
 import ru.iskandar.holiday.calculator.service.model.search.ISearchResult;
 import ru.iskandar.holiday.calculator.service.model.statement.Statement;
-import ru.iskandar.holiday.calculator.service.model.user.User;
-
+import ru.iskandar.holiday.calculator.user.service.api.User;
 /**
  * Служба поиска.
  */

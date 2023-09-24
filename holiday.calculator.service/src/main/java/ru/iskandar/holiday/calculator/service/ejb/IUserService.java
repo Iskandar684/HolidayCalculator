@@ -1,13 +1,14 @@
 package ru.iskandar.holiday.calculator.service.ejb;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
-import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
-import ru.iskandar.holiday.calculator.service.model.user.User;
 import ru.iskandar.holiday.calculator.service.model.user.UserByIdNotFoundException;
 import ru.iskandar.holiday.calculator.service.model.user.UserByLoginNotFoundException;
-import ru.iskandar.holiday.calculator.service.model.user.UserId;
+import ru.iskandar.holiday.calculator.user.service.api.NewUserEntry;
+import ru.iskandar.holiday.calculator.user.service.api.User;
+import ru.iskandar.holiday.calculator.user.service.api.UserId;
 
 /**
  * Сервис работы с пользователями
@@ -63,5 +64,7 @@ public interface IUserService {
 	 *             если пользователь по указанному идентификатору не найден
 	 */
 	void changeNote(UserId aUserId, String aNewNote);
+
+        Map<UserId, User> getUsersById(Collection<UserId> aIds);
 
 }

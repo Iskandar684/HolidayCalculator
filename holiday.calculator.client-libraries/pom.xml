@@ -14,8 +14,7 @@
 
 	<groupId>ru.iskandar.holiday.calculator.client-libraries</groupId>
 	<artifactId>ru.iskandar.holiday.calculator.client-libraries</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
-
+	
 	<packaging>eclipse-plugin</packaging>
 
 	<dependencyManagement>
@@ -38,6 +37,10 @@
 		<dependency>
 			<groupId>ru.iskandar.holiday.calculator</groupId>
 			<artifactId>holiday.calculator.service</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ru.iskandar.holiday.calculator</groupId>
+			<artifactId>holiday.calculator.user.service.api</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -73,6 +76,23 @@
 									<overWrite>true</overWrite>
 									<outputDirectory>${project.basedir}/lib/sources</outputDirectory>
 									<destFileName>holiday.calculator.service-source.jar</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>ru.iskandar.holiday.calculator</groupId>
+									<artifactId>holiday.calculator.user.service.api</artifactId>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.basedir}/lib</outputDirectory>
+									<destFileName>holiday.calculator.user.service.api.jar</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>ru.iskandar.holiday.calculator</groupId>
+									<artifactId>holiday.calculator.user.service.api</artifactId>
+									<type>jar</type>
+									<classifier>sources</classifier>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.basedir}/lib/sources</outputDirectory>
+									<destFileName>holiday.calculator.user.service.api-source.jar</destFileName>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.wildfly</groupId>

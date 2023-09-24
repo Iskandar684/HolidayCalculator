@@ -3,7 +3,7 @@ package ru.iskandar.holiday.calculator.service.ejb.report;
 import java.util.Date;
 import java.util.Set;
 
-import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.user.service.api.User;
 
 /**
  *

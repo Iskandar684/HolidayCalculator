@@ -22,13 +22,13 @@ import ru.iskandar.holiday.calculator.service.model.statement.RecallStatementEnt
 import ru.iskandar.holiday.calculator.service.model.statement.Statement;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
-import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
 import ru.iskandar.holiday.calculator.service.model.user.NewUserNotValidException;
-import ru.iskandar.holiday.calculator.service.model.user.User;
 import ru.iskandar.holiday.calculator.service.model.user.UserByIdNotFoundException;
 import ru.iskandar.holiday.calculator.service.model.user.UserByLoginAlreadyExistException;
 import ru.iskandar.holiday.calculator.service.model.user.UserByLoginNotFoundException;
-import ru.iskandar.holiday.calculator.service.model.user.UserId;
+import ru.iskandar.holiday.calculator.user.service.api.NewUserEntry;
+import ru.iskandar.holiday.calculator.user.service.api.User;
+import ru.iskandar.holiday.calculator.user.service.api.UserId;
 
 /**
  * Сервис учета отгулов
@@ -75,8 +75,8 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 *             если нет прав на рассмотрение заявлений
 	 */
 	Statement<?> approve(Statement<?> aStatement) throws StatementAlreadyConsideredException;
-	
-	
+
+
 	/**
 	 * Одобряет заявление.
 	 *
@@ -94,7 +94,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 *             если нет прав на рассмотрение заявлений
 	 */
 	Statement<?> approve(StatementId aStatementID) throws StatementAlreadyConsideredException;
-	
+
 
 	/**
 	 * Отклоняет заявление
@@ -114,7 +114,7 @@ public interface IHolidayCalculatorService extends IHolidayCalculatorModelPermis
 	 *             если нет прав на рассмотрение заявлений
 	 */
 	Statement<?> reject(Statement<?> aStatement) throws StatementAlreadyConsideredException;
-	
+
 	/**
 	 * Отклоняет заявление
 	 *

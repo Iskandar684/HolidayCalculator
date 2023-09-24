@@ -35,8 +35,8 @@ import ru.iskandar.holiday.calculator.service.model.document.StatementDocument;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.statement.Statement;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
-import ru.iskandar.holiday.calculator.service.model.user.User;
 import ru.iskandar.holiday.calculator.service.model.user.UserByLoginNotFoundException;
+import ru.iskandar.holiday.calculator.user.service.api.User;
 
 /**
  * Веб-сервис учета отгулов
@@ -154,7 +154,7 @@ public class HolidayCalculatorWebService {
         User user = _userService.getCurrentUser();
         return _holidayService.getIncomingHolidaysQuantity(user);
     }
-    
+
 	/**
 	 * Возвращает входящие заявления.
 	 *
@@ -275,7 +275,7 @@ public class HolidayCalculatorWebService {
         }
         return new HTMLDocument(new String(document.getContent(), Charset.forName("utf-8")));
     }
-    
+
 	@POST
 	@Path("/approve/{statementUUID}")
 	@PermitAll
@@ -283,7 +283,7 @@ public class HolidayCalculatorWebService {
 		StatementId statementID = StatementId.from(UUID.fromString(statementUUID));
 		return _holidayService.approve(statementID);
 	}
-	
+
 	@POST
 	@Path("/reject/{statementUUID}")
 	@PermitAll
@@ -291,13 +291,13 @@ public class HolidayCalculatorWebService {
 		StatementId statementID = StatementId.from(UUID.fromString(statementUUID));
 		return _holidayService.reject(statementID);
 	}
-	
+
 	@GET
 	@Path("/canConsider")
 	public boolean canConsider() {
 		return _holidayService.canConsider();
 	}
-	
+
 	@GET
 	@Path("/canCreateUser")
 	public boolean canCreateUser() {

@@ -575,6 +575,14 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>ru.iskandar.holiday.calculator</groupId>
+									<artifactId>holiday.calculator.user.service.api</artifactId>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+							        <outputDirectory>${ear.lib.dir}</outputDirectory>
+									<destFileName>holiday.calculator.user.service.api.jar</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>ru.iskandar.holiday.calculator</groupId>
 									<artifactId>holiday.calculator.service</artifactId>
 									<type>jar</type>
 									<overWrite>true</overWrite>

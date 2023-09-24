@@ -1,4 +1,4 @@
-package ru.iskandar.holiday.calculator.service.model.user;
+package ru.iskandar.holiday.calculator.user.service.entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -9,7 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+
+import ru.iskandar.holiday.calculator.user.service.api.UserConstants;
+import ru.iskandar.holiday.calculator.user.service.api.UserId;
 
 /**
  * Сущность пользователя
@@ -155,6 +159,11 @@ public class UserEntity implements Serializable {
 	public void setNote(String aNote) {
 		_note = aNote;
 	}
+
+        @Transient
+        public UserId getId() {
+            return _uuid == null ? null : UserId.fromString(_uuid);
+        }
 
 	/**
 	 * {@inheritDoc}

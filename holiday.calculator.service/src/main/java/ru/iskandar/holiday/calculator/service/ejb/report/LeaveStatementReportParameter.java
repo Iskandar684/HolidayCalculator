@@ -6,8 +6,8 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
-import ru.iskandar.holiday.calculator.service.model.user.User;
 import ru.iskandar.holiday.calculator.service.utils.DateUtils;
+import ru.iskandar.holiday.calculator.user.service.api.User;
 
 /**
  * Контейнер-параметр для формирования документа "Заявления на отпуск"

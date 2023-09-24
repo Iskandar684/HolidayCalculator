@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
-import ru.iskandar.holiday.calculator.service.model.user.User;
+import ru.iskandar.holiday.calculator.user.service.api.User;
 
 /**
  * Инициатор события

@@ -44,6 +44,11 @@
 			<artifactId>holiday.calculator.report.service</artifactId>
 			<scope>provided</scope>
 		</dependency>
+	    <dependency>
+			<groupId>ru.iskandar.holiday.calculator</groupId>
+			<artifactId>holiday.calculator.user.service.api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>javax.ws.rs</groupId>
 			<artifactId>javax.ws.rs-api</artifactId>

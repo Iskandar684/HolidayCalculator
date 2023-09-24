@@ -49,7 +49,11 @@
 	<modules>
                 <module>holiday.calculator.building.bom</module>
 		<module>holiday.calculator.report.service</module>
-		<module>holiday.calculator.service</module>
+		<module>holiday.calculator.service</module> 
+                <module>holiday.calculator.user.service.api</module>
+                <module>holiday.calculator.user.service</module>
+                <module>holiday.calculator.user.web.service</module>
+
 		<!-- Десктоп -->
 		<module>holiday.calculator.client-libraries</module>
 		<module>holiday.calculator.ui</module>

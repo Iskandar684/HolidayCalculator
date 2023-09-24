@@ -22,11 +22,11 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorEvent;
 import ru.iskandar.holiday.calculator.service.model.HolidayCalculatorModel;
 import ru.iskandar.holiday.calculator.service.model.IHolidayCalculatorModelListener;
-import ru.iskandar.holiday.calculator.service.model.user.User;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.ILoadListener;
 import ru.iskandar.holiday.calculator.ui.ILoadingProvider.LoadStatus;
 import ru.iskandar.holiday.calculator.ui.outgoing.OutgoingStatementsEditor;
 import ru.iskandar.holiday.calculator.ui.outgoing.OutgoingStatementsEditorInput;
+import ru.iskandar.holiday.calculator.user.service.api.User;
 
 /**
  * Форма отображения атрибутов пользователя

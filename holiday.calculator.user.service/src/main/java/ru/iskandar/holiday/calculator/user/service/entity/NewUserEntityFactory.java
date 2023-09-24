@@ -1,7 +1,10 @@
-package ru.iskandar.holiday.calculator.service.model.user;
+package ru.iskandar.holiday.calculator.user.service.entity;
 
 import java.util.Date;
 import java.util.Objects;
+
+import ru.iskandar.holiday.calculator.user.service.api.NewUserEntry;
+import ru.iskandar.holiday.calculator.user.service.api.UserId;
 
 /**
  *

@@ -8,10 +8,10 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.widgets.Composite;
 
-import ru.iskandar.holiday.calculator.service.model.user.User;
-import ru.iskandar.holiday.calculator.service.model.user.UserConstants;
 import ru.iskandar.holiday.calculator.ui.HolidayCalculatorModelProvider;
 import ru.iskandar.holiday.calculator.ui.grid.MultiTextCellEditor;
+import ru.iskandar.holiday.calculator.user.service.api.User;
+import ru.iskandar.holiday.calculator.user.service.api.UserConstants;
 
 /**
  *

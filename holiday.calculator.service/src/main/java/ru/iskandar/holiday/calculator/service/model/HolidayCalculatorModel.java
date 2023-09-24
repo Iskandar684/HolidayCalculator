@@ -32,9 +32,9 @@ import ru.iskandar.holiday.calculator.service.model.statement.Statement;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementStatus;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementType;
-import ru.iskandar.holiday.calculator.service.model.user.NewUserEntry;
-import ru.iskandar.holiday.calculator.service.model.user.User;
 import ru.iskandar.holiday.calculator.service.model.user.UserByLoginAlreadyExistException;
+import ru.iskandar.holiday.calculator.user.service.api.NewUserEntry;
+import ru.iskandar.holiday.calculator.user.service.api.User;
 
 /**
  * Модель учета отгулов
@@ -566,7 +566,7 @@ public class HolidayCalculatorModel implements Serializable {
 
 	/**
 	 * Возвращает все полномочия.
-	 * 
+	 *
 	 * @return коллекция всех полномочий
 	 */
 	public Collection<PermissionId> getAllPermissions() {

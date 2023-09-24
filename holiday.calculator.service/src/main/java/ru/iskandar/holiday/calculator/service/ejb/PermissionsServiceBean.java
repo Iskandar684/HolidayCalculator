@@ -6,7 +6,7 @@ import javax.ejb.Local;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 
-import ru.iskandar.holiday.calculator.service.model.user.UserId;
+import ru.iskandar.holiday.calculator.user.service.api.UserId;
 
 /**
  * Сервис работы с полномочиями

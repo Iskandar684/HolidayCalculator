@@ -38,7 +38,7 @@ public interface IUserServiceRemote {
     /**
      * Меняет примечание пользователя.
      *
-     * @param aUserId идентификатор пользователя
+     * @param aUserUUID идентификатор пользователя
      * @param aNewNote новое примечание
      * @return пользователя
      */

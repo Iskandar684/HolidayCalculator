@@ -1,21 +1,32 @@
 package ru.iskandar.holiday.calculator.user.service.ejb;
 
 /**
- *
+ * Исключение, прокидываемое, если пользователь по идентификатору не найден.
  */
 public class UserByIdNotFoundException extends RuntimeException {
 
-	/**
-	 * Идентификатор для сериализации
-	 */
-	private static final long serialVersionUID = 3175712490342357128L;
+    /**
+     * Идентификатор для сериализации
+     */
+    private static final long serialVersionUID = 3175712490342357128L;
 
-	public UserByIdNotFoundException(String message) {
-		super(message);
-	}
+    /**
+     * Конструктор.
+     *
+     * @param aMessage сообщение
+     */
+    public UserByIdNotFoundException(String aMessage) {
+        super(aMessage);
+    }
 
-	public UserByIdNotFoundException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    /**
+     * Конструктор.
+     *
+     * @param aMessage сообщение
+     * @param aCause причина
+     */
+    public UserByIdNotFoundException(String aMessage, Throwable aCause) {
+        super(aMessage, aCause);
+    }
 
 }

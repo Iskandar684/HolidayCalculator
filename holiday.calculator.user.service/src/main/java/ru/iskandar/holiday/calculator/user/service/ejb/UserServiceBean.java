@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -29,7 +28,7 @@ import ru.iskandar.holiday.calculator.user.service.entity.UserEntity_;
 import ru.iskandar.holiday.calculator.user.service.model.EntityBasedUserFactory;
 
 /**
- * Сервис работы с пользователями
+ * Сервис работы с пользователями.
  */
 @Stateless
 @Remote(IUserServiceRemote.class)
@@ -55,6 +54,12 @@ public class UserServiceBean implements IUserServiceRemote {
         return q.getResultList().stream().map(this::toUser).collect(Collectors.toList());
     }
 
+    /**
+     * Создаёт доменный объект пользователя из сущности пользователя.
+     *
+     * @param aEntity сущность пользователя
+     * @return доменный объект пользователя
+     */
     private User toUser(UserEntity aEntity) {
         return new EntityBasedUserFactory(aEntity).create();
     }
@@ -78,6 +83,11 @@ public class UserServiceBean implements IUserServiceRemote {
         return toUser(entity);
     }
 
+    /**
+     * Валидирует сущность создаваемого пользователя.
+     *
+     * @param aNewUserEntry сущность пользователя
+     */
     private void validateNewUser(@NonNull NewUserEntry aNewUserEntry) {
         if (aNewUserEntry.getLogin() == null || aNewUserEntry.getLogin().isEmpty()) {
             throw new IllegalArgumentException("Не указан логин.");
@@ -96,13 +106,8 @@ public class UserServiceBean implements IUserServiceRemote {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public User findUserByLogin(@NonNull String aLogin) {
-        Objects.requireNonNull(aLogin);
-
         CriteriaBuilder cb = _em.getCriteriaBuilder();
         CriteriaQuery<UserEntity> cq = cb.createQuery(UserEntity.class);
         Root<UserEntity> from = cq.from(UserEntity.class);
@@ -121,9 +126,13 @@ public class UserServiceBean implements IUserServiceRemote {
         return toUser(entity);
     }
 
-    private UserEntity findUser(UserId aId) {
-        Objects.requireNonNull(aId);
-
+    /**
+     * Ищет пользователя по идентификатору.
+     *
+     * @param aId идентификатор
+     * @return пользователя или {@code null}, если пользователь не найден
+     */
+    private UserEntity findUser(@NonNull UserId aId) {
         CriteriaBuilder cb = _em.getCriteriaBuilder();
         CriteriaQuery<UserEntity> cq = cb.createQuery(UserEntity.class);
         Root<UserEntity> from = cq.from(UserEntity.class);

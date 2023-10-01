@@ -6,75 +6,90 @@ import java.util.Objects;
 import ru.iskandar.holiday.calculator.user.service.api.UserId;
 
 /**
- *
+ * Абстрактная фабрика сущности нового пользователя.
  */
 public abstract class UserEntityFactory {
 
-	public UserEntity create() {
+    /**
+     * Создаёт сущность пользователя.
+     *
+     * @return сущность пользователя
+     */
+    public UserEntity create() {
+        UserId id = getId();
+        String firstName = getFirstName();
+        Objects.requireNonNull(firstName);
+        String lastName = getLastName();
+        Objects.requireNonNull(lastName);
 
-		UserId id = getId();
+        String patronymic = getPatronymic();
+        Objects.requireNonNull(patronymic);
 
-		String firstName = getFirstName();
-		Objects.requireNonNull(firstName);
-		String lastName = getLastName();
-		Objects.requireNonNull(lastName);
+        String login = getLogin();
+        Objects.requireNonNull(login);
 
-		String patronymic = getPatronymic();
-		Objects.requireNonNull(patronymic);
+        Date employmentDate = getEmploymentDate();
+        Objects.requireNonNull(employmentDate);
 
-		String login = getLogin();
-		Objects.requireNonNull(login);
+        UserEntity entity = new UserEntity();
+        entity.setEmploymentDate(employmentDate);
+        entity.setFirstName(firstName);
+        entity.setLastName(lastName);
+        entity.setLogin(login);
+        entity.setPatronymic(patronymic);
+        entity.setNote(getNote());
+        // У создаваемого адреса id = null
+        entity.setUuid((id == null) ? null : id.getUUID());
+        return entity;
+    }
 
-		Date employmentDate = getEmploymentDate();
-		Objects.requireNonNull(employmentDate);
+    /**
+     * Возвращает примечание.
+     *
+     * @return примечание
+     */
+    protected abstract String getNote();
 
-		UserEntity entity = new UserEntity();
-		entity.setEmploymentDate(employmentDate);
-		entity.setFirstName(firstName);
-		entity.setLastName(lastName);
-		entity.setLogin(login);
-		entity.setPatronymic(patronymic);
-		entity.setNote(getNote());
-		// У создаваемого адреса id = null
-		entity.setUuid(id != null ? id.getUUID() : null);
-		return entity;
-	}
+    /**
+     * Возвращает идентификатор.
+     *
+     * @return идентификатор
+     */
+    protected abstract UserId getId();
 
-	/**
-	 * Возвращает примечание.
-	 *
-	 * @return примечание
-	 */
-	protected abstract String getNote();
+    /**
+     * Возвращает имя.
+     *
+     * @return имя
+     */
+    protected abstract String getFirstName();
 
-	/**
-	 * @return the uuid
-	 */
-	protected abstract UserId getId();
+    /**
+     * Возвращает фамилию.
+     *
+     * @return фамилию
+     */
+    protected abstract String getLastName();
 
-	/**
-	 * @return the firstName
-	 */
-	protected abstract String getFirstName();
+    /**
+     * Возвращает отчество.
+     *
+     * @return отчество
+     */
+    protected abstract String getPatronymic();
 
-	/**
-	 * @return the lastName
-	 */
-	protected abstract String getLastName();
+    /**
+     * Возвращает логин.
+     *
+     * @return логин
+     */
+    protected abstract String getLogin();
 
-	/**
-	 * @return the patronymic
-	 */
-	protected abstract String getPatronymic();
-
-	/**
-	 * @return the login
-	 */
-	protected abstract String getLogin();
-
-	/**
-	 * @return the employmentDate
-	 */
-	protected abstract Date getEmploymentDate();
+    /**
+     * Возвращает дату принятия на работу.
+     *
+     * @return дату принятия на работу
+     */
+    protected abstract Date getEmploymentDate();
 
 }

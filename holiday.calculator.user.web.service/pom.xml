@@ -12,7 +12,7 @@
 
 	<groupId>holiday.calculator.web.service</groupId>
 	<artifactId>holiday-calculator-user-web-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>Веб сервис пользователей учета отгулов</name>
 

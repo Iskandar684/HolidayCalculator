@@ -598,7 +598,7 @@
 				<version>1.0.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
-				<groupId>holiday.calculator.web.service</groupId>
+				<groupId>ru.iskandar.holiday.calculator</groupId>
 				<artifactId>holiday-calculator-web-service</artifactId>
 				<version>1.0.0-SNAPSHOT</version>
 				<type>war</type>
@@ -614,7 +614,7 @@
 	            <version>1.0.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
-				<groupId>holiday.calculator.web.service</groupId>
+				<groupId>ru.iskandar.holiday.calculator</groupId>
 				<artifactId>holiday-calculator-user-web-service</artifactId>
 				<version>1.0.0-SNAPSHOT</version>
 				<type>war</type>

@@ -64,7 +64,7 @@
 			<artifactId>holiday.calculator.service</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>holiday.calculator.web.service</groupId>
+			<groupId>ru.iskandar.holiday.calculator</groupId>
 			<artifactId>holiday-calculator-web-service</artifactId>
 			<type>war</type>
 		</dependency>
@@ -598,7 +598,7 @@
 									<destFileName>holiday.calculator.report.service.jar</destFileName>
 								</artifactItem>
 								<artifactItem>
-									<groupId>holiday.calculator.web.service</groupId>
+									<groupId>ru.iskandar.holiday.calculator</groupId>
 									<artifactId>holiday-calculator-web-service</artifactId>
 									<type>war</type>
 									<overWrite>true</overWrite>

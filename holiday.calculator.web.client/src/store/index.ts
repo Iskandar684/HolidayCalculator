@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import { LoginParams } from '@/types/LoginParams'
 
 export default createStore({
   state: {

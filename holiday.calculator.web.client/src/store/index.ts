@@ -5,28 +5,30 @@ import { ErrorInfo } from '@/types/ErrorInfo'
 
 export default createStore({
   state: {
-    loggedIn: false,
-    currentUser: {} as User,
+    currentUser: null as User | null,
     loginMessage: '' as string
   },
   getters: {
-    isLoggedIn(state) {
-      return state.loggedIn
+    isLoggedIn(aState) {
+      return aState.currentUser != null;
     },
-    getLoginMessage(state): string {
-      return state.loginMessage;
+    getLoginMessage(aState): string {
+      return aState.loginMessage;
     }
   },
   mutations: {
-    login(state, loggedIn: boolean) {
-      state.loggedIn = loggedIn;
+    setCurrentUser(aState, aUser: User) {
+      aState.currentUser = aUser;
+      aState.loginMessage = '';
+    },
+    setLoginError(aState, aErrorMessage: string) {
+      aState.currentUser = null;
+      aState.loginMessage = aErrorMessage;
     }
   },
   actions: {
-    login(context: any, params: LoginParams) {
-      console.log("login " + params.login + "  password " + params.password);
-      const api = "http://" + window.location.host + "/holiday-calculator-web-service/login/" + params.login + "/" + params.password;
-      console.log("loginURL " + api)
+    login(aContext: any, aParams: LoginParams) {
+      const api = "http://" + window.location.host + "/holiday-calculator-web-service/login/" + aParams.login + "/" + aParams.password;
       fetch(api)
         .then(response => {
           if (response.ok) {
@@ -39,13 +41,11 @@ export default createStore({
         })
         .then((user: User) => {
           console.log("loginResponseJSON" + user.firstName);
-          this.state.currentUser = user;
-          this.state.loginMessage = '';
-          context.commit('login', true);
+          aContext.commit('setCurrentUser', user);
         })
         .catch(error => {
           console.log("loginError " + error.message);
-          this.state.loginMessage = error.message;
+          aContext.commit('setLoginError', error.message);
         })
     }
   },

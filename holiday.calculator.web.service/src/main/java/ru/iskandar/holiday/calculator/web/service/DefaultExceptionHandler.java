@@ -30,11 +30,11 @@ public class DefaultExceptionHandler implements ExceptionMapper<Exception> {
         } else if ((cause instanceof StatementAlreadyConsideredException)
                 || (cause instanceof StatementAlreadySendedException)) {
             status = Response.Status.CONFLICT;
-        } else if (cause instanceof UserByLoginNotFoundException
-                || cause instanceof LoginException) {
+        } else if (cause instanceof UserByLoginNotFoundException || cause instanceof LoginException
+                || hasCauseOf(e, LoginException.class)) {
             status = Response.Status.UNAUTHORIZED;
-		} else if (cause instanceof IllegalArgumentException) {
-			status = Response.Status.BAD_REQUEST;
+        } else if (cause instanceof IllegalArgumentException) {
+            status = Response.Status.BAD_REQUEST;
         }
         ErrorResponse errResp = ErrorResponse.builder().message("Ошибка")
                 .code(status.getStatusCode()).description(cause.getMessage()).build();
@@ -47,6 +47,19 @@ public class DefaultExceptionHandler implements ExceptionMapper<Exception> {
             cause = cause.getCause();
         }
         return cause;
+    }
+
+    private <T extends Exception> boolean hasCauseOf(Exception aException,
+            Class<T> aPossibleExceptionClass) {
+        Throwable cause = aException;
+        while (cause.getCause() != null) {
+            if (cause.getClass().isAssignableFrom(aPossibleExceptionClass)) {
+                return true;
+            }
+            cause = cause.getCause();
+        }
+        return false;
+
     }
 
 }

@@ -64,24 +64,21 @@ public class HolidayCalculatorWebService {
     @Path("/login/{username}/{password}")
     @Produces({MediaType.APPLICATION_JSON})
     @PermitAll
-    public boolean login(@PathParam("username") String username,
+    public User login(@PathParam("username") String username,
             @PathParam("password") String password) {
+        User user = _userService.findUserByLogin(username);
+        if (user == null) {
+            throw new UserByLoginNotFoundException(
+                    String.format("Пользователь с логином %s не найден.", username));
+        }
         try {
             _request.login(username, password);
             LOG.info(String.format("Успешный вход в систему [login=%s].", username));
         } catch (ServletException e) {
-            LOG.error(String.format("Ошибка входа в систему [login=%s].", username), e);
-            return false;
+            throw new LoginException("Неверный логин или пароль.", e);
         }
-        try {
-            _holidayService.checkAuthentification();
-        } catch (UserByLoginNotFoundException e) {
-            LOG.error(String.format(
-                    "Ошибка входа в систему: для логина [login=%s] пользователь не найден.",
-                    username), e);
-            return false;
-        }
-        return true;
+        _holidayService.checkAuthentification();
+        return user;
     }
 
     @GET
@@ -126,8 +123,9 @@ public class HolidayCalculatorWebService {
     }
 
     /**
-     * Возвращает количество исходящих дней отгула. Это количество дней, на которое уменьшется
-     * количество общее дней отгула, после того как заявление на отгул будет принят.
+     * Возвращает количество исходящих дней отгула. Это количество дней, на
+     * которое уменьшется количество общее дней отгула, после того как заявление
+     * на отгул будет принят.
      *
      * @return не отрицательное количество исходящих дней отгула
      */
@@ -141,8 +139,8 @@ public class HolidayCalculatorWebService {
     }
 
     /**
-     * Возвращает количество приходящих отгулов. Это количество дней, на которое будет увеличино
-     * общее количество отгулов, после того как засчитают отзыв.
+     * Возвращает количество приходящих отгулов. Это количество дней, на которое
+     * будет увеличино общее количество отгулов, после того как засчитают отзыв.
      *
      * @return количество приходящих отгулов
      */
@@ -155,21 +153,22 @@ public class HolidayCalculatorWebService {
         return _holidayService.getIncomingHolidaysQuantity(user);
     }
 
-	/**
-	 * Возвращает входящие заявления.
-	 *
-	 * @return входящие заявления
-	 */
-	@GET
-	@Path("/incomingStatements")
-	@PermitAll
-	public Statement<?>[] getIncomingStatements() {
-		if (!_holidayService.canConsider()) {
-			throw new EJBAccessException(String.format(
-					"У текущего пользователя (%s) нет прав на рассмотрение заявлений.", _request.getUserPrincipal()));
-		}
-		return _holidayService.getIncomingStatements().toArray(new Statement<?>[0]);
-	}
+    /**
+     * Возвращает входящие заявления.
+     *
+     * @return входящие заявления
+     */
+    @GET
+    @Path("/incomingStatements")
+    @PermitAll
+    public Statement<?>[] getIncomingStatements() {
+        if (!_holidayService.canConsider()) {
+            throw new EJBAccessException(String.format(
+                    "У текущего пользователя (%s) нет прав на рассмотрение заявлений.",
+                    _request.getUserPrincipal()));
+        }
+        return _holidayService.getIncomingStatements().toArray(new Statement<?>[0]);
+    }
 
     @GET
     @Path("/takeHoliday/{dates}")
@@ -210,8 +209,9 @@ public class HolidayCalculatorWebService {
     }
 
     /**
-     * Возвращает количество исходящих дней отпуска. Это количество дней, на которое уменьшется
-     * количество дней отпуска в этом периоде, после того как заявление на отпуск будет принят.
+     * Возвращает количество исходящих дней отпуска. Это количество дней, на
+     * которое уменьшется количество дней отпуска в этом периоде, после того как
+     * заявление на отпуск будет принят.
      *
      * @return не отрицательное количество исходящих дней отпуска.
      */
@@ -276,32 +276,34 @@ public class HolidayCalculatorWebService {
         return new HTMLDocument(new String(document.getContent(), Charset.forName("utf-8")));
     }
 
-	@POST
-	@Path("/approve/{statementUUID}")
-	@PermitAll
-	public Statement<?> approve(@PathParam("statementUUID") String statementUUID) throws StatementAlreadyConsideredException {
-		StatementId statementID = StatementId.from(UUID.fromString(statementUUID));
-		return _holidayService.approve(statementID);
-	}
+    @POST
+    @Path("/approve/{statementUUID}")
+    @PermitAll
+    public Statement<?> approve(@PathParam("statementUUID") String statementUUID)
+            throws StatementAlreadyConsideredException {
+        StatementId statementID = StatementId.from(UUID.fromString(statementUUID));
+        return _holidayService.approve(statementID);
+    }
 
-	@POST
-	@Path("/reject/{statementUUID}")
-	@PermitAll
-	public Statement<?> reject(@PathParam("statementUUID") String statementUUID) throws StatementAlreadyConsideredException {
-		StatementId statementID = StatementId.from(UUID.fromString(statementUUID));
-		return _holidayService.reject(statementID);
-	}
+    @POST
+    @Path("/reject/{statementUUID}")
+    @PermitAll
+    public Statement<?> reject(@PathParam("statementUUID") String statementUUID)
+            throws StatementAlreadyConsideredException {
+        StatementId statementID = StatementId.from(UUID.fromString(statementUUID));
+        return _holidayService.reject(statementID);
+    }
 
-	@GET
-	@Path("/canConsider")
-	public boolean canConsider() {
-		return _holidayService.canConsider();
-	}
+    @GET
+    @Path("/canConsider")
+    public boolean canConsider() {
+        return _holidayService.canConsider();
+    }
 
-	@GET
-	@Path("/canCreateUser")
-	public boolean canCreateUser() {
-		return _holidayService.canCreateUser();
-	}
+    @GET
+    @Path("/canCreateUser")
+    public boolean canCreateUser() {
+        return _holidayService.canCreateUser();
+    }
 
 }

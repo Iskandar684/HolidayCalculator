@@ -30,7 +30,8 @@ public class DefaultExceptionHandler implements ExceptionMapper<Exception> {
         } else if ((cause instanceof StatementAlreadyConsideredException)
                 || (cause instanceof StatementAlreadySendedException)) {
             status = Response.Status.CONFLICT;
-        } else if (cause instanceof UserByLoginNotFoundException) {
+        } else if (cause instanceof UserByLoginNotFoundException
+                || cause instanceof LoginException) {
             status = Response.Status.UNAUTHORIZED;
 		} else if (cause instanceof IllegalArgumentException) {
 			status = Response.Status.BAD_REQUEST;

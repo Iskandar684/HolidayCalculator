@@ -6,12 +6,16 @@ import { ErrorInfo } from '@/types/ErrorInfo'
 export default createStore({
   state: {
     loggedIn: false,
-    currentUser: {} as User
+    currentUser: {} as User,
+    loginMessage: '' as string
   },
   getters: {
     isLoggedIn(state) {
       return state.loggedIn
     },
+    getLoginMessage(state): string {
+      return state.loginMessage;
+    }
   },
   mutations: {
     login(state, loggedIn: boolean) {
@@ -29,15 +33,20 @@ export default createStore({
             return response.json();
           }
           return response.json().then((info: ErrorInfo) => {
-            throw new Error(info.description);
+            let message = info.code == 401 ? "Неверный логин или пароль." : info.description;
+            throw new Error(message);
           });
         })
         .then((user: User) => {
           console.log("loginResponseJSON" + user.firstName);
           this.state.currentUser = user;
+          this.state.loginMessage = '';
           context.commit('login', true);
         })
-        .catch(error => console.log("loginError " + error.message))
+        .catch(error => {
+          console.log("loginError " + error.message);
+          this.state.loginMessage = error.message;
+        })
     }
   },
   modules: {

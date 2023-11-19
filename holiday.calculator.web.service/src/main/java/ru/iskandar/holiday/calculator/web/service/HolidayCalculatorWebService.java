@@ -306,4 +306,16 @@ public class HolidayCalculatorWebService {
         return _holidayService.canCreateUser();
     }
 
+    @GET
+    @Path("/userHolidaysInfo")
+    public UserHolidaysInfo getUserHolidaysInfo() {
+        User currentUser = _userService.getCurrentUser();
+        return UserHolidaysInfo.builder().userUUID(currentUser.getUuid())
+                .holidaysQuantity(getHolidaysQuantity())
+                .incomingHolidaysQuantity(getIncomingHolidaysQuantity()).leaveCount(getLeaveCount())
+                .nextLeaveStartDate(DateUtils.toLocalDate(getNextLeaveStartDate()))
+                .outgoingHolidaysQuantity(getOutgoingHolidaysQuantity())
+                .outgoingLeaveCount(getOutgoingLeaveCount()).build();
+    }
+
 }

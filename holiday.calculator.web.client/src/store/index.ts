@@ -9,12 +9,18 @@ export default createStore({
     loginMessage: '' as string
   },
   getters: {
-    isLoggedIn(aState) {
+    isLoggedIn(aState): boolean {
       return aState.currentUser != null;
     },
+
     getLoginMessage(aState): string {
       return aState.loginMessage;
-    }
+    },
+
+    getCurrentUser(aState): User | null {
+      return aState.currentUser;
+    },
+    //currentUser: state => state.currentUser
   },
   mutations: {
     setCurrentUser(aState, aUser: User) {

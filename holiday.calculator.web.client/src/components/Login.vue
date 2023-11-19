@@ -49,7 +49,7 @@ export default defineComponent({
         hasLoginMessage(): boolean {
             let message = this.getLoginMessage();
             return message != null && message.length != 0;
-        }
+        },
     },
     mounted() {
         this.checkAuthentication();

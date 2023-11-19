@@ -1,45 +1,74 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
+    <h1>{{ fullLegalName }}</h1>
+    <p>Количество отгулов: {{ holidaysInfo?.holidaysQuantity }}
+      {{ '(-' + holidaysInfo?.outgoingHolidaysQuantity + ')' }}
+      {{ '(+' + holidaysInfo?.incomingHolidaysQuantity + ')' }}
     </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-vuex" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-typescript" target="_blank" rel="noopener">typescript</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+    <p>Количество дней отпуска: {{ holidaysInfo?.leaveCount }}</p>
+    <p>Дата начала следующего периода: {{ holidaysInfo == null ? "" : formatDate(holidaysInfo.nextLeaveStartDate) }}</p>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
+import { mapMutations } from 'vuex';
+import { User } from '@/types/User'
+import { ErrorInfo } from '@/types/ErrorInfo'
+import { UserHolidaysInfo } from '@/types/UserHolidaysInfo'
+import store from '@/store'
 
 export default defineComponent({
-  name: 'HelloWorld',
+  name: 'Личный кабинет',
   props: {
     msg: String,
   },
+  data: function () {
+    return {
+      holidaysInfo: null as UserHolidaysInfo | null,
+    }
+  },
+  methods: {
+    formatDate: function (aDate: Date): string {
+      return aDate.getDate + "." + aDate.getMonth + "." + aDate.getFullYear;
+    },
+    loadUserHolidaysInfo() {
+      const api = "http://" + window.location.host + "/holiday-calculator-web-service/userHolidaysInfo";
+      fetch(api)
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+          return response.json().then((info: ErrorInfo) => {
+            let message = info.code == 401 ? "Неверный логин или пароль." : info.description;
+            throw new Error(message);
+          });
+        })
+        .then((info: UserHolidaysInfo) => {
+          console.log("UserHolidaysInfo nextLeaveStartDate " + info.nextLeaveStartDate);
+          this.$data.holidaysInfo = info;
+        })
+        .catch(error => {
+          console.log("loadUserHolidaysInfo Err " + error.message);
+        })
+    },
+  },
+  computed: {
+    ...mapGetters(['getCurrentUser', 'isLoggedIn']),
+    fullLegalName(): string {
+      let currentUser = <User>this.$store.getters.getCurrentUser;
+      return currentUser?.lastName + " " + currentUser?.firstName + " " + currentUser?.patronymic;
+    }
+  },
+  mounted() {
+    if (!this.isLoggedIn) {
+      return;
+    }
+    this.loadUserHolidaysInfo();
+  }
+
 });
 </script>
 
@@ -48,14 +77,17 @@ export default defineComponent({
 h3 {
   margin: 40px 0 0;
 }
+
 ul {
   list-style-type: none;
   padding: 0;
 }
+
 li {
   display: inline-block;
   margin: 0 10px;
 }
+
 a {
   color: #42b983;
 }

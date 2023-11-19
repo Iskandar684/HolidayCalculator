@@ -27,7 +27,7 @@ export default createStore({
     }
   },
   actions: {
-    login(aContext: any, aParams: LoginParams) {
+    login(aContext, aParams: LoginParams) {
       const api = "http://" + window.location.host + "/holiday-calculator-web-service/login/" + aParams.login + "/" + aParams.password;
       fetch(api)
         .then(response => {
@@ -47,6 +47,19 @@ export default createStore({
           console.log("loginError " + error.message);
           aContext.commit('setLoginError', error.message);
         })
+    },
+
+    checkAuthentication(aContext) {
+      const api = "http://" + window.location.host + "/holiday-calculator-web-service/user/";
+      fetch(api)
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error(response.statusText);
+        })
+        .then((user: User) => aContext.commit('setCurrentUser', user))
+        .catch(error => aContext.commit('setLoginError', ""))
     }
   },
   modules: {

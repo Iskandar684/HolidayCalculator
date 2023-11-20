@@ -313,7 +313,7 @@ public class HolidayCalculatorWebService {
         return UserHolidaysInfo.builder().userUUID(currentUser.getUuid())
                 .holidaysQuantity(getHolidaysQuantity())
                 .incomingHolidaysQuantity(getIncomingHolidaysQuantity()).leaveCount(getLeaveCount())
-                .nextLeaveStartDate(DateUtils.toLocalDate(getNextLeaveStartDate()))
+                .nextLeaveStartDate(getNextLeaveStartDate())
                 .outgoingHolidaysQuantity(getOutgoingHolidaysQuantity())
                 .outgoingLeaveCount(getOutgoingLeaveCount()).build();
     }

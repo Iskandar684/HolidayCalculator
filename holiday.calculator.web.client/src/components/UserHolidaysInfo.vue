@@ -32,7 +32,7 @@ export default defineComponent({
   },
   methods: {
     formatDate: function (aDate: Date): string {
-      return aDate.getDate + "." + aDate.getMonth + "." + aDate.getFullYear;
+      return aDate.getDate() + "." + aDate.getMonth() + "." + aDate.getFullYear();
     },
     loadUserHolidaysInfo() {
       const api = "http://" + window.location.host + "/holiday-calculator-web-service/userHolidaysInfo";
@@ -47,7 +47,7 @@ export default defineComponent({
           });
         })
         .then((info: UserHolidaysInfo) => {
-          console.log("UserHolidaysInfo nextLeaveStartDate " + info.nextLeaveStartDate);
+          info.nextLeaveStartDate = new Date(info.nextLeaveStartDate);
           this.$data.holidaysInfo = info;
         })
         .catch(error => {

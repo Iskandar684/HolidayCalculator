@@ -1,7 +1,7 @@
 package ru.iskandar.holiday.calculator.web.service;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.UUID;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -70,6 +70,6 @@ public class UserHolidaysInfo implements Serializable {
 
     /** Дата начала следующего периода */
     @XmlElement(name = "nextLeaveStartDate")
-    private final LocalDate _nextLeaveStartDate;
+    private final Date _nextLeaveStartDate;
 
 }

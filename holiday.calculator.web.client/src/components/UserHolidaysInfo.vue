@@ -19,6 +19,7 @@ import { User } from '@/types/User'
 import { ErrorInfo } from '@/types/ErrorInfo'
 import { UserHolidaysInfo } from '@/types/UserHolidaysInfo'
 import store from '@/store'
+import dayjs from 'dayjs';
 
 export default defineComponent({
   name: 'Личный кабинет',
@@ -32,7 +33,7 @@ export default defineComponent({
   },
   methods: {
     formatDate: function (aDate: Date): string {
-      return aDate.getDate() + "." + aDate.getMonth() + "." + aDate.getFullYear();
+      return dayjs(aDate).format('DD.MM.YYYY');
     },
     loadUserHolidaysInfo() {
       const api = "http://" + window.location.host + "/holiday-calculator-web-service/userHolidaysInfo";

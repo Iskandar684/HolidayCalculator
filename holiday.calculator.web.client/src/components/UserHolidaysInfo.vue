@@ -20,6 +20,7 @@ import { ErrorInfo } from '@/types/ErrorInfo'
 import { UserHolidaysInfo } from '@/types/UserHolidaysInfo'
 import store from '@/store'
 import dayjs from 'dayjs';
+import { URLs } from '@/services/URLs'
 
 export default defineComponent({
   name: 'Личный кабинет',
@@ -36,8 +37,7 @@ export default defineComponent({
       return dayjs(aDate).format('DD.MM.YYYY');
     },
     loadUserHolidaysInfo() {
-      const api = "http://" + window.location.host + "/holiday-calculator-web-service/userHolidaysInfo";
-      fetch(api)
+      fetch(URLs.CURRENT_USER_HOLIDAYS_INFO_URL)
         .then(response => {
           if (response.ok) {
             return response.json();

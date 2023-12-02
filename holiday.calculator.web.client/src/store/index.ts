@@ -2,6 +2,7 @@ import { createStore } from 'vuex'
 import { LoginParams } from '@/types/LoginParams'
 import { User } from '@/types/User'
 import { ErrorInfo } from '@/types/ErrorInfo'
+import { URLs } from '@/services/URLs'
 
 export default createStore({
   state: {
@@ -34,7 +35,7 @@ export default createStore({
   },
   actions: {
     login(aContext, aParams: LoginParams) {
-      const api = "http://" + window.location.host + "/holiday-calculator-web-service/login/" + aParams.login + "/" + aParams.password;
+      const api = URLs.LOGIN_URL + aParams.login + "/" + aParams.password;
       fetch(api)
         .then(response => {
           if (response.ok) {
@@ -56,8 +57,7 @@ export default createStore({
     },
 
     checkAuthentication(aContext) {
-      const api = "http://" + window.location.host + "/holiday-calculator-web-service/user/";
-      fetch(api)
+      fetch(URLs.CURRENT_USER_URL)
         .then(response => {
           if (response.ok) {
             return response.json();

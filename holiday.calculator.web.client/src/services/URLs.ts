@@ -7,6 +7,9 @@ export class URLs {
     /** Путь к входу в систему */
     static LOGIN_URL = this.APP_URL + "login/"
 
+    /** Путь к выходу из системы */
+    static LOGOUT_URL = this.APP_URL + "logout/"
+
     /** Путь получения текущего пользователя */
     static CURRENT_USER_URL = this.APP_URL + "user"
 

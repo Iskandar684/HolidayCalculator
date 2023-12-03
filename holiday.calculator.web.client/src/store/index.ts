@@ -66,6 +66,16 @@ export default createStore({
         })
         .then((user: User) => aContext.commit('setCurrentUser', user))
         .catch(error => aContext.commit('setLoginError', ""))
+    },
+    logout(aContext) {
+      fetch(URLs.LOGOUT_URL)
+        .then(response => {
+          if (response.ok) {
+            aContext.commit('setCurrentUser', null)
+          }
+          throw new Error(response.statusText);
+        })
+        .catch(error => console.log("logout error: " + error))
     }
   },
   modules: {

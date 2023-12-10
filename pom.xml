@@ -64,6 +64,7 @@
 		<module>holiday.calculator.product</module>
 		<!-- Веб -->
 		<module>holiday.calculator.web.service</module>
+                <module>holiday.calculator.web.client</module>
 		<!-- СБОРКА СЕРВЕРА -->
 		<module>holiday.calculator.product.server</module>
 	</modules>

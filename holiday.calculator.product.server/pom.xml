@@ -5,6 +5,7 @@
 	<groupId>ru.iskandar.holiday.calculator</groupId>
 	<artifactId>holiday.calculator.product.server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -13,6 +14,7 @@
 		<ear.dir>${deployments.dir}/holiday.ear/</ear.dir>
 		<ear.lib.dir>${deployments.dir}/holiday.ear/lib/</ear.lib.dir>
 		<modules.dir>${project.basedir}/src/main/resources/modules/</modules.dir>
+		<web.client.dir>${project.basedir}/src/main/resources/welcome-content</web.client.dir>
 	</properties>
 
 	<repositories>
@@ -62,6 +64,11 @@
 		<dependency>
 			<groupId>ru.iskandar.holiday.calculator</groupId>
 			<artifactId>holiday.calculator.service</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ru.iskandar.holiday.calculator</groupId>
+			<artifactId>holiday-calculator-web-client</artifactId>
+			<type>zip</type>
 		</dependency>
 		<dependency>
 			<groupId>ru.iskandar.holiday.calculator</groupId>
@@ -567,7 +574,7 @@
 				<executions>
 					<execution>
 						<id>copy</id>
-						<phase>initialize</phase>
+						<phase>packaging</phase>
 						<goals>
 							<goal>copy</goal>
 						</goals>
@@ -578,7 +585,7 @@
 									<artifactId>holiday.calculator.user.service.api</artifactId>
 									<type>jar</type>
 									<overWrite>true</overWrite>
-							        <outputDirectory>${ear.lib.dir}</outputDirectory>
+									<outputDirectory>${ear.lib.dir}</outputDirectory>
 									<destFileName>holiday.calculator.user.service.api.jar</destFileName>
 								</artifactItem>
 								<artifactItem>
@@ -1671,6 +1678,27 @@
 									<destFileName>jackson-annotations-2.10.1.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
+						</configuration>
+					</execution>
+					<execution>
+						<id>unpack-zip</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>ru.iskandar.holiday.calculator</groupId>
+									<artifactId>holiday-calculator-web-client</artifactId>
+									<type>zip</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${web.client.dir}</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+							
 						</configuration>
 					</execution>
 				</executions>

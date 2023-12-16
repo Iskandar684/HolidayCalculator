@@ -1,8 +1,4 @@
 <template>
-  <div class="about">
-    <h1>Мои заявления</h1>
-  </div>
-
   <div id="statmentsTable">
     <table>
       <thead>
@@ -120,7 +116,6 @@ input {
 
 table {
   /* Параметры таблицы */
-  width: 630px;
   margin: auto;
   border: 2px solid #308090;
   border-radius: 3px;

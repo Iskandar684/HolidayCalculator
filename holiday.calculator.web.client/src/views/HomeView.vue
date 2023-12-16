@@ -19,6 +19,9 @@ import { URLs } from '@/services/URLs';
 
 export default defineComponent({
   name: 'HomeView',
+  data() {
+    return {};
+  },
   components: {
     UserHolidaysInfo,
     Login

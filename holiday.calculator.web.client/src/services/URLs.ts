@@ -15,4 +15,8 @@ export class URLs {
 
     /** Путь получения информации об отгулах текущего пользователя */
     static CURRENT_USER_HOLIDAYS_INFO_URL = this.APP_URL + "userHolidaysInfo"
+
+
+    /** Путь получения заявлений текущего пользователя */
+    static CURRENT_USER_STATEMENTS_URL = this.APP_URL + "currentUserStatements"
 }

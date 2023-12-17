@@ -3,10 +3,10 @@ package ru.iskandar.holiday.calculator.web.service;
 import java.nio.charset.Charset;
 import java.security.Principal;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.security.PermitAll;
 import javax.ejb.EJB;
@@ -14,6 +14,7 @@ import javax.ejb.EJBAccessException;
 import javax.ejb.Stateless;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -21,17 +22,17 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.jboss.logging.Logger;
 
+import lombok.NonNull;
 import ru.iskandar.holiday.calculator.service.ejb.IHolidayCalculatorLocal;
 import ru.iskandar.holiday.calculator.service.ejb.IUserServiceLocal;
 import ru.iskandar.holiday.calculator.service.model.StatementAlreadyConsideredException;
 import ru.iskandar.holiday.calculator.service.model.StatementAlreadySendedException;
 import ru.iskandar.holiday.calculator.service.model.document.DocumentPreviewException;
 import ru.iskandar.holiday.calculator.service.model.document.StatementDocument;
+import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatement;
 import ru.iskandar.holiday.calculator.service.model.statement.HolidayStatementEntry;
 import ru.iskandar.holiday.calculator.service.model.statement.Statement;
 import ru.iskandar.holiday.calculator.service.model.statement.StatementId;
@@ -124,28 +125,17 @@ public class HolidayCalculatorWebService {
         return _holidayService.getIncomingStatements().toArray(new Statement<?>[0]);
     }
 
-    @GET
-    @Path("/takeHoliday/{dates}")
-    @Produces({MediaType.APPLICATION_JSON})
+    @POST
+    @Path("/takeHoliday")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @PermitAll
-    public Response takeHoliday(@PathParam("dates") Date[] aDates) {
-        if (!isLoggedIn()) {
-            return Response.status(Status.FORBIDDEN).build();
-        }
-        Objects.requireNonNull(aDates);
+    public HolidayStatement takeHoliday(@NonNull NewHolidayStatementRequest aRequest)
+            throws StatementAlreadySendedException {
         User user = _userService.getCurrentUser();
-        Set<Date> dates = new HashSet<Date>();
-        for (Date date : aDates) {
-            dates.add(date);
-        }
+        Set<Date> dates = Stream.of(aRequest.getDates()).collect(Collectors.toSet());
         HolidayStatementEntry entry = new HolidayStatementEntry(dates, user);
-        try {
-            _holidayService.createHolidayStatement(entry);
-        } catch (StatementAlreadySendedException e) {
-            LOG.error("Аналогичное заявление уже было отправлено", e);
-            return Response.status(Status.CONFLICT).build();
-        }
-        return Response.ok().build();
+        return _holidayService.createHolidayStatement(entry);
     }
 
     /**

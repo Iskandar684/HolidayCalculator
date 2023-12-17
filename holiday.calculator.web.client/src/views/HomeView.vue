@@ -6,6 +6,7 @@
     <img alt="Vue logo" src="../assets/logo.png">
     <UserHolidaysInfo v-if="isLoggedIn()" />
     <Login v-else />
+    <NewStatement v-show="isLoggedIn()" />
   </div>
 </template>
 
@@ -16,6 +17,7 @@ import Login from '@/components/Login.vue';
 import { mapActions } from 'vuex';
 import { mapGetters } from 'vuex';
 import { URLs } from '@/services/URLs';
+import NewStatement from './NewStatement.vue';
 
 export default defineComponent({
   name: 'HomeView',
@@ -24,7 +26,8 @@ export default defineComponent({
   },
   components: {
     UserHolidaysInfo,
-    Login
+    Login,
+    NewStatement
   },
   methods: {
     ...mapGetters(['isLoggedIn']),

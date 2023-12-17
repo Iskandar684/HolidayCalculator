@@ -19,4 +19,7 @@ export class URLs {
 
     /** Путь получения заявлений текущего пользователя */
     static CURRENT_USER_STATEMENTS_URL = this.APP_URL + "currentUserStatements"
+
+    /**Путь к ресурсу подачи заявления на отгул */
+    static TAKE_HOLIDAY_URL = this.APP_URL + "takeHoliday"
 }

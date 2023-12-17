@@ -44,6 +44,7 @@ export default defineComponent({
           }
           return response.json().then((info: ErrorInfo) => {
             let message = info.code == 401 ? "Неверный логин или пароль." : info.description;
+            store.dispatch("checkAuthentication")
             throw new Error(message);
           });
         })

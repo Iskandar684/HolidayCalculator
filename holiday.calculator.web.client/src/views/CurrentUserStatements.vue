@@ -116,6 +116,7 @@ input {
 
 table {
   /* Параметры таблицы */
+  width: 100%;
   margin: auto;
   border: 2px solid #308090;
   border-radius: 3px;

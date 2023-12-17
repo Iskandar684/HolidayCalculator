@@ -1,10 +1,29 @@
 <template>
-  <nav>
+  <nav v-show="isLoggedIn">
     <router-link to="/">Главная</router-link> |
     <router-link to="/myStatements">Мои заявления</router-link>
   </nav>
   <router-view />
 </template>
+
+<script lang="ts">
+import store from '@/store';
+import { defineComponent } from 'vue';
+import { mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
+import { mapMutations } from 'vuex';
+
+export default defineComponent({
+  name: 'App',
+  data: () => ({}),
+
+  computed: {
+    ...mapGetters(['getCurrentUser', 'isLoggedIn'])
+  },
+});
+
+
+</script>
 
 <style>
 #app {

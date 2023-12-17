@@ -4,6 +4,8 @@
     </div>
 </template>
 
+
+
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { ErrorInfo } from '@/types/ErrorInfo'
@@ -12,11 +14,13 @@ import { URLs } from '@/services/URLs'
 import { Statement } from '@/types/Statement'
 import { TakeHolidayRequest } from '@/types/TakeHolidayRequest';
 import store from '@/store'
+import { ref } from 'vue'
+import { emitter } from '@/main'
 
 export default defineComponent({
     name: 'NewStatement',
-    data: () => ({}),
-    components: {
+    data: function () {
+        return {}
     },
     methods: {
         takeHoliday() {
@@ -42,9 +46,12 @@ export default defineComponent({
                 })
                 .catch(error => {
                     console.log("newHolidayStatementError " + error.message);
-                    alert(error)
+                    emitter.emit("showMessageDialog", error.message)
                 })
         },
+        openDialog(aMessage: String) {
+            emitter.emit("showMessageDialog", aMessage)
+        }
     },
     computed: {},
 });

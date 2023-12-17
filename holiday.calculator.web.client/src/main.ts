@@ -4,6 +4,10 @@ import router from './router'
 import store from './store'
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/ru'
+import mitt from 'mitt';
 
-createApp(App).use(store).use(router).mount('#app')
+export const emitter = mitt();
+const app = createApp(App);
+app.config.globalProperties.emitter = emitter;
+app.use(store).use(router).mount('#app')
 dayjs.locale('ru')

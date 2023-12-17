@@ -4,6 +4,7 @@
     <router-link to="/myStatements">Мои заявления</router-link>
   </nav>
   <router-view />
+  <MessageDialog></MessageDialog>
 </template>
 
 <script lang="ts">
@@ -12,6 +13,7 @@ import { defineComponent } from 'vue';
 import { mapActions } from 'vuex';
 import { mapGetters } from 'vuex';
 import { mapMutations } from 'vuex';
+import MessageDialog from '@/components/MessageDialog.vue';
 
 export default defineComponent({
   name: 'App',
@@ -20,6 +22,7 @@ export default defineComponent({
   computed: {
     ...mapGetters(['getCurrentUser', 'isLoggedIn'])
   },
+  components: { MessageDialog }
 });
 
 

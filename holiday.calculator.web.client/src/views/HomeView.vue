@@ -4,9 +4,11 @@
   </div>
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png">
-    <UserHolidaysInfo v-if="isLoggedIn()" />
+    <div v-if="isLoggedIn()">
+      <UserHolidaysInfo />
+      <NewStatement />
+    </div>
     <Login v-else />
-    <NewStatement v-show="isLoggedIn()" />
   </div>
 </template>
 

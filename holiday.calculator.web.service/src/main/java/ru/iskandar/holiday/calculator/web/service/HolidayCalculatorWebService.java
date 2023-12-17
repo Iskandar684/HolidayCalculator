@@ -108,52 +108,6 @@ public class HolidayCalculatorWebService {
     }
 
     /**
-     * Возвращает количество отгулов у текущего пользователя
-     *
-     * @param aUser пользователь
-     * @return количество отгулов
-     */
-    @GET
-    @Path("/HolidaysQuantity")
-    @Produces({MediaType.APPLICATION_JSON})
-    @PermitAll
-    public int getHolidaysQuantity() {
-        User user = _userService.getCurrentUser();
-        return _holidayService.getHolidaysQuantity(user);
-    }
-
-    /**
-     * Возвращает количество исходящих дней отгула. Это количество дней, на
-     * которое уменьшется количество общее дней отгула, после того как заявление
-     * на отгул будет принят.
-     *
-     * @return не отрицательное количество исходящих дней отгула
-     */
-    @GET
-    @Path("/OutgoingHolidaysQuantity")
-    @Produces({MediaType.APPLICATION_JSON})
-    @PermitAll
-    public int getOutgoingHolidaysQuantity() {
-        User user = _userService.getCurrentUser();
-        return _holidayService.getOutgoingHolidaysQuantity(user);
-    }
-
-    /**
-     * Возвращает количество приходящих отгулов. Это количество дней, на которое
-     * будет увеличино общее количество отгулов, после того как засчитают отзыв.
-     *
-     * @return количество приходящих отгулов
-     */
-    @GET
-    @Path("/IncomingHolidaysQuantity")
-    @Produces({MediaType.APPLICATION_JSON})
-    @PermitAll
-    public int getIncomingHolidaysQuantity() {
-        User user = _userService.getCurrentUser();
-        return _holidayService.getIncomingHolidaysQuantity(user);
-    }
-
-    /**
      * Возвращает входящие заявления.
      *
      * @return входящие заявления
@@ -192,50 +146,6 @@ public class HolidayCalculatorWebService {
             return Response.status(Status.CONFLICT).build();
         }
         return Response.ok().build();
-    }
-
-    /**
-     * Возвращает количество неиспользованных дней отпуска
-     *
-     * @return количество дней
-     */
-    @GET
-    @Path("/LeaveCount")
-    @Produces({MediaType.APPLICATION_JSON})
-    @PermitAll
-    public int getLeaveCount() {
-        User user = _userService.getCurrentUser();
-        return _holidayService.getLeaveCount(user);
-    }
-
-    /**
-     * Возвращает количество исходящих дней отпуска. Это количество дней, на
-     * которое уменьшется количество дней отпуска в этом периоде, после того как
-     * заявление на отпуск будет принят.
-     *
-     * @return не отрицательное количество исходящих дней отпуска.
-     */
-    @GET
-    @Path("/OutgoingLeaveCount")
-    @Produces({MediaType.APPLICATION_JSON})
-    @PermitAll
-    public int getOutgoingLeaveCount() {
-        User user = _userService.getCurrentUser();
-        return _holidayService.getOutgoingLeaveCount(user);
-    }
-
-    /**
-     * Возвращает дату начала следующего периода
-     *
-     * @return дата начала следующего периода
-     */
-    @GET
-    @Path("/NextLeaveStartDate")
-    @Produces({MediaType.APPLICATION_JSON})
-    @PermitAll
-    public Date getNextLeaveStartDate() {
-        User user = _userService.getCurrentUser();
-        return _holidayService.getNextLeaveStartDate(user);
     }
 
     /**
@@ -308,14 +218,16 @@ public class HolidayCalculatorWebService {
 
     @GET
     @Path("/userHolidaysInfo")
+    @PermitAll
     public UserHolidaysInfo getUserHolidaysInfo() {
-        User currentUser = _userService.getCurrentUser();
-        return UserHolidaysInfo.builder().userUUID(currentUser.getUuid())
-                .holidaysQuantity(getHolidaysQuantity())
-                .incomingHolidaysQuantity(getIncomingHolidaysQuantity()).leaveCount(getLeaveCount())
-                .nextLeaveStartDate(getNextLeaveStartDate())
-                .outgoingHolidaysQuantity(getOutgoingHolidaysQuantity())
-                .outgoingLeaveCount(getOutgoingLeaveCount()).build();
+        User user = _userService.getCurrentUser();
+        return UserHolidaysInfo.builder().userUUID(user.getUuid())
+                .holidaysQuantity(_holidayService.getHolidaysQuantity(user))
+                .incomingHolidaysQuantity(_holidayService.getIncomingHolidaysQuantity(user))
+                .leaveCount(_holidayService.getLeaveCount(user))
+                .nextLeaveStartDate(_holidayService.getNextLeaveStartDate(user))
+                .outgoingHolidaysQuantity(_holidayService.getOutgoingHolidaysQuantity(user))
+                .outgoingLeaveCount(_holidayService.getOutgoingLeaveCount(user)).build();
     }
 
 }

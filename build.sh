@@ -1,5 +1,5 @@
 #!/bin/bash
 
-mvn clean install -DskipTests=true 
+mvn clean install
 
 sh ./deploy.sh

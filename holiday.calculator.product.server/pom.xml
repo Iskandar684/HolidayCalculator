@@ -574,11 +574,13 @@
 				<executions>
 					<execution>
 						<id>copy</id>
-						<phase>packaging</phase>
+						<phase>initialize</phase>
 						<goals>
 							<goal>copy</goal>
 						</goals>
 						<configuration>
+						<overWriteReleases>true</overWriteReleases>
+						<overWriteSnapshots>true</overWriteSnapshots>
 							<artifactItems>
 								<artifactItem>
 									<groupId>ru.iskandar.holiday.calculator</groupId>

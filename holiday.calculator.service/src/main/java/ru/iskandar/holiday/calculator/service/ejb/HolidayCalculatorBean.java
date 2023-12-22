@@ -17,6 +17,7 @@ import javax.jms.JMSException;
 
 import org.jboss.logging.Logger;
 
+import lombok.NonNull;
 import ru.iskandar.holiday.calculator.report.service.api.IReport;
 import ru.iskandar.holiday.calculator.service.ejb.jms.MessageSenderBean;
 import ru.iskandar.holiday.calculator.service.ejb.search.ISearchServiceLocal;
@@ -190,13 +191,9 @@ public class HolidayCalculatorBean implements IHolidayCalculatorRemote, IHoliday
         return statement;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public HolidayStatement createHolidayStatement(HolidayStatementEntry aStatement)
+    public HolidayStatement createHolidayStatement(@NonNull HolidayStatementEntry aStatement)
             throws StatementAlreadySendedException {
-        Objects.requireNonNull(aStatement);
         checkStatementEntry(aStatement);
 
         if (StatementStatus.APPROVE.equals(aStatement.getStatus())

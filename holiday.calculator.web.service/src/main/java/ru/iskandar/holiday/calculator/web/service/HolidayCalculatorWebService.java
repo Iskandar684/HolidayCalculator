@@ -3,6 +3,7 @@ package ru.iskandar.holiday.calculator.web.service;
 import java.nio.charset.Charset;
 import java.security.Principal;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -133,7 +134,8 @@ public class HolidayCalculatorWebService {
     public HolidayStatement takeHoliday(@NonNull NewHolidayStatementRequest aRequest)
             throws StatementAlreadySendedException {
         User user = _userService.getCurrentUser();
-        Set<Date> dates = Stream.of(aRequest.getDates()).collect(Collectors.toSet());
+        Set<Date> dates =
+                Stream.of(aRequest.getDates()).filter(Objects::nonNull).collect(Collectors.toSet());
         HolidayStatementEntry entry = new HolidayStatementEntry(dates, user);
         return _holidayService.createHolidayStatement(entry);
     }

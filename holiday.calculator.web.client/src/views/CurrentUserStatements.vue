@@ -8,15 +8,14 @@
         <th>Кто рассмотрел</th>
         <th>Дата рассмотрения</th>
       </thead>
-      <tbody>
-        <tr v-for="(statement, index) in statements">
+      <tbody v-for="statement in statements" v-on:click="openStatementDocument(statement)">
+        <tr>
           <td>{{ getStatementTypeDescription(statement.entry.statementType) }}</td>
           <td>{{ formatDate(statement.entry.createDate) }}</td>
           <td>{{ getStatementStatusDescription(statement.entry.status) }}</td>
           <td>{{ fullLegalName(statement.entry.consider) }}</td>
           <td>{{ formatDate(statement.entry.considerDate) }}</td>
         </tr>
-
       </tbody>
     </table>
 
@@ -92,6 +91,10 @@ export default defineComponent({
         return aStatus;
       }
       return Object.values(StatementStatus)[indexOfStatus];
+    },
+    openStatementDocument: function (statement: Statement) {
+      console.log("openStatementDocument UUID=" + statement.uuid);
+      window.open(URLs.STATEMENT_DOCUMENT_URL + statement.uuid)
     }
   },
   computed: {

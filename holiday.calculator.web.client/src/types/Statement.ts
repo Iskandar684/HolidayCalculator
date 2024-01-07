@@ -4,4 +4,5 @@ export interface Statement {
 
     entry: StatementEntry
 
+    uuid: String
 }

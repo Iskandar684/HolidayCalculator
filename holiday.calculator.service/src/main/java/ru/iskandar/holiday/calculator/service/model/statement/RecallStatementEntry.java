@@ -6,11 +6,17 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import ru.iskandar.holiday.calculator.user.service.api.User;
 /**
  * Заявления на отзыв. Это заявление, где указаны дни, в которые сотрудник
  * работал во время отпуска. На основе этих дней зачислиются отгула.
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class RecallStatementEntry extends StatementEntry {
 
 	/**

@@ -3,10 +3,16 @@ package ru.iskandar.holiday.calculator.service.model.statement;
 import java.util.Date;
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * Заявления на отзыв. Это заявление, где указаны дни, в которые сотрудник
  * работал во время отпуска. На основе этих дней зачислиются отгула.
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class RecallStatement extends Statement<RecallStatementEntry> {
 
 	/**

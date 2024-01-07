@@ -155,17 +155,17 @@ public class HolidayCalculatorWebService {
     }
 
     /**
-     * Формирует документ заявления на отгул
+     * Формирует документ заявления на отгул в HTML-формате.
      *
      * @param aStatementID идентификатор заявления
-     * @return документ заявления
+     * @return документ заявления в HTML-формате
      * @throws DocumentPreviewException если не удалось сформировать документ
      */
     @GET
-    @Path("/getStatementDocument/{statementUUID}")
-    @Produces({MediaType.APPLICATION_JSON})
-    @PermitAll
-    public HTMLDocument getStatementDocument(@PathParam("statementUUID") String statementUUID) {
+    @Path("/statementDocument/{statementUUID}")
+    @Produces({MediaType.TEXT_HTML})
+    public String getStatementDocument(@PathParam("statementUUID") String statementUUID) {
+        _holidayService.checkAuthentification();
         StatementId statementID = StatementId.from(UUID.fromString(statementUUID));
         StatementDocument document;
         try {
@@ -175,7 +175,7 @@ public class HolidayCalculatorWebService {
                     String.format("Ошибка получения документа заявления с ID=%s", statementUUID),
                     e);
         }
-        return new HTMLDocument(new String(document.getContent(), Charset.forName("utf-8")));
+        return new String(document.getContent(), Charset.forName("utf-8"));
     }
 
     @POST

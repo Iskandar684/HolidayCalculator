@@ -14,8 +14,8 @@ import ru.iskandar.holiday.calculator.user.service.api.User;
 /**
  * Содержимое заявления
  */
-@XmlRootElement(name = "StatementEntry")
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public abstract class StatementEntry implements Serializable {
 
 	/**

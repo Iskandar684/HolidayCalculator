@@ -3,9 +3,15 @@ package ru.iskandar.holiday.calculator.service.model.statement;
 import java.util.Date;
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * Заявление на отпуск
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class LeaveStatement extends Statement<LeaveStatementEntry> {
 
 	/**

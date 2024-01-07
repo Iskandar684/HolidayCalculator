@@ -6,11 +6,17 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import ru.iskandar.holiday.calculator.user.service.api.User;
 
 /**
  * Заявление на отпуск
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class LeaveStatementEntry extends StatementEntry {
 
 	/**

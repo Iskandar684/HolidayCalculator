@@ -1,7 +1,4 @@
 <template>
-  <div v-show="isLoggedIn()" class="loginInfo">
-    <a href="#" @click="logout">Выйти</a>
-  </div>
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png">
     <div v-if="isLoggedIn()">
@@ -32,8 +29,7 @@ export default defineComponent({
     NewStatements
   },
   methods: {
-    ...mapGetters(['isLoggedIn']),
-    ...mapActions(['logout']),
+    ...mapGetters(['isLoggedIn'])
   },
   computed: {},
 });
@@ -42,11 +38,5 @@ export default defineComponent({
 <style scoped>
 a {
   color: #42b983;
-}
-
-.loginInfo {
-  position: fixed;
-  top: 20px;
-  right: 10px;
 }
 </style>

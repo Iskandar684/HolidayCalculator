@@ -1,7 +1,7 @@
 <template>
   <nav v-show="isLoggedIn">
     <router-link to="/">Главная</router-link> |
-    <router-link to="/myStatements">Мои заявления</router-link>
+    <router-link to="/my-statements">Мои заявления</router-link>
   </nav>
   <router-view />
   <MessageDialog></MessageDialog>

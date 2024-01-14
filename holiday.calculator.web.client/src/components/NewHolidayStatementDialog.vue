@@ -77,7 +77,7 @@ export default defineComponent({
                 .then((statement: Statement) => {
                     console.log("newHolidayStatement " + statement);
                     this.$.data.isOpen = false
-                    window.open(URLs.STATEMENT_DOCUMENT_URL + statement.uuid)
+                    this.$router.push(`/statement/${statement.uuid}`);
                 })
                 .catch(error => {
                     console.log("newHolidayStatementError " + error.message);

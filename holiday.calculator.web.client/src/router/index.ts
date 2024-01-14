@@ -8,10 +8,14 @@ const routes: Array<RouteRecordRaw> = [
     component: HomeView
   },
   {
-    path: '/myStatements',
-    name: 'myStatements',
-
+    path: '/my-statements',
+    name: 'my-statements',
     component: () => import('../views/CurrentUserStatements.vue')
+  },
+  {
+    path: '/statement/:uuid',
+    name: 'statement',
+    component: () => import('../components/StatementDocument.vue')
   }
 ]
 

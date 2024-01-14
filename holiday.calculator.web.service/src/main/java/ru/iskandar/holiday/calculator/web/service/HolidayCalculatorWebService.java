@@ -163,8 +163,8 @@ public class HolidayCalculatorWebService {
      */
     @GET
     @Path("/statementDocument/{statementUUID}")
-    @Produces({MediaType.TEXT_HTML})
-    public String getStatementDocument(@PathParam("statementUUID") String statementUUID) {
+    @Produces({MediaType.APPLICATION_JSON})
+    public HTMLDocument getStatementDocument(@PathParam("statementUUID") String statementUUID) {
         _holidayService.checkAuthentification();
         StatementId statementID = StatementId.from(UUID.fromString(statementUUID));
         StatementDocument document;
@@ -175,7 +175,7 @@ public class HolidayCalculatorWebService {
                     String.format("Ошибка получения документа заявления с ID=%s", statementUUID),
                     e);
         }
-        return new String(document.getContent(), Charset.forName("utf-8"));
+        return new HTMLDocument(new String(document.getContent(), Charset.forName("utf-8")));
     }
 
     @POST

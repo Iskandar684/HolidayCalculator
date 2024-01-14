@@ -8,9 +8,11 @@
         <th>Кто рассмотрел</th>
         <th>Дата рассмотрения</th>
       </thead>
-      <tbody v-for="statement in statements" v-on:click="openStatementDocument(statement)">
+      <tbody v-for="statement in statements">
         <tr>
-          <td>{{ getStatementTypeDescription(statement.entry.statementType) }}</td>
+          <td> <router-link :to="`statement/${statement.uuid}`">{{
+            getStatementTypeDescription(statement.entry.statementType)
+          }}</router-link></td>
           <td>{{ formatDate(statement.entry.createDate) }}</td>
           <td>{{ getStatementStatusDescription(statement.entry.status) }}</td>
           <td>{{ fullLegalName(statement.entry.consider) }}</td>
@@ -35,7 +37,7 @@ import { StatementStatus } from '@/types/StatementStatus';
 
 
 export default defineComponent({
-  name: 'Личный кабинет',
+  name: 'CurrentUserStatements',
   props: {
     msg: String,
   },

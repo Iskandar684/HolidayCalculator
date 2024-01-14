@@ -93,10 +93,6 @@ export default defineComponent({
         return aStatus;
       }
       return Object.values(StatementStatus)[indexOfStatus];
-    },
-    openStatementDocument: function (statement: Statement) {
-      console.log("openStatementDocument UUID=" + statement.uuid);
-      window.open(URLs.STATEMENT_DOCUMENT_URL + statement.uuid)
     }
   },
   computed: {

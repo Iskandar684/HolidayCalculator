@@ -1,5 +1,8 @@
 <template>
   <nav v-show="isLoggedIn">
+    <div class="loginInfo">
+      <a href="#" @click="logoutAndNavToRoot">Выйти</a>
+    </div>
     <router-link to="/">Главная</router-link> |
     <router-link to="/my-statements">Мои заявления</router-link>
   </nav>
@@ -21,6 +24,13 @@ export default defineComponent({
 
   computed: {
     ...mapGetters(['getCurrentUser', 'isLoggedIn'])
+  },
+  methods: {
+    ...mapActions(['logout']),
+    logoutAndNavToRoot() {
+      this.logout();
+      this.$router.push(`/`);
+    }
   },
   components: { MessageDialog }
 });
@@ -48,5 +58,11 @@ nav a {
 
 nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.loginInfo {
+  position: fixed;
+  top: 20px;
+  right: 10px;
 }
 </style>

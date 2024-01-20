@@ -1,17 +1,17 @@
 <template>
     <h1>Вход в личный кабинет</h1>
-    <form>
-        <div class="form_element">
-            <p> <label>Логин:</label></p>
-            <p> <input v-model.trim="params.login" /> </p>
-            <p> <label>Пароль:</label> </p>
-            <p><input v-model.trim="params.password" type="password"> </p>
-            <p v-show="hasLoginMessage" id="login_message"> <label>{{ getLoginMessage() }}</label> </p>
+    <div class="login">
+        <div class="params">
+            <p>Логин:</p>
+            <input v-model.trim="params.login" />
+            <p>Пароль:</p>
+            <input v-model.trim="params.password" type="password">
+            <p v-show="hasLoginMessage" id="login_message"> <label>{{ getLoginMessage() }}</label></p>
         </div>
-        <div>
+        <div class="button">
             <button @click="loginPressed" :disabled="cannotLogin" type="button">Войти</button>
         </div>
-    </form>
+    </div>
 </template>
 
 <script lang="ts">
@@ -61,11 +61,43 @@ export default defineComponent({
 
 
 <style scoped>
-.form_element {
-    margin: 10px 0;
+.login {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.params {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    text-align: left;
+    width: 200px;
+}
+
+p {
+    margin-bottom: 2px;
+}
+
+input {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 #login_message {
     color: brown;
+}
+
+.button {
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+button {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
 }
 </style>

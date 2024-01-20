@@ -1,5 +1,7 @@
 <template>
-    <div v-html="statementDocument" class="doc"></div>
+    <div class="parent">
+        <div v-html="statementDocument" class="doc"></div>
+    </div>
 </template>
 
 <script lang="ts">
@@ -52,8 +54,13 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.parent {
+    background-color: #aaa;
+}
+
 .doc {
-    border: solid;
+    background-color: #fefefe;
+    border: 1px solid #888;
     width: 800px;
     margin-left: auto;
     margin-right: auto;

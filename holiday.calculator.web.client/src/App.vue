@@ -61,4 +61,11 @@ nav a.router-link-exact-active {
 #logout {
   float: right;
 }
+
+/* Стили для печати */
+@media print {
+  nav {
+    display: none;
+  }
+}
 </style>

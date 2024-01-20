@@ -2,6 +2,7 @@ package ru.iskandar.holiday.calculator.web.service;
 
 import java.nio.charset.Charset;
 import java.security.Principal;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
@@ -149,9 +150,11 @@ public class HolidayCalculatorWebService {
     @Path("/currentUserStatements")
     @Produces({MediaType.APPLICATION_JSON})
     @PermitAll
-    public Statement<?>[] getAllStatements() {
+    public Statement<?>[] getCurrentUserStatements() {
         User user = _userService.getCurrentUser();
-        return _holidayService.getAllStatements(user).toArray(new Statement<?>[0]);
+        return _holidayService.getAllStatements(user).stream()
+                .sorted(Comparator.comparing(Statement::getCreateDate, Comparator.reverseOrder()))
+                .toArray(Statement[]::new);
     }
 
     /**

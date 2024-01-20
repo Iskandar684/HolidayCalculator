@@ -1,10 +1,8 @@
 <template>
   <nav v-show="isLoggedIn">
-    <div class="loginInfo">
-      <a href="#" @click="logoutAndNavToRoot">Выйти</a>
-    </div>
     <router-link to="/">Главная</router-link> |
     <router-link to="/my-statements">Мои заявления</router-link>
+    <a id="logout" href="#" @click="logoutAndNavToRoot">Выйти</a>
   </nav>
   <router-view />
   <MessageDialog></MessageDialog>
@@ -60,9 +58,7 @@ nav a.router-link-exact-active {
   color: #42b983;
 }
 
-.loginInfo {
-  position: fixed;
-  top: 20px;
-  right: 10px;
+#logout {
+  float: right;
 }
 </style>

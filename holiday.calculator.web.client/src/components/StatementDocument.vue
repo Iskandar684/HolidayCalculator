@@ -1,6 +1,7 @@
 <template>
     <div class="parent">
         <div v-html="statementDocument" class="doc"></div>
+        <button v-on:click="printStatementDocument()" class="print-button">Распечатать</button>
     </div>
 </template>
 
@@ -41,6 +42,9 @@ export default defineComponent({
                 .catch(error => {
                     console.log("load statementDocument Error" + error.message);
                 })
+        },
+        printStatementDocument() {
+            window.print();
         }
     },
     async mounted() {
@@ -64,5 +68,27 @@ export default defineComponent({
     width: 800px;
     margin-left: auto;
     margin-right: auto;
+}
+
+button {
+    margin-top: 10px;
+}
+
+/* Стили для печати */
+@media print {
+    .print-button {
+        display: none;
+    }
+
+    .doc {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    .parent {
+        width: 100%;
+        height: 100%;
+    }
 }
 </style>
